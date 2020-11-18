@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="selectedTabIconColor">#345b7b</color>
+    <color name="unselectedTabIconColor">#D8D8D8</color>
+    <color name="buttonSelectedColor">#103E65</color>
+    <color name="buttonUnselectedColor">#D8D8D8</color>
+    <color name="spinnerIconColor">#C7D0D8</color>
+    <color name="spinnerSelectedIconColor">#103E65</color>
+    <color name="dialogBgColor">#fff</color>
+</resources>

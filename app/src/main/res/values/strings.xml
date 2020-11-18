@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">LiveNewsGlobe</string>
+    <string name="city">Select City</string>
+    <string name="state">Select State</string>
+    <string name="network">Select Network</string>
+    <string name="drawer_open">drawer_open</string>
+    <string name="drawer_close">drawer_close</string>
+</resources>

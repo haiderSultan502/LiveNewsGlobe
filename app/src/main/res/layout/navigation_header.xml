@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_190sdp"
+        android:background="@drawable/side_bar_bg">>
+        <RelativeLayout
+            android:id="@+id/relative_layout_image"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_90sdp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_40sdp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/img_bg">
+            <ImageView
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/profile21"/>
+        </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relative_layout_image"
+        android:text="Daniel"
+        android:textColor="#FFF"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_55sdp"
+        android:layout_marginTop="@dimen/_5sdp"/>
+
+</RelativeLayout>

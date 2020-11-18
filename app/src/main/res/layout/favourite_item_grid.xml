@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_115sdp"
+    android:id="@+id/complete_item_click">
+    <RelativeLayout
+        android:layout_width="@dimen/_85sdp"
+        android:layout_height="@dimen/_105sdp"
+        android:background="@drawable/grid_bgg">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_view_networks"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:src="@drawable/fox11"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_centerInParent="true">
+        </androidx.appcompat.widget.AppCompatImageView>
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="@dimen/_57sdp"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@drawable/line_h"
+            android:layout_below="@+id/image_view_networks"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_centerInParent="true"></View>
+
+        <TextView
+            android:id="@+id/text_view_channel_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KPTV"
+            android:textColor="#18204E"
+            android:layout_below="@id/view_line"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:textSize="@dimen/_14sdp"
+            android:layout_marginLeft="@dimen/_8sdp"/>
+        <TextView
+            android:id="@+id/text_view_channel_name_come"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KPTV"
+            android:textColor="#18204E"
+            android:layout_below="@id/view_line"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:textSize="@dimen/_14sdp"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible"/>
+        <ImageView
+            android:id="@+id/image_view_favourite_channel"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/favorite_icon"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/view_line"
+            android:layout_marginTop="@dimen/_13sdp"
+            android:layout_marginRight="@dimen/_4sdp">
+
+        </ImageView>
+
+
+
+
+    </RelativeLayout>
+</LinearLayout>
+
+
