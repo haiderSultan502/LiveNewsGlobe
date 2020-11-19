@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -83,6 +85,9 @@ public class Home extends Fragment {
     Button btnLogin,btnSignUp;
     TextView tvLogin,tvSignUp;
     EditText userName;
+    Animation animation;
+    RelativeLayout dialogTab;
+    ColorStateList oldColors;
 
 
 //    static InterfaceApi interfaceApi;
@@ -193,11 +198,16 @@ public class Home extends Fragment {
         dialog=new Dialog(getActivity());
         dialog.setContentView(R.layout.custom_login_signup_dialog);
 
+        //Set the background of the dialog's root view to transparent, because Android puts your dialog layout within a root view that hides the corners in your custom layout.
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         tvLogin=dialog.findViewById(R.id.login);
         tvSignUp=dialog.findViewById(R.id.signUp);
         btnLogin=dialog.findViewById(R.id.btn_login);
         userName=dialog.findViewById(R.id.username);
         btnSignUp=dialog.findViewById(R.id.btn_signup);
+        dialogTab=dialog.findViewById(R.id.dialog_tab);
+        oldColors =  tvSignUp.getTextColors();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,6 +225,15 @@ public class Home extends Fragment {
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                animation = AnimationUtils.loadAnimation(getActivity(),
+                        R.anim.alert_bar_move_right);
+                dialogTab.setAnimation(animation);
+
+
+                tvSignUp.setTextColor(Color.parseColor("#103E65"));
+                tvLogin.setTextColor(oldColors);
+
                 userName.setVisibility(View.VISIBLE);
                 btnSignUp.setVisibility(View.VISIBLE);
                 btnLogin.setVisibility(View.GONE);
@@ -224,6 +243,12 @@ public class Home extends Fragment {
         tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                animation = AnimationUtils.loadAnimation(getActivity(),
+                        R.anim.alert_bar_move_left);
+                dialogTab.setAnimation(animation);
+
+                tvSignUp.setTextColor(oldColors);
+
                 userName.setVisibility(View.GONE);
                 btnSignUp.setVisibility(View.GONE);
                 btnLogin.setVisibility(View.VISIBLE);
@@ -244,6 +269,7 @@ public class Home extends Fragment {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putBoolean("visibilityOfTip",false);
                     editor.apply();
+                    visibilityOfTip=false;
                 }
             });
 
