@@ -72,4 +72,8 @@ dependencies {
 
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 
+    //blur background while popup show
+
+    implementation 'com.eightbitlab:blurview:1.6.5'
+
 }

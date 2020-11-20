@@ -352,9 +352,15 @@
             </com.google.android.material.tabs.TabLayout>
         </LinearLayout>
 
-
     </LinearLayout>
 
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+    </eightbitlab.com.blurview.BlurView>
 <!--    copy end-->
 
     <!--
@@ -384,11 +390,11 @@
                 android:layout_height="wrap_content"
                 android:text="Sign Out"
                 android:textColor="#578FBF"
-                android:textSize="@dimen/_15sdp"
+                android:textSize="@dimen/_12sdp"
                 android:layout_alignParentRight="true"/>
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
                 android:layout_below="@+id/signOut"
                 android:src="@drawable/signout"
                 android:layout_alignParentRight="true"

@@ -8,6 +8,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -212,12 +214,14 @@ public class Home extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mainActivity.blurView.setVisibility(View.GONE);
                 dialog.dismiss();
             }
         });
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mainActivity.blurView.setVisibility(View.GONE);
                 dialog.dismiss();
             }
         });
@@ -247,6 +251,7 @@ public class Home extends Fragment {
                         R.anim.alert_bar_move_left);
                 dialogTab.setAnimation(animation);
 
+                tvLogin.setTextColor(Color.parseColor("#103E65"));
                 tvSignUp.setTextColor(oldColors);
 
                 userName.setVisibility(View.GONE);
@@ -272,6 +277,12 @@ public class Home extends Fragment {
                     visibilityOfTip=false;
                 }
             });
+
+
+
+
+
+
 
 
 
@@ -412,10 +423,13 @@ public class Home extends Fragment {
 
                 }
             }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                 @Override
                 public void onSwipeOptionClicked(int viewID, int position) {
                     switch (viewID) {
                         case R.id.favourite_network:
+
+                            mainActivity.blurView.setVisibility(View.VISIBLE);
                             dialog.show();
                             Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                             break;
@@ -563,7 +577,7 @@ public class Home extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID) {
                                 case R.id.favourite_network:
-                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         }
@@ -824,8 +838,9 @@ public class Home extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID) {
                                 case R.id.favourite_network:
+                                    mainActivity.blurView.setVisibility(View.VISIBLE);
                                     dialog.show();
-                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         }
@@ -930,8 +945,9 @@ public class Home extends Fragment {
                     public void onSwipeOptionClicked(int viewID, int position) {
                         switch (viewID) {
                             case R.id.favourite_network:
+                                mainActivity.blurView.setVisibility(View.VISIBLE);
                                 dialog.show();
-                                Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }
@@ -1047,8 +1063,9 @@ public class Home extends Fragment {
             public void onSwipeOptionClicked(int viewID, int position) {
                 switch (viewID) {
                     case R.id.favourite_network:
+                        mainActivity.blurView.setVisibility(View.VISIBLE);
                         dialog.show();
-                        Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }

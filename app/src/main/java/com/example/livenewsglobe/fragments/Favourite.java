@@ -192,7 +192,7 @@ public class Favourite extends Fragment {
         recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"list");
+        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"listFavourie");
         recyclerView.setAdapter(favouriteItem);
         recyclerView.scheduleLayoutAnimation();
         recyclerViewGrid.scheduleLayoutAnimation();
@@ -203,7 +203,7 @@ public class Favourite extends Fragment {
         recyclerView.setVisibility(View.GONE);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"grid");
+        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"gridFavourie");
         recyclerViewGrid.setAdapter(favouriteItem);
         // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
         recyclerView.scheduleLayoutAnimation();

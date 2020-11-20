@@ -1,11 +1,14 @@
 package com.example.livenewsglobe;
 
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -19,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 
@@ -50,6 +54,8 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     String[] cityNames={"City","Los Angeles","San Diego","San Jose","San Francisco","Fresno"};
     String[] networkNames={"Network","ABC","CBS","FOX","Independent","NBC"};
     ArrayList<String> arrayList=new ArrayList<String>();
+    int check;
+    public BlurView blurView;
 
     RecyclerView recyclerView,recyclerViewGrid;
 
@@ -142,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,6 +217,9 @@ public class MainActivity extends AppCompatActivity {
         spinnerCity=findViewById(R.id.spinner_city);
         spinnerState=findViewById(R.id.spinner_state);
         spinnerNetwork=findViewById(R.id.spinner_network);
+        blurView=findViewById(R.id.blurlayout);
+
+        blurbackground();
 
 
         listView.setBackgroundResource(R.drawable.on_list);
@@ -537,6 +548,10 @@ public class MainActivity extends AppCompatActivity {
                         homeGridViewMode();
                     }
                 }
+                else if(favFrag==true)
+                {
+                        favouriteGridViewMode();
+                }
 
 
 
@@ -587,15 +602,45 @@ public class MainActivity extends AppCompatActivity {
 
                 if(cityFrag==true)
                 {
-                    cityListViewMode();
+                    if(getCityList==false)
+                    {
+                        storeCities=cityList.get();
+                        cityListViewMode();
+                        getCityList=true;
+                    }
+                    else {
+                        cityListViewMode();
+                    }
                 }
                 else if(stateFrag==true)
                 {
-                    stateListViewMode();
+                    if(getStateList==false)
+                    {
+                        storeStates=state.get();
+                        stateListViewMode();
+                        getStateList=true;
+                    }
+                    else {
+                        stateListViewMode();
+                    }
+
                 }
                 else if(homeFrag==true)
                 {
-                    homeListViewMode();
+                    if(getFeaturedList==false)
+                    {
+                        storeNetworks=homef.get();
+                        homeListViewMode();
+                        getFeaturedList=true;
+                    }
+                    else {
+                        homeListViewMode();
+                    }
+
+                }
+                else if(favFrag==true)
+                {
+                    favouriteListViewMode();
                 }
 
 //
@@ -726,37 +771,7 @@ public class MainActivity extends AppCompatActivity {
                             getSupportFragmentManager().popBackStackImmediate();}
                         //end
 
-                        if(getFeaturedList==true)
-                        {
-                            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                            linearLayout.setLayoutParams(params);
-
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
-                            homeListViewMode();
-                            homeFrag=true;
-                            stateFrag=false;
-                            cityFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                        }
-//                        else if(gridStatus==true)
-//                        {
-//                            listView.setBackgroundResource(R.drawable.on_list);
-//                            gridView.setBackgroundResource(R.drawable.grid);
-//                            stateFrag=true;
-//                            cityFrag=false;
-//                            regionFrag=false;
-//                            favFrag=false;
-//                            homeFrag=false;
-//                            fragmentTransaction.replace(R.id.frame_layout,state);
-//                            //        ft.addToBackStack(null);
-//                            fragmentTransaction.commit();
-//                            gridStatus=false;
-//                        }
-                        else
+                        if(getFeaturedList==false)
                         {
                             listView.setBackgroundResource(R.drawable.on_list);
                             gridView.setBackgroundResource(R.drawable.grid);
@@ -770,6 +785,22 @@ public class MainActivity extends AppCompatActivity {
                             fragmentTransaction.replace(R.id.frame_layout,home);
                             //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
+
+                        }
+                        else
+                        {
+                            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
+                            linearLayout.setLayoutParams(params);
+                            listView.setBackgroundResource(R.drawable.on_list);
+                            gridView.setBackgroundResource(R.drawable.grid);
+                            filter.setBackgroundResource(R.drawable.filter);
+                            filter_options.setVisibility(View.GONE);
+                            homeListViewMode();
+                            homeFrag=true;
+                            stateFrag=false;
+                            cityFrag=false;
+                            regionFrag=false;
+                            favFrag=false;
                         }
 
 
@@ -961,7 +992,6 @@ public class MainActivity extends AppCompatActivity {
                             //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                         }
-
                         break;
                 }
 
@@ -978,6 +1008,26 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void blurbackground() {
+        float radius = 1f;
+
+        View decorView = getWindow().getDecorView();
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+        ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(this))
+                .setBlurRadius(radius)
+                .setBlurAutoUpdate(true)
+                .setHasFixedTransformationMatrix(true);
     }
 
 
@@ -1041,6 +1091,28 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 //        ft.addToBackStack(null);
             fragmentTransaction.commit();
+    }
+
+    private void favouriteListViewMode() {
+
+        Favourite favourite=new Favourite("list");
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction= fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout,favourite);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        ft.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void favouriteGridViewMode() {
+
+        Favourite favourite=new Favourite("grid");
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction= fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout,favourite);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        ft.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void initViews() {
