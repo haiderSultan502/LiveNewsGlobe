@@ -12,11 +12,11 @@
         android:id="@+id/dialog_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="@dimen/_10sdp">
         <View
-            android:layout_width="@dimen/_100sdp"
+            android:layout_width="140dp"
             android:layout_height="@dimen/_5sdp"
             android:background="#103E65" />
     </RelativeLayout>
@@ -97,14 +97,14 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:background="#103E65"
+                android:background="@drawable/button_style"
                 android:id="@+id/btn_login"
                 android:text="LOGIN"
                 android:textColor="#fff"></Button>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:background="#103E65"
+                android:background="@drawable/button_style"
                 android:id="@+id/btn_signup"
                 android:text="SignUp"
                 android:textColor="#fff"

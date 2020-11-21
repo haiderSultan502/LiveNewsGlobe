@@ -244,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
                 arrayListCity2.remove(14);
                 arrayListCity2.remove(17);
                 arrayListCity2.remove(21);
-
                 //I place the array adapter inside on response because outside of onResponse adapter we receive the null arrraylist, and if we focus in array adpater that
 //                we are passing whole object of arrayList but we get only city name in spinner so this was happend when we place the toString overRide function in class that of which we are
 //                are making arraylist so this is most imp point that make toString overRide function and return the name in this function that we want to show in spinner.
@@ -285,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
                     spinnerNetwork.setEnabled(true);
 
-                    Fragment home = new Home(city,"city");
+                    Fragment home = new Home(cityId,"city");
                     fragmentManager = getSupportFragmentManager();
                     fragmentTransaction= fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.frame_layout,home);

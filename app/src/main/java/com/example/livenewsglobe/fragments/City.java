@@ -286,8 +286,7 @@ public class City extends Fragment {
                     arrayListCity.remove(17);
                     arrayListCity.remove(21);
 
-
-                        recyclerViewGrid.setVisibility(View.GONE);
+                    recyclerViewGrid.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -410,9 +409,9 @@ public class City extends Fragment {
 
                 }
 
-
-                arrayListCity = citiesAccordingToState; // great haider here something new you try
+                arrayListCity = citiesAccordingToState;
                 MainActivity mainActivity= (MainActivity) getActivity();
+
                 if(mainActivity.gridStatus == true)
                 {
                     recyclerViewGrid.setVisibility(View.VISIBLE);

@@ -9,5 +9,6 @@
     <color name="buttonUnselectedColor">#D8D8D8</color>
     <color name="spinnerIconColor">#C7D0D8</color>
     <color name="spinnerSelectedIconColor">#103E65</color>
+    <color name="blueColor">#103E65</color>
     <color name="dialogBgColor">#fff</color>
 </resources>

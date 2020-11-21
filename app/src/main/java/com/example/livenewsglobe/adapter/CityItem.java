@@ -76,7 +76,8 @@ public class CityItem extends RecyclerView.Adapter<CityItem.ItemViewHolder> {
             public void onClick(View view) {
 //                cityID=arrayListCity.get(position).getTermId();
                 ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, new Home(arrayListCity.get(position).getName(),"city")).addToBackStack(null)
+//                        .replace(R.id.frame_layout, new Home(arrayListCity.get(position).getName(),"city")).addToBackStack(null)
+                        .replace(R.id.frame_layout, new Home(arrayListCity.get(position).getTermId(),"city")).addToBackStack(null)
                         .commit();
             }
         });
@@ -103,8 +104,17 @@ public class CityItem extends RecyclerView.Adapter<CityItem.ItemViewHolder> {
 
 
         String content = arrayListCity.get(position).getDescription();
-        String imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("jpg")+3);
-        Picasso.with(context).load(imgUrl).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.cityImage);
+        if(content.length() == 0)
+        {
+            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
+            Picasso.with(context).load(R.drawable.ic_baseline_image_search_24).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.cityImage);
+        }
+        else
+        {
+//            String imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("jpg")+3);
+        String imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("alt")-2);
+            Picasso.with(context).load(imgUrl).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.cityImage);
+        }
 
         cityName=arrayListCity.get(position).getName();
         holder.textViewCityName.setText(cityName);

@@ -128,6 +128,7 @@ public class Home extends Fragment {
     int currentItems,totalItems,scrollOutItems;
 
     String checkNetworkOrCity;
+    int checkNetworkOrCityy;
     String paramCheck="null";
     String cityName,mainNetworkName;
 
@@ -143,6 +144,12 @@ public class Home extends Fragment {
         this.checkNetworkOrCity=checkNetworkOrCity;
         this.paramCheck=paramCheck;
     }
+    public Home(int checkNetworkOrCity,String paramCheck)
+    {
+        this.checkNetworkOrCityy=checkNetworkOrCity;
+        this.paramCheck=paramCheck;
+    }
+
     public Home()
     {
 
@@ -293,7 +300,7 @@ public class Home extends Fragment {
         if(paramCheck.equals("city"))
         {
 
-            getRelateableChannels(checkNetworkOrCity);
+            getRelateableChannels(checkNetworkOrCityy);
 
         }
         else if(paramCheck.equals("networkname"))
@@ -628,122 +635,13 @@ public class Home extends Fragment {
 //        });
 
     }
-    public void getRelateableChannels(String cityName) {
+    public void getRelateableChannels(int cityName) {
 
 
-        InterfaceApi interfaceApi = RetrofitLab.connect("http://www.livenewsglobe.com/wp-json/wp/v2/");
+        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/wp/v2/");
+        https://www.livenewsglobe.com/wp-json/wp/v2/city_tags/
         imgLoading.setVisibility(View.VISIBLE);
-//        call = interfaceApi.getChannelsAccordingToCities(cityItem.cityID);
-        switch (cityName)
-        {
-            case "San Diego":
-                call = interfaceApi.getRelatedSanDiegoChannels(); //retrofit create implementation for this method
-                break;
-            case "Sacramento":
-                call = interfaceApi.getRelatedSacramentoChannels(); //retrofit create implementation for this method
-                break;
-            case "Los Angeles CA":
-                call = interfaceApi.getRelatedLosAngelesCaChannels(); //retrofit create implementation for this method
-                break;
-            case "San Francisco":
-                call = interfaceApi.getRelatedSanFranciscoNetworks(); //retrofit create implementation for this method
-                break;
-            case "Oakland":
-                call = interfaceApi.getRelatedOaklandNetworks(); //retrofit create implementation for this method
-                break;
-
-            case "Denver":
-                call = interfaceApi.getRelatedDenverChannels();
-                break;
-            case "Phoenix":
-                call = interfaceApi.getRelatedPhoenixChannels();
-                break;
-            case "Orlando":
-                call = interfaceApi.getRelatedOrlandoChannels();
-                break;
-            case "Miami":
-                call = interfaceApi.getRelatedMiamiChannels();
-                break;
-            case "Jacksonville":
-                call = interfaceApi.getRelatedJacksonvilleChannels();
-                break;
-            case "St. Petersburg":
-                call = interfaceApi.getRelatedStPetersburgChannels();
-                break;
-            case "Tampa":
-                call = interfaceApi.getRelatedTampaChannels();
-                break;
-            case "Atlanta":
-                call = interfaceApi.getRelatedAtlantaChannels();
-                break;
-            case "Chicago":
-                call = interfaceApi.getRelatedChicagoChannels();
-                break;
-            case "Decatur":
-                call = interfaceApi.getRelatedDecaturChannels();
-                break;
-            case "Boston":
-                call = interfaceApi.getRelatedBostonChannels();
-                break;
-            case "Detroit":
-                call = interfaceApi.getRelatedDetroitChannels();
-                break;
-            case "Columbia MO":
-                call = interfaceApi.getRelatedColumbiaMoChannels();
-                break;
-            case "Las Vegas":
-                call = interfaceApi.getRelatedLasVegasChannels();
-                break;
-            case "Cleveland":
-                call = interfaceApi.getRelatedClevelandChannels();
-                break;
-            case "Columbus":
-                call = interfaceApi.getRelatedColumbusChannels();
-                break;
-            case "Portland":
-                call = interfaceApi.getRelatedPortlandChannels();
-                break;
-            case "Harrisburg":
-                call = interfaceApi.getRelatedHarrisburgandChannels();
-                break;
-            case "Charleston SC":
-                call = interfaceApi.getRelatedCharlestonScChannels();
-                break;
-            case "Austin":
-                call = interfaceApi.getRelatedAustinChannels();
-                break;
-            case "Dallas":
-                call = interfaceApi.getRelatedDallasAndFortWorthChannels();
-                break;
-            case "Fort Worth":
-                call = interfaceApi.getRelatedDallasAndFortWorthChannels();
-                break;
-            case "Houston":
-                call = interfaceApi.getRelatedHoustonChannels();
-                break;
-            case "Richmond":
-                call = interfaceApi.getRelatedRichmondChannels();
-                break;
-            case "Seattle":
-                call = interfaceApi.getRelatedSeattleChannels();
-                break;
-            case "Washington D.C.":
-                call = interfaceApi.getRelatedWashingtonDcChannels();
-                break;
-            case "Springfield":
-                //80
-                call = interfaceApi.getRelatedWashingtonDcChannels();
-                break;
-            case "York":
-                //61
-                call = interfaceApi.getRelatedWashingtonDcChannels();
-                break;
-            case "Bakersfield":
-                //72
-                call = interfaceApi.getRelatedWashingtonDcChannels();
-                break;
-
-        }
+        call = interfaceApi.getChannelsAccordingToCities(cityName);
         call.enqueue(new Callback<List<FeaturedNetworks>>() {
             @Override
             public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
@@ -850,7 +748,6 @@ public class Home extends Fragment {
                     recyclerView.scheduleLayoutAnimation();
                     recyclerViewGrid.scheduleLayoutAnimation();
                 }
-
             }
 
             @Override
@@ -858,7 +755,6 @@ public class Home extends Fragment {
                 imgLoading.setVisibility(View.GONE);
             }
         });
-
     }
 
     public void searchNetworks(String networkName)
