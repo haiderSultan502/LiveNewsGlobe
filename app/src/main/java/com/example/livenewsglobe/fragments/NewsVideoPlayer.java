@@ -84,10 +84,9 @@ return view;
 
                 document.getElementsByClass("td-header-template-wrap").remove();
                 document.getElementsByClass("td-footer-template-wrap").remove();
-//                document.getElementsByClass("tdb-author-box td_block_wrap tdb_single_author_box tdi_90_0cd tdb-content-vert-top td-pb-border-top td_block_template_1").remove();
-//                document.getElementsByClass("td-post-sharing tdb-block td-ps-bg td-ps-padding td-post-sharing-style2").remove();
-//                document.getElementsByClass("vc_row tdi_98_cce  wpb_row td-pb-row tdc-element-style").remove();
-//                document.getElementsByClass("tdb-block-inner td-fix-index").remove();
+                document.getElementById("comments").remove();
+//                document.getElementsByClass("vc_column tdi_100_fc1  wpb_column vc_column_container tdc-column td-pb-span12").remove();
+//                document.getElementsByClass("td-post-sharing-visible").remove();
 
             } catch (IOException e) {
                 e.printStackTrace();
