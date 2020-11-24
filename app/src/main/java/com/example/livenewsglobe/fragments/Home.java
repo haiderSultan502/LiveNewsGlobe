@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -83,12 +85,12 @@ public class Home extends Fragment {
     LinearLayout textViewShowTip;
 
     Context context;
-    Dialog dialog;
+    Dialog dialog2;
     Button btnLogin,btnSignUp;
     TextView tvLogin,tvSignUp;
-    EditText userName;
+    EditText userName,email,password;
     Animation animation;
-    RelativeLayout dialogTab;
+    View dialogTab;
     ColorStateList oldColors;
 
 
@@ -173,7 +175,6 @@ public class Home extends Fragment {
         statesList = new ArrayList<>();
 
 
-
     }
 
 
@@ -204,32 +205,46 @@ public class Home extends Fragment {
         textViewShowTip=view.findViewById(R.id.text_tip_show);
         textViewShowTip.setVisibility(View.GONE);
 
-        dialog=new Dialog(getActivity());
-        dialog.setContentView(R.layout.custom_login_signup_dialog);
+        dialog2=new Dialog(getActivity());
+        dialog2.setContentView(R.layout.custom_login_signup_dialog);
 
         //Set the background of the dialog's root view to transparent, because Android puts your dialog layout within a root view that hides the corners in your custom layout.
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        tvLogin=dialog.findViewById(R.id.login);
-        tvSignUp=dialog.findViewById(R.id.signUp);
-        btnLogin=dialog.findViewById(R.id.btn_login);
-        userName=dialog.findViewById(R.id.username);
-        btnSignUp=dialog.findViewById(R.id.btn_signup);
-        dialogTab=dialog.findViewById(R.id.dialog_tab);
+            dialog2.show();
+        tvLogin=dialog2.findViewById(R.id.login);
+        tvSignUp=dialog2.findViewById(R.id.signUp);
+        btnLogin=dialog2.findViewById(R.id.btn_login);
+        userName=dialog2.findViewById(R.id.username);
+        email=dialog2.findViewById(R.id.email);
+        password=dialog2.findViewById(R.id.password);
+        btnSignUp=dialog2.findViewById(R.id.btn_signup);
+        dialogTab=dialog2.findViewById(R.id.dialog_tab);
         oldColors =  tvSignUp.getTextColors();
 
+
+        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_GO)
+                {
+                    dialog2.dismiss();
+                }
+                return false;
+            }
+        });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mainActivity.blurView.setVisibility(View.GONE);
-                dialog.dismiss();
+                dialog2.dismiss();
             }
         });
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mainActivity.blurView.setVisibility(View.GONE);
-                dialog.dismiss();
+                dialog2.dismiss();
             }
         });
 
@@ -248,6 +263,7 @@ public class Home extends Fragment {
                 userName.setVisibility(View.VISIBLE);
                 btnSignUp.setVisibility(View.VISIBLE);
                 btnLogin.setVisibility(View.GONE);
+
             }
         });
 
@@ -267,6 +283,7 @@ public class Home extends Fragment {
             }
         });
 
+        dialog2.show();
 
         // the sharedPreference code for permanently remove tip by clicking on tip the TIP is  add the channel in favouirte
         SharedPreferences prefs = getActivity().getSharedPreferences("prefs",Context.MODE_PRIVATE );
@@ -437,7 +454,7 @@ public class Home extends Fragment {
                         case R.id.favourite_network:
 
                             mainActivity.blurView.setVisibility(View.VISIBLE);
-                            dialog.show();
+//                            dialog.show();
                             Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                             break;
                     }
@@ -737,7 +754,7 @@ public class Home extends Fragment {
                             switch (viewID) {
                                 case R.id.favourite_network:
                                     mainActivity.blurView.setVisibility(View.VISIBLE);
-                                    dialog.show();
+//                                    dialog.show();
 //                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                     break;
                             }
@@ -842,7 +859,7 @@ public class Home extends Fragment {
                         switch (viewID) {
                             case R.id.favourite_network:
                                 mainActivity.blurView.setVisibility(View.VISIBLE);
-                                dialog.show();
+//                                dialog.show();
 //                                Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                 break;
                         }
@@ -960,7 +977,7 @@ public class Home extends Fragment {
                 switch (viewID) {
                     case R.id.favourite_network:
                         mainActivity.blurView.setVisibility(View.VISIBLE);
-                        dialog.show();
+//                        dialog.show();
 //                        Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                         break;
                 }
