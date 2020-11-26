@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imgLoading;
 
     public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false;
-    public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,regionFrag=false,favFrag=false;
+    public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,regionFrag=false,favFrag=false,stateGridView=false,stateListView=false;
 
 
 //    static InterfaceApi interfaceApi;
@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
     Call<List<FeaturedNetworks>> call;
     Call<List<SearchNetwork>> callNetworks;
     Call<List<FeaturedNetworks>> callForRelatedNetwork;
-    List<String> listCities;
-    ArrayList<Cities> storeCities;
-    ArrayList<States> storeStates;
-    ArrayList<FeaturedNetworks> storeNetworks;
+    public static List<String> listCities;
+    public static ArrayList<Cities> storeCities;
+    public static ArrayList<States> storeStates;
+    public static ArrayList<FeaturedNetworks> storeNetworks;
 
 
     static ArrayList<FeaturedNetworks> networks;
@@ -513,39 +513,16 @@ public class MainActivity extends AppCompatActivity {
 
                 if(cityFrag==true)
                 {
-                    if(getCityList==false)
-                    {
-                        storeCities=cityList.get();
-                        cityGridViewMode();
-                        getCityList=true;
-                    }
-                    else {
-                        cityGridViewMode();
-                    }
+                    cityGridViewMode();
                 }
                 else if(stateFrag==true)
                 {
-                    if(getStateList==false)
-                    {
-                        storeStates=state.get();
-                        stateGridViewMode();
-                        getStateList=true;
-                    }
-                    else {
-                        stateGridViewMode();
-                    }
+//                    stateGridView=true;
+                    stateGridViewMode();
                 }
                 else if(homeFrag==true)
                 {
-                    if(getFeaturedList==false)
-                    {
-                        storeNetworks=homef.get();
                         homeGridViewMode();
-                        getFeaturedList=true;
-                    }
-                    else {
-                        homeGridViewMode();
-                    }
                 }
                 else if(favFrag==true)
                 {
@@ -601,49 +578,22 @@ public class MainActivity extends AppCompatActivity {
 
                 if(cityFrag==true)
                 {
-                    if(getCityList==false)
-                    {
-                        storeCities=cityList.get();
                         cityListViewMode();
-                        getCityList=true;
-                    }
-                    else {
-                        cityListViewMode();
-                    }
                 }
                 else if(stateFrag==true)
                 {
-                    if(getStateList==false)
-                    {
-                        storeStates=state.get();
-                        stateListViewMode();
-                        getStateList=true;
-                    }
-                    else {
-                        stateListViewMode();
-                    }
+
+                    stateListViewMode();
 
                 }
                 else if(homeFrag==true)
                 {
-                    if(getFeaturedList==false)
-                    {
-                        storeNetworks=homef.get();
                         homeListViewMode();
-                        getFeaturedList=true;
-                    }
-                    else {
-                        homeListViewMode();
-                    }
-
                 }
                 else if(favFrag==true)
                 {
                     favouriteListViewMode();
                 }
-
-//
-
                 checkVisibilityList=true;
 
                 if(checkVisibilityGrid==true)
@@ -752,6 +702,10 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 //        ft.addToBackStack(null);
         fragmentTransaction.commit();
+//        storeNetworks=homef.get();
+//        getFeaturedList=true;
+
+
         tabLayout=findViewById(R.id.tabLayout);
 
 
@@ -770,26 +724,9 @@ public class MainActivity extends AppCompatActivity {
                             getSupportFragmentManager().popBackStackImmediate();}
                         //end
 
-                        if(getFeaturedList==false)
-                        {
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
-                            homeFrag=true;
-                            stateFrag=false;
-                            cityFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            fragmentTransaction.replace(R.id.frame_layout,home);
-                            //        ft.addToBackStack(null);
-                            fragmentTransaction.commit();
 
-                        }
-                        else
-                        {
-                            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                            linearLayout.setLayoutParams(params);
+                            LinearLayout.LayoutParams params1 =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
+                            linearLayout.setLayoutParams(params1);
                             listView.setBackgroundResource(R.drawable.on_list);
                             gridView.setBackgroundResource(R.drawable.grid);
                             filter.setBackgroundResource(R.drawable.filter);
@@ -800,10 +737,6 @@ public class MainActivity extends AppCompatActivity {
                             cityFrag=false;
                             regionFrag=false;
                             favFrag=false;
-                        }
-
-
-
 
                         break;
                     case 1:
@@ -1059,13 +992,11 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
     private void stateListViewMode() {
-
         State state=new State("list",storeStates);
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,state);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -1110,7 +1041,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,favourite);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
 

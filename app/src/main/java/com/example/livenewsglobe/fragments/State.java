@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.livenewsglobe.Interface.InterfaceApi;
+import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.adapter.StateItem;
 import com.example.livenewsglobe.models.States;
@@ -41,6 +42,8 @@ public class State extends Fragment{
     static ArrayList<States> arrayListStateParam;
     String viewMode="null";
 
+    MainActivity mainActivity;
+
 
     public State()
     {
@@ -56,6 +59,7 @@ public class State extends Fragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mainActivity = (MainActivity) getActivity();
         arrayListStates = new ArrayList<>();
         interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
         arrayListStateStore = new ArrayList<>();
@@ -125,7 +129,9 @@ public class State extends Fragment{
 
                 imgLoading.setVisibility(View.GONE);
                 arrayListStates = (ArrayList<States>) response.body();
-                store(arrayListStates);
+
+                mainActivity.storeStates=arrayListStates;
+                mainActivity.getStateList=true;
 
                 arrayListStates.remove(3);
 
@@ -144,12 +150,6 @@ public class State extends Fragment{
         });
 
 
-    }
-    public void store(ArrayList<States> arrayListState) {
-        arrayListStateStore=arrayListState;
-    }
-    public ArrayList<States> get() {
-        return  arrayListStateStore;
     }
     private void listView() {
 

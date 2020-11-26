@@ -90,17 +90,18 @@
                             android:layout_width="@dimen/_30sdp"
                             android:layout_height="@dimen/_30sdp"
                             android:background="@drawable/filter"
-                            android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginRight="@dimen/_89sdp"/>
+                            android:layout_marginRight="@dimen/_7sdp"
+                            android:layout_toLeftOf="@+id/button_gridview"
+                            />
                         <Button
                             android:id="@+id/button_gridview"
                             android:layout_width="@dimen/_30sdp"
                             android:layout_height="@dimen/_30sdp"
                             android:background="@drawable/grid"
-                            android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginRight="@dimen/_52sdp"/>
+                            android:layout_marginRight="@dimen/_7sdp"
+                            android:layout_toLeftOf="@+id/button_listview"/>
 
                         <Button
                             android:id="@+id/button_listview"
@@ -134,18 +135,18 @@
                             android:layout_width="@dimen/_30sdp"
                             android:layout_height="@dimen/_30sdp"
                             android:background="@drawable/on_list"
-                            android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginRight="@dimen/_52sdp"
+                            android:layout_marginRight="@dimen/_7sdp"
+                            android:layout_toLeftOf="@+id/button_listview"
                             android:visibility="invisible"/>
                         <Button
                             android:id="@+id/button_filterview_come_bottom_grid"
                             android:layout_width="@dimen/_30sdp"
                             android:layout_height="@dimen/_30sdp"
                             android:background="@drawable/on_filter"
-                            android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginRight="@dimen/_52sdp"
+                            android:layout_marginRight="@dimen/_7sdp"
+                            android:layout_toLeftOf="@+id/button_listview"
                             android:visibility="invisible"/>
 
                         <Button
@@ -153,9 +154,9 @@
                             android:layout_width="@dimen/_30sdp"
                             android:layout_height="@dimen/_30sdp"
                             android:background="@drawable/on_list"
-                            android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginRight="@dimen/_89sdp"
+                            android:layout_marginRight="@dimen/_7sdp"
+                            android:layout_toLeftOf="@+id/button_gridview"
                             android:visibility="invisible"/>
 
                         <Button
@@ -163,9 +164,9 @@
                             android:layout_width="@dimen/_30sdp"
                             android:layout_height="@dimen/_30sdp"
                             android:background="@drawable/on_grid"
-                            android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginRight="@dimen/_89sdp"
+                            android:layout_marginRight="@dimen/_7sdp"
+                            android:layout_toLeftOf="@+id/button_gridview"
                             android:visibility="invisible"/>
                     </RelativeLayout>
 

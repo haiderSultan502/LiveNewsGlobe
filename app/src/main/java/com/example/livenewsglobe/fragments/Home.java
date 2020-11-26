@@ -85,12 +85,12 @@ public class Home extends Fragment {
     LinearLayout textViewShowTip;
 
     Context context;
-    Dialog dialog2;
+    Dialog dialog;
     Button btnLogin,btnSignUp;
     TextView tvLogin,tvSignUp;
     EditText userName,email,password;
     Animation animation;
-    View dialogTab;
+    View dialogTab3;
     ColorStateList oldColors;
 
 
@@ -205,21 +205,20 @@ public class Home extends Fragment {
         textViewShowTip=view.findViewById(R.id.text_tip_show);
         textViewShowTip.setVisibility(View.GONE);
 
-        dialog2=new Dialog(getActivity());
-        dialog2.setContentView(R.layout.custom_login_signup_dialog);
+        dialog=new Dialog(getActivity());
+        dialog.setContentView(R.layout.custom_login_signup_dialog);
 
         //Set the background of the dialog's root view to transparent, because Android puts your dialog layout within a root view that hides the corners in your custom layout.
-        dialog2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-            dialog2.show();
-        tvLogin=dialog2.findViewById(R.id.login);
-        tvSignUp=dialog2.findViewById(R.id.signUp);
-        btnLogin=dialog2.findViewById(R.id.btn_login);
-        userName=dialog2.findViewById(R.id.username);
-        email=dialog2.findViewById(R.id.email);
-        password=dialog2.findViewById(R.id.password);
-        btnSignUp=dialog2.findViewById(R.id.btn_signup);
-        dialogTab=dialog2.findViewById(R.id.dialog_tab);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        tvLogin=dialog.findViewById(R.id.login);
+        tvSignUp=dialog.findViewById(R.id.signUp);
+        btnLogin=dialog.findViewById(R.id.btn_login);
+        userName=dialog.findViewById(R.id.username);
+        email=dialog.findViewById(R.id.email);
+        password=dialog.findViewById(R.id.password);
+        btnSignUp=dialog.findViewById(R.id.btn_signup);
+        dialogTab3=dialog.findViewById(R.id.dialog_tab);
+//        lineAtSignUp=dialog.findViewById(R.id.line_at_signup);
         oldColors =  tvSignUp.getTextColors();
 
 
@@ -228,7 +227,7 @@ public class Home extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId== EditorInfo.IME_ACTION_GO)
                 {
-                    dialog2.dismiss();
+                    dialog.dismiss();
                 }
                 return false;
             }
@@ -237,14 +236,14 @@ public class Home extends Fragment {
             @Override
             public void onClick(View view) {
                 mainActivity.blurView.setVisibility(View.GONE);
-                dialog2.dismiss();
+                dialog.dismiss();
             }
         });
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mainActivity.blurView.setVisibility(View.GONE);
-                dialog2.dismiss();
+                dialog.dismiss();
             }
         });
 
@@ -254,8 +253,7 @@ public class Home extends Fragment {
 
                 animation = AnimationUtils.loadAnimation(getActivity(),
                         R.anim.alert_bar_move_right);
-                dialogTab.setAnimation(animation);
-
+                dialogTab3.setAnimation(animation);
 
                 tvSignUp.setTextColor(Color.parseColor("#103E65"));
                 tvLogin.setTextColor(oldColors);
@@ -272,7 +270,7 @@ public class Home extends Fragment {
             public void onClick(View view) {
                 animation = AnimationUtils.loadAnimation(getActivity(),
                         R.anim.alert_bar_move_left);
-                dialogTab.setAnimation(animation);
+                dialogTab3.setAnimation(animation);
 
                 tvLogin.setTextColor(Color.parseColor("#103E65"));
                 tvSignUp.setTextColor(oldColors);
@@ -283,7 +281,6 @@ public class Home extends Fragment {
             }
         });
 
-        dialog2.show();
 
         // the sharedPreference code for permanently remove tip by clicking on tip the TIP is  add the channel in favouirte
         SharedPreferences prefs = getActivity().getSharedPreferences("prefs",Context.MODE_PRIVATE );
@@ -301,14 +298,6 @@ public class Home extends Fragment {
                     visibilityOfTip=false;
                 }
             });
-
-
-
-
-
-
-
-
 
 
         recyclerViewGrid.setVisibility(View.INVISIBLE);
@@ -344,16 +333,7 @@ public class Home extends Fragment {
             listView();
         }
 
-        //rest api work start from here
-
         checkListStatus=true;
-
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//        NewsItem newsItem=new NewsItem(getActivity(), (ArrayList<FeaturedNetworks>) networks,"list");
-//        recyclerView.setAdapter(newsItem);
-
 //         for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
         recyclerView.scheduleLayoutAnimation();
         recyclerViewGrid.scheduleLayoutAnimation();
@@ -389,8 +369,9 @@ public class Home extends Fragment {
 //            progressDialog.progressDialogVar.dismiss();
             imgLoading.setVisibility(View.GONE);
             networks = (ArrayList<FeaturedNetworks>) response.body();
-            store(networks);
 
+            mainActivity.storeNetworks=networks;
+            mainActivity.getFeaturedList=true;
 
             recyclerView.setHasFixedSize(true);
             Context context;
@@ -454,7 +435,7 @@ public class Home extends Fragment {
                         case R.id.favourite_network:
 
                             mainActivity.blurView.setVisibility(View.VISIBLE);
-//                            dialog.show();
+                            dialog.show();
                             Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                             break;
                     }
@@ -483,26 +464,6 @@ public class Home extends Fragment {
 
         InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/wp/v2/");
         callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(mainActivity.cityId,mainActivity.networkId); //retrofit create implementation for this method
-
-//        switch (network)
-//        {
-//            case "ABC":
-////                callForRelatedNetwork = interfaceApi.getRelatedAbcNetworks(); //retrofit create implementation for this method
-//                callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(73,62); //retrofit create implementation for this method
-//                break;
-////            case "CBS":
-////                callForRelatedNetwork = interfaceApi.getRelatedCbsNetworks(); //retrofit create implementation for this method
-////                break;
-////            case "FOX":
-////                callForRelatedNetwork = interfaceApi.getRelatedFoxNetworks(); //retrofit create implementation for this method
-////                break;
-////            case "Independent":
-////                callForRelatedNetwork = interfaceApi.getRelatedIndependentNetworks(); //retrofit create implementation for this method
-////                break;
-////            case "NBC":
-////                callForRelatedNetwork = interfaceApi.getRelatedNbcNetworks(); //retrofit create implementation for this method
-////                break;
-//        }
 
         callForRelatedNetwork.enqueue(new Callback<List<FeaturedNetworks>>() {
             @Override
@@ -620,37 +581,6 @@ public class Home extends Fragment {
             }
         });
 
-//        callForRelatedNetwork.enqueue(new Callback<List<FeaturedNetworks>>() {
-//            @Override
-//            public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
-//                if(!response.isSuccessful())
-//                {
-//                    imgLoading.setVisibility(View.GONE);
-////                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                imgLoading.setVisibility(View.GONE);
-//                networks = (ArrayList<FeaturedNetworks>) response.body();
-//
-////                Toast.makeText(getActivity(), "tital size of related channels is " + networks.size() , Toast.LENGTH_SHORT).show();
-//
-//                recyclerView.setHasFixedSize(true);
-//                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//                NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
-//                recyclerView.setAdapter(newsItem);
-//                recyclerView.scheduleLayoutAnimation();
-//                recyclerViewGrid.scheduleLayoutAnimation();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
-//                imgLoading.setVisibility(View.GONE);
-////                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-////                Log.d("CheckMessage",t.getMessage());
-//            }
-//        });
-
     }
     public void getRelateableChannels(int cityName) {
 
@@ -754,7 +684,7 @@ public class Home extends Fragment {
                             switch (viewID) {
                                 case R.id.favourite_network:
                                     mainActivity.blurView.setVisibility(View.VISIBLE);
-//                                    dialog.show();
+                                    dialog.show();
 //                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                     break;
                             }
@@ -859,7 +789,7 @@ public class Home extends Fragment {
                         switch (viewID) {
                             case R.id.favourite_network:
                                 mainActivity.blurView.setVisibility(View.VISIBLE);
-//                                dialog.show();
+                                dialog.show();
 //                                Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                 break;
                         }
@@ -909,12 +839,6 @@ public class Home extends Fragment {
     }
 
 
-    public void store(ArrayList<FeaturedNetworks> arrayListFeaturedNetwork) {
-        arrayListFeaturedStore=arrayListFeaturedNetwork;
-    }
-    public ArrayList<FeaturedNetworks> get() {
-        return  arrayListFeaturedStore;
-    }
     private void listView() {
 
         recyclerViewGrid.setVisibility(View.GONE);
@@ -977,7 +901,7 @@ public class Home extends Fragment {
                 switch (viewID) {
                     case R.id.favourite_network:
                         mainActivity.blurView.setVisibility(View.VISIBLE);
-//                        dialog.show();
+                        dialog.show();
 //                        Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                         break;
                 }

@@ -142,97 +142,6 @@ public class City extends Fragment {
             getCitiesByStates(checKCityOrState);
         }
 
-//        recyclerViewGrid.setVisibility(View.INVISIBLE);
-
-
-
-//        gridView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//
-//                recyclerViewGrid.setVisibility(View.VISIBLE);
-//                recyclerView.setVisibility(View.INVISIBLE);
-////                recyclerViewGrid.setHasFixedSize(true);
-//
-//                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),3);
-//                recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-//
-//                CityItem cityItem=new CityItem(getActivity(),arrayListCity,"grid");
-//                recyclerViewGrid.setAdapter(cityItem);
-//                // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-//                recyclerView.scheduleLayoutAnimation();
-//                recyclerViewGrid.scheduleLayoutAnimation();
-//
-////                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-////                linearLayout.setLayoutParams(params);
-//
-//
-//            }
-//        });
-
-        /*listView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                checkVisibilityList=true;
-
-                if(checkVisibilityGrid==true)
-                {
-                    //apply animation
-                    animation = AnimationUtils.loadAnimation(getActivity(),
-                            R.anim.move_right);
-                    btnMoveBgColorListBottomGrid.setVisibility(View.VISIBLE);
-                    btnMoveBgColorListBottomGrid.setAnimation(animation);
-                    btnMoveBgColorListBottomGrid.setVisibility(View.INVISIBLE);
-
-                    checkVisibilityGrid=false;
-                }
-                else if(checkVisibilityFilter==true)
-                {
-                    //apply animation
-                    animation = AnimationUtils.loadAnimation(getActivity(),
-                            R.anim.move_double_right);
-                    btnMoveBgColorListBottomFilter.setVisibility(View.VISIBLE);
-                    btnMoveBgColorListBottomFilter.setAnimation(animation);
-                    btnMoveBgColorListBottomFilter.setVisibility(View.INVISIBLE);
-
-                    checkVisibilityFilter=false;
-                }
-
-
-                filter_options.setVisibility(View.GONE);
-
-                listView.setBackgroundResource(R.drawable.on_list);
-                gridView.setBackgroundResource(R.drawable.grid);
-                filter.setBackgroundResource(R.drawable.filter);
-
-                recyclerViewGrid.setVisibility(View.INVISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
-
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                CityItem cityItem=new CityItem(getActivity(),arrayListCity,"list");
-                recyclerView.setAdapter(cityItem);
-
-                // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-                recyclerView.scheduleLayoutAnimation();
-                recyclerViewGrid.scheduleLayoutAnimation();
-
-                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                linearLayout.setLayoutParams(params);
-            }
-        });*/
-
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//        CityItem cityItem=new CityItem(getActivity(),arrayListCity,"list");
-//        recyclerView.setAdapter(cityItem);
-//
-//        // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-//        recyclerView.scheduleLayoutAnimation();
-//        recyclerViewGrid.scheduleLayoutAnimation();
 
         return view;
     }
@@ -279,12 +188,16 @@ public class City extends Fragment {
 
                     imgLoading.setVisibility(View.GONE);
                     arrayListCity = (ArrayList<Cities>) response.body();
-                    store(arrayListCity);
+
                     arrayListCity.remove(0);
                     arrayListCity.remove(4);
                     arrayListCity.remove(14);
                     arrayListCity.remove(17);
                     arrayListCity.remove(21);
+
+
+                    mainActivity.storeCities=arrayListCity;
+                    mainActivity.getCityList=true;
 
                     recyclerViewGrid.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
@@ -306,13 +219,6 @@ public class City extends Fragment {
 
 
 
-    }
-
-    public void store(ArrayList<Cities> arrayListCity) {
-        arrayListCityStore=arrayListCity;
-    }
-    public ArrayList<Cities> get() {
-       return  arrayListCityStore;
     }
 
 
