@@ -157,7 +157,7 @@ public class State extends Fragment{
         recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        StateItem stateItem = new StateItem(getActivity(), arrayListStateParam, "list");
+        StateItem stateItem = new StateItem  (getActivity(), arrayListStateParam, "list");
         recyclerView.setAdapter(stateItem);
         recyclerView.scheduleLayoutAnimation();
         recyclerViewGrid.scheduleLayoutAnimation();

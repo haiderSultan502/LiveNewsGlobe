@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -59,6 +60,7 @@ import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
+import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
 import com.example.livenewsglobe.otherClasses.RecyclerTouchListener;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
@@ -85,7 +87,6 @@ public class Home extends Fragment {
     LinearLayout textViewShowTip;
 
     Context context;
-    Dialog dialog;
     Button btnLogin,btnSignUp;
     TextView tvLogin,tvSignUp;
     EditText userName,email,password;
@@ -97,6 +98,7 @@ public class Home extends Fragment {
 //    static InterfaceApi interfaceApi;
 
     MainActivity mainActivity;
+    CustomAlertDialog customAlertDialog;
     CityItem cityItem;
 
     Call<List<FeaturedNetworks>> call;
@@ -189,6 +191,7 @@ public class Home extends Fragment {
 
         Context context;
         mainActivity = (MainActivity) getActivity();
+        customAlertDialog=new CustomAlertDialog(getActivity());
         cityItem=new CityItem();
 
 
@@ -205,81 +208,9 @@ public class Home extends Fragment {
         textViewShowTip=view.findViewById(R.id.text_tip_show);
         textViewShowTip.setVisibility(View.GONE);
 
-        dialog=new Dialog(getActivity());
-        dialog.setContentView(R.layout.custom_login_signup_dialog);
-
-        //Set the background of the dialog's root view to transparent, because Android puts your dialog layout within a root view that hides the corners in your custom layout.
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        tvLogin=dialog.findViewById(R.id.login);
-        tvSignUp=dialog.findViewById(R.id.signUp);
-        btnLogin=dialog.findViewById(R.id.btn_login);
-        userName=dialog.findViewById(R.id.username);
-        email=dialog.findViewById(R.id.email);
-        password=dialog.findViewById(R.id.password);
-        btnSignUp=dialog.findViewById(R.id.btn_signup);
-        dialogTab3=dialog.findViewById(R.id.dialog_tab);
-//        lineAtSignUp=dialog.findViewById(R.id.line_at_signup);
-        oldColors =  tvSignUp.getTextColors();
 
 
-        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_GO)
-                {
-                    dialog.dismiss();
-                }
-                return false;
-            }
-        });
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.blurView.setVisibility(View.GONE);
-                dialog.dismiss();
-            }
-        });
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.blurView.setVisibility(View.GONE);
-                dialog.dismiss();
-            }
-        });
 
-        tvSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                animation = AnimationUtils.loadAnimation(getActivity(),
-                        R.anim.alert_bar_move_right);
-                dialogTab3.setAnimation(animation);
-
-                tvSignUp.setTextColor(Color.parseColor("#103E65"));
-                tvLogin.setTextColor(oldColors);
-
-                userName.setVisibility(View.VISIBLE);
-                btnSignUp.setVisibility(View.VISIBLE);
-                btnLogin.setVisibility(View.GONE);
-
-            }
-        });
-
-        tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                animation = AnimationUtils.loadAnimation(getActivity(),
-                        R.anim.alert_bar_move_left);
-                dialogTab3.setAnimation(animation);
-
-                tvLogin.setTextColor(Color.parseColor("#103E65"));
-                tvSignUp.setTextColor(oldColors);
-
-                userName.setVisibility(View.GONE);
-                btnSignUp.setVisibility(View.GONE);
-                btnLogin.setVisibility(View.VISIBLE);
-            }
-        });
 
 
         // the sharedPreference code for permanently remove tip by clicking on tip the TIP is  add the channel in favouirte
@@ -337,6 +268,7 @@ public class Home extends Fragment {
 //         for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
         recyclerView.scheduleLayoutAnimation();
         recyclerViewGrid.scheduleLayoutAnimation();
+
 
         return view;
     }
@@ -434,8 +366,10 @@ public class Home extends Fragment {
                     switch (viewID) {
                         case R.id.favourite_network:
 
-                            mainActivity.blurView.setVisibility(View.VISIBLE);
-                            dialog.show();
+
+                            customAlertDialog.clickListener();
+//                            mainActivity.blurView.setVisibility(View.VISIBLE);
+//                            dialog.show();
                             Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                             break;
                     }
@@ -562,6 +496,7 @@ public class Home extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID) {
                                 case R.id.favourite_network:
+                                    customAlertDialog.clickListener();
 //                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                     break;
                             }
@@ -683,9 +618,7 @@ public class Home extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID) {
                                 case R.id.favourite_network:
-                                    mainActivity.blurView.setVisibility(View.VISIBLE);
-                                    dialog.show();
-//                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
+                                    customAlertDialog.clickListener();
                                     break;
                             }
                         }
@@ -788,9 +721,7 @@ public class Home extends Fragment {
                     public void onSwipeOptionClicked(int viewID, int position) {
                         switch (viewID) {
                             case R.id.favourite_network:
-                                mainActivity.blurView.setVisibility(View.VISIBLE);
-                                dialog.show();
-//                                Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
+                                customAlertDialog.clickListener();
                                 break;
                         }
                     }
@@ -900,9 +831,7 @@ public class Home extends Fragment {
             public void onSwipeOptionClicked(int viewID, int position) {
                 switch (viewID) {
                     case R.id.favourite_network:
-                        mainActivity.blurView.setVisibility(View.VISIBLE);
-                        dialog.show();
-//                        Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
+
                         break;
                 }
             }

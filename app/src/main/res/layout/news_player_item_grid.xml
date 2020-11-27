@@ -33,7 +33,7 @@
             android:textColor="#18204E"
             android:layout_below="@id/view_line"
             android:layout_marginTop="@dimen/_10sdp"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_8sdp"/>
         <ImageView
             android:id="@+id/image_view_play_button_news_item_grid"

@@ -1,14 +1,19 @@
 package com.example.livenewsglobe.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -18,6 +23,7 @@ import com.example.livenewsglobe.R;
 //import com.example.livenewsglobe.activties.ViewDragLayout;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
 import com.example.livenewsglobe.models.FeaturedNetworks;
+import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,6 +38,8 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 
     static String content;
     static String imgUrl;
+
+    CustomAlertDialog customAlertDialog;
 
 //    String content;
 
@@ -54,6 +62,7 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
 //        viewDragNewsPlayer=LayoutInflater.from(context).inflate(R.layout.news_video_player, parent, false);
+        customAlertDialog=new CustomAlertDialog(context);
 
         if(showItem.equals("list"))
         {
@@ -130,6 +139,12 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 
 //        Toast.makeText(context, "String is  go  " + imgUrl, Toast.LENGTH_SHORT).show();
 //        holder.channelImage.setImageResource(arrayListNetwork.get(position).getNetwokImage());
+        holder.imageVideoPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customAlertDialog.clickListener();
+            }
+        });
     }
 
     @Override
@@ -160,7 +175,7 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
     public class ItemViewHolder extends RecyclerView.ViewHolder
     {
         TextView textViewChannelName,textViewChannelNameCome;
-        ImageView channelImage,imageVideoPlayButton,imageViewNetworksCome;
+        ImageView channelImage,imageViewNetworksCome,imageVideoPlayButton;
         LinearLayout linearLayoutItemClick;
 
         public ItemViewHolder(@NonNull View itemView) {

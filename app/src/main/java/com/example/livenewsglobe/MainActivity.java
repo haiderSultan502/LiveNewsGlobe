@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     String[] networkNames={"Network","ABC","CBS","FOX","Independent","NBC"};
     ArrayList<String> arrayList=new ArrayList<String>();
     int check;
-    public BlurView blurView;
+    public static BlurView blurView;
 
     RecyclerView recyclerView,recyclerViewGrid;
 
@@ -88,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView imgLoading;
 
     public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false;
-    public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,regionFrag=false,favFrag=false,stateGridView=false,stateListView=false;
+    public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,regionFrag=false,favFrag=false;
+//    stateGridView=false,stateListView=false,favouriteGridView=false,favouritListView=false,ciityGridView=false,cityListView=false,homeGridView=false,homeListView=false;
 
 
 //    static InterfaceApi interfaceApi;
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     static ArrayAdapter<String> arrayAdapterState;
     static String  arrrayState[] = new String[19];
-    Boolean checkstatus=false, checkGridStatus=false,checkListStatus=false, checkStatusCitySpinner=false,searchStatus=false, isScrooling=false;
+    Boolean checkGridStatus=false,checkListStatus=false, checkStatusCitySpinner=false,searchStatus=false, isScrooling=false;
 
     int currentItems,totalItems,scrollOutItems;
 
@@ -218,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerState=findViewById(R.id.spinner_state);
         spinnerNetwork=findViewById(R.id.spinner_network);
         blurView=findViewById(R.id.blurlayout);
+
 
         blurbackground();
 
@@ -469,6 +472,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -505,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         gridView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -517,8 +522,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(stateFrag==true)
                 {
-//                    stateGridView=true;
-                    stateGridViewMode();
+                    stateGridViewMode("grid","state");
                 }
                 else if(homeFrag==true)
                 {
@@ -723,8 +727,6 @@ public class MainActivity extends AppCompatActivity {
                         if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
                             getSupportFragmentManager().popBackStackImmediate();}
                         //end
-
-
                             LinearLayout.LayoutParams params1 =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
                             linearLayout.setLayoutParams(params1);
                             listView.setBackgroundResource(R.drawable.on_list);
@@ -982,13 +984,20 @@ public class MainActivity extends AppCompatActivity {
 //        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
-    private void stateGridViewMode() {
-        State state=new State("grid",storeStates);
+    private void stateGridViewMode(String checkViewStatus,String currentFrag) {
+
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout,state);
+
+        switch (currentFrag)
+        {
+            case "state":
+                State state=new State(checkViewStatus,storeStates);
+                fragmentTransaction.replace(R.id.frame_layout,state);
+                break;
+        }
+
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
     private void stateListViewMode() {
@@ -1076,4 +1085,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//
+//        if (MotionEvent.ACTION_OUTSIDE == event.getAction()) {
+//            // Do Something or not...
+//            blurView.setVisibility(View.GONE);
+//            return true;
+//        }
+//
+//        return super.onTouchEvent(event);
+//    }
 }

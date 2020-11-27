@@ -284,25 +284,6 @@
                         android:layout_height="0dp"
                         android:layout_weight="6.3"
                         android:visibility="gone">
-<!--                        <ImageView-->
-<!--                            android:id="@+id/img_loading"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:scaleType="centerCrop"-->
-<!--                            android:visibility="gone"-->
-<!--                            />-->
-<!--                        <androidx.recyclerview.widget.RecyclerView-->
-<!--                            android:id="@+id/recycler_view"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:layoutAnimation="@anim/animation_for_recycler_view_items"/>-->
-<!--                        <androidx.recyclerview.widget.RecyclerView-->
-<!--                            android:id="@+id/recycler_view_gridView"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:paddingRight="@dimen/_8sdp"-->
-<!--                            android:layoutAnimation="@anim/animation_for_recycler_view_items"-->
-<!--                            android:paddingLeft="@dimen/_18sdp"/>-->
 
                     </RelativeLayout>
 

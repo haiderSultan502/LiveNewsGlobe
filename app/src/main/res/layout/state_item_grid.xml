@@ -42,7 +42,7 @@
             android:textColor="#18204E"
             android:layout_below="@id/view_line"
             android:layout_marginTop="@dimen/_12sdp"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_8sdp"/>
 <!--        <TextView-->
 <!--            android:id="@+id/text_view_state_name_come"-->
