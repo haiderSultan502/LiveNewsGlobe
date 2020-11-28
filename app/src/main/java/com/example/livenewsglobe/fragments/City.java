@@ -123,6 +123,8 @@ public class City extends Fragment {
         recyclerViewGrid=view.findViewById(R.id.recycler_view_gridView);
 
         imgLoading=view.findViewById(R.id.img_loading);
+
+
         Glide.with(getContext()).load(R.drawable.loading).into(imgLoading);
 
         if (checKCityOrState.equals("allCities"))

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
 //import com.example.livenewsglobe.activties.ViewDragLayout;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> implements Animation.AnimationListener{
 
     static View view,viewDragNewsPlayer;
-    private Context context;
+    private MainActivity context;
     String showItem;
     boolean check=false;
     ArrayList<FeaturedNetworks> arrayListNetwork;
@@ -52,7 +53,7 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
     }
     public NewsItem(Context context, ArrayList<FeaturedNetworks> arrayListNetwork, String showItem)
     {
-        this.context=context;
+        this.context=(MainActivity) context;
         this.arrayListNetwork=arrayListNetwork;
         this.showItem=showItem;
     }
@@ -112,7 +113,6 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
             @Override
             public void onClick(View view) {
 
-//                progressDialog.startDialog(context);
 
                 Bundle bundle = new Bundle();
                 bundle.putString("networkUrl",arrayListNetwork.get(position).getGuid());

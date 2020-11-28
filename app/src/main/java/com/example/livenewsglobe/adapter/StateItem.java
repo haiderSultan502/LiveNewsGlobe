@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.fragments.City;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
@@ -27,13 +28,13 @@ import java.util.ArrayList;
 public class StateItem extends RecyclerView.Adapter<StateItem.ItemViewHolder> {
 
     static View view;
-    private Context context;
+    private MainActivity context;
     String showItem;
     ArrayList<States> arrayListState;
 
     public StateItem(Context context, ArrayList<States> arrayListState, String showItem)
         {
-            this.context=context;
+            this.context=(MainActivity) context;
             this.arrayListState=arrayListState;
             this.showItem=showItem;
         }
@@ -58,6 +59,9 @@ public class StateItem extends RecyclerView.Adapter<StateItem.ItemViewHolder> {
         holder.linearLayoutItemClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+//                context.btnBack.setVisibility(View.VISIBLE);
+
                 ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frame_layout, new City(arrayListState.get(position).getName())).addToBackStack(null)
                         .commit();

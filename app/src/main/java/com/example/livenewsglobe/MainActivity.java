@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     EditText search;
     Button searchButton,gridView,listView,filter,navigationDrawer,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
     Boolean checkVisibilityFilter=false,checkVisibilityGrid=false,checkVisibilityList=true;
-    RelativeLayout filter_options,btnBack;
+    public static RelativeLayout filter_options,btnBack;
     LinearLayout linearLayout;
     DrawerLayout drawerLayout;
     RelativeLayout relativeLayoutCity,relativeLayoutState,relativeLayoutNetwork;
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         btnMoveBgColorfilterBottomList=findViewById(R.id.button_filterview_come_bottom_list);
-        btnMoveBgColorGridBottomList=findViewById(R.id.button_gridview_come_bottom_list);
+        btnMoveBgColorGridBottomList=findViewById(R.id.button_filterview_come_bottom_list);
 
         btnMoveBgColorFilterBottomGrid=findViewById(R.id.button_filterview_come_bottom_grid);
         btnMoveBgColorListBottomGrid=findViewById(R.id.button_listview_come_bottom_grid);
@@ -473,6 +473,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        btnBack.setVisibility(View.GONE);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -526,11 +527,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(homeFrag==true)
                 {
-                        homeGridViewMode();
+                    homeGridViewMode();
                 }
                 else if(favFrag==true)
                 {
-                        favouriteGridViewMode();
+                    favouriteGridViewMode();
                 }
 
 
@@ -582,7 +583,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(cityFrag==true)
                 {
-                        cityListViewMode();
+                    cityListViewMode();
                 }
                 else if(stateFrag==true)
                 {
@@ -592,7 +593,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(homeFrag==true)
                 {
-                        homeListViewMode();
+                    homeListViewMode();
                 }
                 else if(favFrag==true)
                 {

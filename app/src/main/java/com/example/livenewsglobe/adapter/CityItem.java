@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.fragments.City;
 import com.example.livenewsglobe.fragments.Home;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 public class CityItem extends RecyclerView.Adapter<CityItem.ItemViewHolder> {
 
     static View view;
-    private Context context;
+    private MainActivity context;
     String showItem;
     static String cityName;
     ArrayList<Cities> arrayListCity;
@@ -43,7 +44,7 @@ public class CityItem extends RecyclerView.Adapter<CityItem.ItemViewHolder> {
     }
     public CityItem(Context context, ArrayList<Cities> arrayListCity, String showItem)
     {
-        this.context=context;
+        this.context=(MainActivity) context;
         this.arrayListCity=arrayListCity;
         this.showItem=showItem;
     }

@@ -80,6 +80,8 @@ public class State extends Fragment{
         Glide.with(getContext()).load(R.drawable.loading).into(imgLoading);
 
 
+//        mainActivity.btnBack.setVisibility(View.GONE);
+
         recyclerViewGrid.setVisibility(View.INVISIBLE);
 
         recyclerView.setHasFixedSize(true);
