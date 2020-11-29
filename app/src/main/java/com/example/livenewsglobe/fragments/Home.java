@@ -831,7 +831,7 @@ public class Home extends Fragment {
             public void onSwipeOptionClicked(int viewID, int position) {
                 switch (viewID) {
                     case R.id.favourite_network:
-
+                        customAlertDialog.clickListener();
                         break;
                 }
             }
@@ -853,5 +853,6 @@ public class Home extends Fragment {
         recyclerView.scheduleLayoutAnimation();
         recyclerViewGrid.scheduleLayoutAnimation();
     }
+
 
 }

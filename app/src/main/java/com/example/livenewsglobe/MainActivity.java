@@ -47,6 +47,7 @@ import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
+import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.google.android.material.navigation.NavigationView;
@@ -508,7 +509,6 @@ public class MainActivity extends AppCompatActivity {
                 drawer.openDrawer(Gravity.RIGHT);
             }
         });
-
 
 
         gridView.setOnClickListener(new View.OnClickListener() {
@@ -1086,15 +1086,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
+    @Override
+    public void onBackPressed() {
+
+//        int count = getSupportFragmentManager().getBackStackEntryCount();
 //
-//        if (MotionEvent.ACTION_OUTSIDE == event.getAction()) {
-//            // Do Something or not...
+//        if (count == 0 ) {
+////            super.onBackPressed();
 //            blurView.setVisibility(View.GONE);
-//            return true;
 //        }
-//
-//        return super.onTouchEvent(event);
-//    }
+    }
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
 import com.example.livenewsglobe.models.Favourites;
+import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 
 import java.util.ArrayList;
 
@@ -56,9 +57,11 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
             public void onClick(View view) {
                 if(check==false)
                 {
-                    ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().addToBackStack(null)
-                            .replace(R.id.frame_layout, new NewsVideoPlayer())
-                            .commit();
+//                    CustomAlertDialog customAlertDialog=new CustomAlertDialog(context);
+//                    customAlertDialog.clickListener();
+//                    ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().addToBackStack(null)
+//                            .replace(R.id.frame_layout, new NewsVideoPlayer())
+//                            .commit();
                     check=true;
                 }
                 else
