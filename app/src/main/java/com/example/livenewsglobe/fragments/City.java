@@ -41,6 +41,7 @@ import com.example.livenewsglobe.adapter.CityItem;
 import com.example.livenewsglobe.adapter.NewsItem;
 import com.example.livenewsglobe.adapter.StateItem;
 import com.example.livenewsglobe.models.Cities;
+import com.example.livenewsglobe.models.CityModel;
 import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.States;
@@ -50,6 +51,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import retrofit2.Call;
@@ -73,9 +77,12 @@ public class City extends Fragment {
     static ArrayList<Cities> arrayListStoreParam;
     ArrayList<Cities> citiesAccordingToState;
 
+    ArrayList<Cities> cityNames;
+
 
     static InterfaceApi interfaceApi,interfaceApii;
     String checKCityOrState;
+    String cityName;
 
     public City()
     {
@@ -103,6 +110,8 @@ public class City extends Fragment {
         arrayListCity = new ArrayList<>();
         arrayListCityStore = new ArrayList<>();
         citiesAccordingToState = new ArrayList<>();
+
+        cityNames=new ArrayList<>();
 
         interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
 
@@ -141,7 +150,7 @@ public class City extends Fragment {
         }
         else
         {
-            getCitiesByStates(checKCityOrState);
+            getCitiesByStatess(checKCityOrState);
         }
 
 
@@ -223,7 +232,133 @@ public class City extends Fragment {
 
     }
 
+    public void getCitiesByStatess(final String stateName) {
 
+        interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/salman/v2/");
+        imgLoading.setVisibility(View.VISIBLE);
+
+        Call<List<Cities>> call = interfaceApi.getCitesByStates(stateName); //retrofit create implementation for this method
+
+        call.enqueue(new Callback<List<Cities>>() {
+            @Override
+            public void onResponse(Call<List<Cities>> call, Response<List<Cities>> response) {
+                if(!response.isSuccessful())
+                {
+                    imgLoading.setVisibility(View.GONE);
+                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                imgLoading.setVisibility(View.GONE);
+
+                arrayListCity = (ArrayList<Cities>) response.body();
+
+                int size = arrayListCity.size();
+
+                int sizee= cityNames.size();
+//
+                for(int i = 0; i < size ; i++) {
+
+                    cityName = arrayListCity.get(i).getName();
+
+                   if(sizee == 0)
+                   {
+                       cityNames.add(arrayListCity.get(i));
+                       sizee = cityNames.size();
+                   }
+                   else
+                   {
+                       for (int j = 0 ; j < sizee ; j++)
+                       {
+                           if (cityName.equals(cityNames.get(j).getName()))
+                           {
+                               break;
+                           }
+                           else
+                           {
+                               cityNames.add(arrayListCity.get(i));
+                           }
+                       }
+                       sizee = cityNames.size();
+                   }
+
+                }
+
+
+
+
+
+//                for(int i = 0; i < size ; i++)
+//                {
+//
+//                 cityName = arrayListCity.get(i).getName();
+//
+//                 cityNames.add(cityName);
+//                     switch (cityName)
+//                    {
+//                        case "ABC":
+//                            arrayListCity.remove(i);
+//                            size = size-1;
+//                            break;
+//                        case "CBS":
+//                            arrayListCity.remove(i);
+//                            size = size-1;
+//                            break;
+//                        case "Fox":
+//                            arrayListCity.remove(i);
+//                            size = size-1;
+//                            break;
+//                        case "Independent":
+//                            arrayListCity.remove(i);
+//                            size = size-1;
+//                            break;
+//                        case "NBC":
+//                            arrayListCity.remove(i);
+//                            size = size-1;
+//                            break;
+//                    }
+//
+//                }
+//                citiesAccordingToState=new ArrayList<>();
+
+                MainActivity mainActivity= (MainActivity) getActivity();
+
+                if(mainActivity.gridStatus == true)
+                {
+                    recyclerViewGrid.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                    recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
+                    CityItem cityItem=new CityItem(getActivity(),arrayListCity,"grid");
+                    recyclerViewGrid.setAdapter(cityItem);
+                    // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
+                    recyclerView.scheduleLayoutAnimation();
+                    recyclerViewGrid.scheduleLayoutAnimation();
+                    mainActivity.gridStatus = false;
+
+                }
+                else
+                {
+                    recyclerViewGrid.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    CityItem cityItem=new CityItem(getActivity(),cityNames,"list");
+                    recyclerView.setAdapter(cityItem);
+                    recyclerView.scheduleLayoutAnimation();
+                    recyclerViewGrid.scheduleLayoutAnimation();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Cities>> call, Throwable t) {
+
+            }
+        });
+
+    }
     public void getCitiesByStates(final String stateName) {
 
         imgLoading.setVisibility(View.VISIBLE);

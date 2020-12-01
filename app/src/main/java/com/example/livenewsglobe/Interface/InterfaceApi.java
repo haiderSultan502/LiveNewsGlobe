@@ -54,6 +54,9 @@ public interface InterfaceApi {
 //    use must @FormUrlEncoded for form data and @FieldMap or @Field to send params
 //    Call<Register> registerUser(@FieldMap Map<String,String> params);
     Call<Register> loginUsre( @Field("email") String email,@Field("password") String password);
+
+    @GET("posts/")
+    Call<List<Cities>> getCitesByStates(@Query("category") String stateName);
     
 
 }
