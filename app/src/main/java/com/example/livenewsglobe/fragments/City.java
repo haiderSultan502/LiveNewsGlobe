@@ -52,6 +52,8 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -253,73 +255,52 @@ public class City extends Fragment {
 
                 arrayListCity = (ArrayList<Cities>) response.body();
 
-                int size = arrayListCity.size();
+                HashSet<Cities> hashSet = new HashSet<>(arrayListCity);
 
-                int sizee= cityNames.size();
+                ArrayList<Cities> arrayList = new ArrayList<>(hashSet);
+
+                int size = arrayList.size();
+
+                 for(int i = 0; i < size ; i++)
+                {
+
+                 cityName = arrayList.get(i).getName();
+
+                 if (cityName.equals("ABC") || cityName.equals("CBS") || cityName.equals("Fox") || cityName.equals("Independent") || cityName.equals("NBC"))
+                 {
+//                     break;
+                 }
+                 else
+                 {
+                     cityNames.add(arrayList.get(i));
+                 }
 //
-                for(int i = 0; i < size ; i++) {
-
-                    cityName = arrayListCity.get(i).getName();
-
-                   if(sizee == 0)
-                   {
-                       cityNames.add(arrayListCity.get(i));
-                       sizee = cityNames.size();
-                   }
-                   else
-                   {
-                       for (int j = 0 ; j < sizee ; j++)
-                       {
-                           if (cityName.equals(cityNames.get(j).getName()))
-                           {
-                               break;
-                           }
-                           else
-                           {
-                               cityNames.add(arrayListCity.get(i));
-                           }
-                       }
-                       sizee = cityNames.size();
-                   }
-
-                }
-
-
-
-
-
-//                for(int i = 0; i < size ; i++)
-//                {
-//
-//                 cityName = arrayListCity.get(i).getName();
-//
-//                 cityNames.add(cityName);
 //                     switch (cityName)
 //                    {
 //                        case "ABC":
-//                            arrayListCity.remove(i);
-//                            size = size-1;
+////                            arrayList.remove(i);
+////                            size = size-1;
 //                            break;
 //                        case "CBS":
-//                            arrayListCity.remove(i);
-//                            size = size-1;
+////                            arrayList.remove(i);
+////                            size = size-1;
 //                            break;
 //                        case "Fox":
-//                            arrayListCity.remove(i);
-//                            size = size-1;
+////                            arrayList.remove(i);
+////                            size = size-1;
 //                            break;
 //                        case "Independent":
-//                            arrayListCity.remove(i);
-//                            size = size-1;
+////                            arrayList.remove(i);
+////                            size = size-1;
 //                            break;
 //                        case "NBC":
-//                            arrayListCity.remove(i);
-//                            size = size-1;
+////                            arrayList.remove(i);
+////                            size = size-1;
 //                            break;
 //                    }
-//
-//                }
-//                citiesAccordingToState=new ArrayList<>();
+
+
+                }
 
                 MainActivity mainActivity= (MainActivity) getActivity();
 

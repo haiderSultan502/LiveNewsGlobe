@@ -1,6 +1,12 @@
 package com.example.livenewsglobe.models;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Objects;
 
 import javax.crypto.Cipher;
 
@@ -16,6 +22,15 @@ public class Cities {
     @SerializedName("description")
     @Expose
     private String description;
+
+    public Cities() {
+    }
+
+    public Cities(Integer termId, String name, String description) {
+        this.termId = termId;
+        this.name = name;
+        this.description = description;
+    }
 
     public Integer getTermId() {
         return termId;
@@ -46,6 +61,21 @@ public class Cities {
         return name ;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cities)) return false;
+        Cities cities = (Cities) o;
+        return getTermId().equals(cities.getTermId()) &&
+                getName().equals(cities.getName()) &&
+                getDescription().equals(cities.getDescription());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTermId(), getName(), getDescription());
+    }
 }
 
 
