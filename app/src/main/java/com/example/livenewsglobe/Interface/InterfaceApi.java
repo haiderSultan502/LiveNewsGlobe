@@ -48,6 +48,12 @@ public interface InterfaceApi {
 //    use must @FormUrlEncoded for form data and @FieldMap or @Field to send params
 //    Call<Register> registerUser(@FieldMap Map<String,String> params);
     Call<Register> registerUser(@Field("username") String username,@Field("email") String email,@Field("password") String password);
+
+    @POST("login") //post request in body form-data parameter
+    @FormUrlEncoded
+//    use must @FormUrlEncoded for form data and @FieldMap or @Field to send params
+//    Call<Register> registerUser(@FieldMap Map<String,String> params);
+    Call<Register> loginUsre( @Field("email") String email,@Field("password") String password);
     
 
 }

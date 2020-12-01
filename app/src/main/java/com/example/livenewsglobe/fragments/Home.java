@@ -370,7 +370,7 @@ public class Home extends Fragment {
                             customAlertDialog.clickListener();
 //                            mainActivity.blurView.setVisibility(View.VISIBLE);
 //                            dialog.show();
-                            Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
