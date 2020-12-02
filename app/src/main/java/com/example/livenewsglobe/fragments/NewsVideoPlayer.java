@@ -2,6 +2,7 @@ package com.example.livenewsglobe.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,11 +32,11 @@ public class NewsVideoPlayer extends Fragment {
     View view;
     WebView web;
     Bundle bundle;
-    String networkUrl;
+    static String networkUrl;
     RelativeLayout imgBackButton;
     ImageView imageViewLoading;
-    public static Boolean webview = false;
-
+    public static Boolean webview = false,captureLinkClick;
+    Document document = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class NewsVideoPlayer extends Fragment {
 //        String url = "https://livenewsglobe.com/?p=3744";
         bundle=getArguments();
         networkUrl=bundle.getString("networkUrl");
+        captureLinkClick=false;
         new MyAsynTask().execute();
 
         imgBackButton.setOnClickListener(new View.OnClickListener() {
@@ -78,24 +81,36 @@ return view;
 
         @Override
         protected Document doInBackground(Void... voids) {
-            Document document = null;
-            try {
-                document= Jsoup.connect(networkUrl).get();
+            if (captureLinkClick==false)
+            {
+                try {
+                    document= Jsoup.connect(networkUrl).get();
 
-                document.getElementsByClass("td-header-template-wrap").remove();
-                document.getElementsByClass("td-footer-template-wrap").remove();
-                document.getElementById("comments").remove();
+                    document.getElementsByClass("td-header-template-wrap").remove();
+                    document.getElementsByClass("td-footer-template-wrap").remove();
+                    document.getElementById("comments").remove();
 //                document.getElementsByClass("vc_column tdi_100_fc1  wpb_column vc_column_container tdc-column td-pb-span12").remove();
 //                document.getElementsByClass("td-post-sharing-visible").remove();
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            else
+            {
+                try {
+                    document= Jsoup.connect(networkUrl).get();
+                    Log.d("NetworkUrl",networkUrl);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             return document;
         }
 
         @Override
-        protected void onPostExecute(Document document) {
+        protected void onPostExecute(final Document document) {
             super.onPostExecute(document);
 
             web.loadDataWithBaseURL(networkUrl,document.toString(),"text/html","utf-8","");
@@ -103,18 +118,30 @@ return view;
             //after adding below these two lines webview able to load the images and videos
             web.getSettings().setJavaScriptEnabled(true);
             web.getSettings().setUseWideViewPort(true);
+//            web.loadUrl(networkUrl);
 
             web.setWebViewClient(new WebViewClient(){
+
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     view.loadUrl(networkUrl);
                     return super.shouldOverrideUrlLoading(view, request);
                 }
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    imageViewLoading.setVisibility(View.VISIBLE);
+                    Log.d("url",url);
+                    networkUrl=url;
+                    captureLinkClick=true;
+                    new MyAsynTask().execute();
+                    return true;
+                }
+
             });
             imageViewLoading.setVisibility(View.GONE);
         }
 
     }
-
 
 }

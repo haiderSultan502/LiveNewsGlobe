@@ -120,6 +120,8 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 
 //                Toast.makeText(context,arrayListNetwork.get(position).getGuid(), Toast.LENGTH_SHORT).show();
 
+//                NewsVideoPlayer newsVideoPlayerObj=new NewsVideoPlayer();
+//                newsVideoPlayerObj.captureLinkClick=false;
                 ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frame_layout_player, newsVideoPlayer).addToBackStack(null)
                         .commit();
@@ -131,11 +133,24 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
         holder.textViewChannelName.setText(arrayListNetwork.get(position).getTitle());
 
         content = arrayListNetwork.get(position).getContent();
-        imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("alt")-2);
+
+        if(content.length() == 0)
+        {
+            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
+            Picasso.with(context).load(R.drawable.ic_baseline_image_search_24).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
+        }
+        else
+        {
+//            String imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("jpg")+3);
+//            String imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("alt")-2);
+            imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("alt")-2);
+            Picasso.with(context).load(imgUrl).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
+        }
+
 //        imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("_logo")+9);
 //        Log.e("checkT",imgUrl);
 //        String url = "https://livenewsglobe.com/wp-content/uploads/2020/07/NBC_Los_Angeles_logo.png";
-        Picasso.with(context).load(imgUrl).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
+//        Picasso.with(context).load(imgUrl).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
 
 //        Toast.makeText(context, "String is  go  " + imgUrl, Toast.LENGTH_SHORT).show();
 //        holder.channelImage.setImageResource(arrayListNetwork.get(position).getNetwokImage());

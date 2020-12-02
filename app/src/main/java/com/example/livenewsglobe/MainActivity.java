@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -42,12 +41,10 @@ import com.example.livenewsglobe.fragments.Favourite;
 import com.example.livenewsglobe.fragments.Home;
 import com.example.livenewsglobe.fragments.State;
 import com.example.livenewsglobe.models.Cities;
-import com.example.livenewsglobe.models.CityNames;
 import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
-import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.google.android.material.navigation.NavigationView;
@@ -75,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     RelativeLayout relativeLayoutCity,relativeLayoutState,relativeLayoutNetwork;
     Spinner spinnerCity,spinnerState,spinnerNetwork;
-    String[] cityNames={"City","Los Angeles","San Diego","San Jose","San Francisco","Fresno"};
+    String[] cityList={"City","Los Angeles","San Diego","San Jose","San Francisco","Fresno"};
     String[] networkNames={"Network","ABC","CBS","FOX","Independent","NBC"};
     ArrayList<String> arrayList=new ArrayList<String>();
     int check;
@@ -136,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     State state = new State();
     Home homef=new Home();
     Fragment city = new City("allCities");
-    City cityList=new City();
+    City cityLists=new City();
     Fragment favourite = new Favourite();
 
     Cities cities=new Cities();

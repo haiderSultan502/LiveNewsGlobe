@@ -1,34 +1,17 @@
 package com.example.livenewsglobe.fragments;
 
 import android.annotation.SuppressLint;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,33 +21,16 @@ import com.example.livenewsglobe.Interface.InterfaceApi;
 import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.adapter.CityItem;
-import com.example.livenewsglobe.adapter.NewsItem;
-import com.example.livenewsglobe.adapter.StateItem;
 import com.example.livenewsglobe.models.Cities;
-import com.example.livenewsglobe.models.CityModel;
-import com.example.livenewsglobe.models.FeaturedNetworks;
-import com.example.livenewsglobe.models.ProgressDialog;
-import com.example.livenewsglobe.models.States;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
-import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class City extends Fragment {
 
@@ -79,7 +45,7 @@ public class City extends Fragment {
     static ArrayList<Cities> arrayListStoreParam;
     ArrayList<Cities> citiesAccordingToState;
 
-    ArrayList<Cities> cityNames;
+    ArrayList<Cities> cityList;
 
 
     static InterfaceApi interfaceApi,interfaceApii;
@@ -113,7 +79,7 @@ public class City extends Fragment {
         arrayListCityStore = new ArrayList<>();
         citiesAccordingToState = new ArrayList<>();
 
-        cityNames=new ArrayList<>();
+        cityList=new ArrayList<>();
 
         interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
 
@@ -272,7 +238,7 @@ public class City extends Fragment {
                  }
                  else
                  {
-                     cityNames.add(arrayList.get(i));
+                     cityList.add(arrayList.get(i));
                  }
 //
 //                     switch (cityName)
@@ -324,7 +290,7 @@ public class City extends Fragment {
                     recyclerView.setVisibility(View.VISIBLE);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    CityItem cityItem=new CityItem(getActivity(),cityNames,"list");
+                    CityItem cityItem=new CityItem(getActivity(),cityList,"list");
                     recyclerView.setAdapter(cityItem);
                     recyclerView.scheduleLayoutAnimation();
                     recyclerViewGrid.scheduleLayoutAnimation();

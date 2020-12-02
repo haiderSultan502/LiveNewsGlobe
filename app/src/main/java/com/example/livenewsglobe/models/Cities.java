@@ -12,7 +12,6 @@ import javax.crypto.Cipher;
 
 public class Cities {
 
-
     @SerializedName("term_id")
     @Expose
     private Integer termId;
