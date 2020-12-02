@@ -240,30 +240,6 @@ public class City extends Fragment {
                  {
                      cityList.add(arrayList.get(i));
                  }
-//
-//                     switch (cityName)
-//                    {
-//                        case "ABC":
-////                            arrayList.remove(i);
-////                            size = size-1;
-//                            break;
-//                        case "CBS":
-////                            arrayList.remove(i);
-////                            size = size-1;
-//                            break;
-//                        case "Fox":
-////                            arrayList.remove(i);
-////                            size = size-1;
-//                            break;
-//                        case "Independent":
-////                            arrayList.remove(i);
-////                            size = size-1;
-//                            break;
-//                        case "NBC":
-////                            arrayList.remove(i);
-////                            size = size-1;
-//                            break;
-//                    }
 
 
                 }
@@ -276,12 +252,11 @@ public class City extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
                     recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-                    CityItem cityItem=new CityItem(getActivity(),arrayListCity,"grid");
+                    CityItem cityItem=new CityItem(getActivity(),cityList,"grid");
                     recyclerViewGrid.setAdapter(cityItem);
                     // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
                     recyclerView.scheduleLayoutAnimation();
                     recyclerViewGrid.scheduleLayoutAnimation();
-                    mainActivity.gridStatus = false;
 
                 }
                 else
