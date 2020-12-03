@@ -655,13 +655,32 @@ public class Home extends Fragment {
                 imgLoading.setVisibility(View.GONE);
                 searchNetworks = (ArrayList<SearchNetwork>) response.body();
 
-                recyclerView.setHasFixedSize(true);
-                Context context;
                 final LinearLayoutManager linearLayoutManagersss=new LinearLayoutManager(getActivity());
-                recyclerView.setLayoutManager(linearLayoutManagersss);
 
-                SearchItem searchItem = new SearchItem(getActivity(), searchNetworks,"list");
-                recyclerView.setAdapter(searchItem);
+                if(mainActivity.gridStatus == true)
+                {
+                    recyclerViewGrid.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                    recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
+                    SearchItem searchItem = new SearchItem(getActivity(), searchNetworks,"grid");
+                    recyclerViewGrid.setAdapter(searchItem);
+                    // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
+                    recyclerView.scheduleLayoutAnimation();
+                    recyclerViewGrid.scheduleLayoutAnimation();
+
+                }
+                else
+                {
+                    recyclerViewGrid.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(linearLayoutManagersss);
+                    SearchItem searchItem = new SearchItem(getActivity(), searchNetworks,"list");
+                    recyclerView.setAdapter(searchItem);
+                    recyclerView.scheduleLayoutAnimation();
+                    recyclerViewGrid.scheduleLayoutAnimation();
+                }
 
                 recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override

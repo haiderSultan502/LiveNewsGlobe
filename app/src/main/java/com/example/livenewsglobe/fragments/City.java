@@ -241,8 +241,11 @@ public class City extends Fragment {
                      cityList.add(arrayList.get(i));
                  }
 
-
                 }
+
+                mainActivity.spinnerArrayListCity=cityList;
+
+                 mainActivity.setCitySpinnerListAdapetr();
 
                 MainActivity mainActivity= (MainActivity) getActivity();
 

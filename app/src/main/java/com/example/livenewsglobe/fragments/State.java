@@ -36,11 +36,13 @@ public class State extends Fragment{
     View view;
     private RecyclerView recyclerView,recyclerViewGrid;
     static ArrayList<States> arrayListStates;
+    static ArrayList<States> arrayListStates2;
     static InterfaceApi interfaceApi;
     ImageView imgLoading;
     static ArrayList<States> arrayListStateStore;
     static ArrayList<States> arrayListStateParam;
     String viewMode="null";
+    String stateName;
 
     MainActivity mainActivity;
 
@@ -61,9 +63,12 @@ public class State extends Fragment{
 
         mainActivity = (MainActivity) getActivity();
         arrayListStates = new ArrayList<>();
+        arrayListStates2 = new ArrayList<>();
         interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
         arrayListStateStore = new ArrayList<>();
     }
+
+
 
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -132,17 +137,31 @@ public class State extends Fragment{
                 imgLoading.setVisibility(View.GONE);
                 arrayListStates = (ArrayList<States>) response.body();
 
-                mainActivity.storeStates=arrayListStates;
+                int size = arrayListStates.size();
+
+                for(int i = 0; i < size ; i++) {
+
+                    stateName = arrayListStates.get(i).getName();
+
+                    if (stateName.equals("Featured")) {
+//                     break;
+                    } else {
+                        arrayListStates2.add(arrayListStates.get(i));
+                    }
+                }
+
+                mainActivity.storeStates=arrayListStates2;
                 mainActivity.getStateList=true;
 
-                arrayListStates.remove(3);
+//                arrayListStates.remove(3);
 
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                StateItem stateItem=new StateItem(getActivity(),arrayListStates,"list");
+                StateItem stateItem=new StateItem(getActivity(),arrayListStates2,"list");
                 recyclerView.setAdapter(stateItem);
                 recyclerView.scheduleLayoutAnimation();
                 recyclerViewGrid.scheduleLayoutAnimation();
+
             }
 
             @Override

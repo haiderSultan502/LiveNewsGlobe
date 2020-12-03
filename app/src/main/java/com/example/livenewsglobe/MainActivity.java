@@ -6,11 +6,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -71,11 +74,12 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout linearLayout;
     DrawerLayout drawerLayout;
     RelativeLayout relativeLayoutCity,relativeLayoutState,relativeLayoutNetwork;
-    Spinner spinnerCity,spinnerState,spinnerNetwork;
+    static Spinner spinnerCity,spinnerState,spinnerNetwork;
     String[] cityList={"City","Los Angeles","San Diego","San Jose","San Francisco","Fresno"};
     String[] networkNames={"Network","ABC","CBS","FOX","Independent","NBC"};
     ArrayList<String> arrayList=new ArrayList<String>();
     int check;
+    String stateName;
     public static BlurView blurView;
 
     RecyclerView recyclerView,recyclerViewGrid;
@@ -104,22 +108,22 @@ public class MainActivity extends AppCompatActivity {
 
     static ArrayList<FeaturedNetworks> networks;
     static ArrayList<SearchNetwork> searchNetworks;
-    static ArrayList<Cities> arrayListCity;
+    public static ArrayList<Cities> spinnerArrayListCity;
     ArrayList<Cities> arrayListCity2;
     ArrayList<Cities> citiesAccordingToState;
 
 
     GetStateCityNetwork getStateCityNetwork;
     ArrayList<States> statesList;
+    ArrayList<States> statesList2;
 
-    static ArrayAdapter<String> arrayAdapterState;
-    static String  arrrayState[] = new String[19];
     Boolean checkGridStatus=false,checkListStatus=false, checkStatusCitySpinner=false,searchStatus=false, isScrooling=false;
 
     int currentItems,totalItems,scrollOutItems;
 
 
     String checkNetworkOrCity;
+    String cityName;
 
     //end
 
@@ -164,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
         networks = new ArrayList<>();
 
-        arrayListCity = new ArrayList<>();
+        spinnerArrayListCity = new ArrayList<>();
         arrayListCity2 = new ArrayList<>();
         citiesAccordingToState = new ArrayList<>();
         storeCities = new ArrayList<>();
@@ -172,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         storeNetworks=new ArrayList<>();
 
         statesList = new ArrayList<>();
+        statesList2 = new ArrayList<>();
         listCities = new ArrayList<String>();
 
 
@@ -191,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         gridView = findViewById(R.id.button_gridview);
         listView = findViewById(R.id.button_listview);
         filter=findViewById(R.id.button_filter);
-        search=findViewById(R.id.edit_text_search);
+//        search=findViewById(R.id.edit_text_search);
         searchButton=findViewById(R.id.button_search);
         search=findViewById(R.id.edit_text_search);
 
@@ -220,49 +225,32 @@ public class MainActivity extends AppCompatActivity {
         blurView=findViewById(R.id.blurlayout);
 
 
+
         blurbackground();
 
 
         listView.setBackgroundResource(R.drawable.on_list);
 
-        InterfaceApi interfaceApii = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
-        Call<List<Cities>> callCity = interfaceApii.getCites();
-        callCity.enqueue(new Callback<List<Cities>>() {
+//        ArrayList<Integer> list = new ArrayList<>();
+//        list.add(100);
+//        list.add(200);
+//        Log.d("Ist index", "valuse"+list.get(0));
+//        Log.d("2nd index", "valuse"+list.get(1));
+
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onResponse(Call<List<Cities>> call, Response<List<Cities>> response) {
-                if(!response.isSuccessful())
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_SEARCH)
                 {
-//                    progressDialog.progressDialogVar.dismiss();
-                    Toast.makeText(getApplicationContext(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
-                    return;
+                    String networkName =  search.getText().toString();
+                    fragmentTransaction= getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_layout,new Home(networkName,"search"));
+                    //        ft.addToBackStack(null);
+                    fragmentTransaction.commit();
                 }
-
-//                progressDialog.progressDialogVar.dismiss();
-                arrayListCity2 = (ArrayList<Cities>) response.body();
-
-                arrayListCity2.remove(0);
-                arrayListCity2.remove(4);
-                arrayListCity2.remove(14);
-                arrayListCity2.remove(17);
-                arrayListCity2.remove(21);
-                //I place the array adapter inside on response because outside of onResponse adapter we receive the null arrraylist, and if we focus in array adpater that
-//                we are passing whole object of arrayList but we get only city name in spinner so this was happend when we place the toString overRide function in class that of which we are
-//                are making arraylist so this is most imp point that make toString overRide function and return the name in this function that we want to show in spinner.
-
-                ArrayAdapter<Cities> arrayAdapterCity=new ArrayAdapter<Cities>(MainActivity.this,android.R.layout.simple_spinner_item, arrayListCity2);
-                arrayAdapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerCity.setAdapter(arrayAdapterCity);
-            }
-
-            @Override
-            public void onFailure(Call<List<Cities>> call, Throwable t) {
-
+                return false;
             }
         });
-
-
-//        listCities.add("Atlanta");
-//        listCities.add("Arizona");
         AdapterView.OnItemSelectedListener listenerCity = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -280,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
 //                    ((TextView) parent.getChildAt(position)).setTextColor(Color.rgb(16, 62, 101));
 //                    ((TextView) view).setTextColor(Color.rgb(16, 62, 101));
 
-                    cityId = arrayListCity2.get(position).getTermId();
+                    cityId = spinnerArrayListCity.get(position).getTermId();
                     String city = parent.getSelectedItem().toString();
 
                     spinnerNetwork.setEnabled(true);
@@ -316,47 +304,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        AdapterView.OnItemSelectedListener listenerState = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if(position==0)
-                {
-//                    ((TextView) view).setTextColor(Color.rgb(211, 218, 224));
-
-//                    ((TextView) parent.getChildAt(0)).setTextColor(Color.rgb(211, 218, 224));
-                    relativeLayoutState.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.spinner_design));
-                    spinnerState.getBackground().setColorFilter(getResources().getColor(R.color.spinnerIconColor), PorterDuff.Mode.SRC_ATOP);
-
-                }
-                else
-                {
-//                    ((TextView) parent.getChildAt(position)).setTextColor(Color.rgb(16, 62, 101));
-//                    ((TextView) view).setTextColor(Color.rgb(16, 62, 101));
-                    String state = parent.getSelectedItem().toString();
-                    spinnerCity.setEnabled(true);
-                    Fragment city = new City(state);
-                    fragmentManager = getSupportFragmentManager();
-                    fragmentTransaction= fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_layout,city);
-                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        ft.addToBackStack(null);
-                    fragmentTransaction.commit();
-
-                    relativeLayoutState.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.spinner_item_select_design));
-                    spinnerState.getBackground().setColorFilter(getResources().getColor(R.color.spinnerSelectedIconColor), PorterDuff.Mode.SRC_ATOP);
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-
-
-
-        };
 
 
 
@@ -373,15 +321,29 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 statesList = (ArrayList<States>) response.body();
-                statesList.remove(3);
+
+                int size = statesList.size();
+
+                 for(int i = 0; i < size ; i++) {
+
+                     stateName = statesList.get(i).getName();
+
+                     if (stateName.equals("Featured")) {
+//                     break;
+                     } else {
+                         statesList2.add(statesList.get(i));
+                     }
+                 }
+
+//                statesList.remove(3);
 
 //                Toast.makeText(getApplicationContext(), " " + statesList.size(), Toast.LENGTH_SHORT).show();
 
-                for (int i = 0; i < statesList.size() ; i++)
-                {
-                    arrrayState[i] = statesList.get(i).getName();
-                }
+//                statesList2.get(0).setName("States");
 
+                ArrayAdapter<States> arrayAdapterState  = new ArrayAdapter<States>(MainActivity.this,android.R.layout.simple_spinner_item,statesList2);
+                arrayAdapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerState.setAdapter(arrayAdapterState);
             }
 
             @Override
@@ -391,18 +353,48 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("CheckMessage",t.getMessage());
             }
         });
+        AdapterView.OnItemSelectedListener listenerState = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        arrayAdapterState=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,arrrayState);
-        arrayAdapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+                if(position==0)
+                {
+//                    ((TextView) view).setTextColor(Color.rgb(211, 218, 224));
 
+//                    ((TextView) parent.getChildAt(0)).setTextColor(Color.rgb(211, 218, 224));
+                relativeLayoutState.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.spinner_design));
+                spinnerState.getBackground().setColorFilter(getResources().getColor(R.color.spinnerIconColor), PorterDuff.Mode.SRC_ATOP);
+
+                }
+                else
+                {
+//                    ((TextView) parent.getChildAt(position)).setTextColor(Color.rgb(16, 62, 101));
+//                    ((TextView) view).setTextColor(Color.rgb(16, 62, 101));
+                String state = parent.getSelectedItem().toString();
+                spinnerCity.setEnabled(true);
+                Fragment city = new City(state);
+                fragmentManager = getSupportFragmentManager();
+                fragmentTransaction= fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout,city);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        ft.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                relativeLayoutState.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.spinner_item_select_design));
+                spinnerState.getBackground().setColorFilter(getResources().getColor(R.color.spinnerSelectedIconColor), PorterDuff.Mode.SRC_ATOP);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        };
 
         spinnerState.setOnItemSelectedListener(listenerState);
-        spinnerState.setAdapter(arrayAdapterState);
-
-
-
-
 
 
         AdapterView.OnItemSelectedListener listenerNetwork = new AdapterView.OnItemSelectedListener() {
@@ -419,10 +411,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-//                    ((TextView) parent.getChildAt(position)).setTextColor(Color.rgb(16, 62, 101));
-//                    ((TextView) view).setTextColor(Color.rgb(16, 62, 101));
-
                     String networkname = parent.getSelectedItem().toString();
+
                     switch (networkname)
                     {
                         case "ABC":
@@ -962,6 +952,12 @@ public class MainActivity extends AppCompatActivity {
                 .setHasFixedTransformationMatrix(true);
     }
 
+    public void setCitySpinnerListAdapetr()
+    {
+        ArrayAdapter<Cities> arrayAdapterCity=new ArrayAdapter<Cities>(MainActivity.this,android.R.layout.simple_spinner_item,spinnerArrayListCity);
+        arrayAdapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCity.setAdapter(arrayAdapterCity);
+    }
 
     private void homeGridViewMode() {
         Home home=new Home("grid",storeNetworks);

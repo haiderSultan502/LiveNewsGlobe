@@ -154,11 +154,12 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 
 //        Toast.makeText(context, "String is  go  " + imgUrl, Toast.LENGTH_SHORT).show();
 //        holder.channelImage.setImageResource(arrayListNetwork.get(position).getNetwokImage());
-//        holder.imageVideoPlayButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
+        holder.imageVideoPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customAlertDialog.clickListener();
+            }
+        });
     }
 
     @Override
