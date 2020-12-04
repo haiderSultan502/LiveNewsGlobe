@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     String[] networkNames={"Network","ABC","CBS","FOX","Independent","NBC"};
     ArrayList<String> arrayList=new ArrayList<String>();
     int check;
-    String stateName;
+    String stateName,cityName;
     public static BlurView blurView;
 
     RecyclerView recyclerView,recyclerViewGrid;
@@ -109,13 +109,14 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<FeaturedNetworks> networks;
     static ArrayList<SearchNetwork> searchNetworks;
     public static ArrayList<Cities> spinnerArrayListCity;
+    public static ArrayList<String> spinnerArrayListCityString;
     ArrayList<Cities> arrayListCity2;
     ArrayList<Cities> citiesAccordingToState;
 
 
     GetStateCityNetwork getStateCityNetwork;
     ArrayList<States> statesList;
-    ArrayList<States> statesList2;
+    ArrayList<String> statesList2;
 
     Boolean checkGridStatus=false,checkListStatus=false, checkStatusCitySpinner=false,searchStatus=false, isScrooling=false;
 
@@ -123,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     String checkNetworkOrCity;
-    String cityName;
 
     //end
 
@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         networks = new ArrayList<>();
 
         spinnerArrayListCity = new ArrayList<>();
+        spinnerArrayListCityString = new ArrayList<String>();
         arrayListCity2 = new ArrayList<>();
         citiesAccordingToState = new ArrayList<>();
         storeCities = new ArrayList<>();
@@ -176,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         storeNetworks=new ArrayList<>();
 
         statesList = new ArrayList<>();
-        statesList2 = new ArrayList<>();
+        statesList2 = new ArrayList<String>();
         listCities = new ArrayList<String>();
 
 
@@ -251,6 +253,12 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        spinnerArrayListCityString.add("Cities");
+        ArrayAdapter<String> arrayAdapterCity=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,spinnerArrayListCityString);
+        arrayAdapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCity.setAdapter(arrayAdapterCity);
+
         AdapterView.OnItemSelectedListener listenerCity = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -299,15 +307,6 @@ public class MainActivity extends AppCompatActivity {
         spinnerCity.setOnItemSelectedListener(listenerCity);
         spinnerCity.setEnabled(false);
 
-
-
-
-
-
-
-
-
-
         InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
         Call<List<States>> call = interfaceApi.getStates(); //retrofit create implementation for this method
 
@@ -324,24 +323,28 @@ public class MainActivity extends AppCompatActivity {
 
                 int size = statesList.size();
 
-                 for(int i = 0; i < size ; i++) {
+                String stateList3[] = new String[size+1];
+
+                stateList3[0] = "States" ;
+
+                for(int i = 0; i < size ; i++) {
 
                      stateName = statesList.get(i).getName();
-
-                     if (stateName.equals("Featured")) {
-//                     break;
-                     } else {
-                         statesList2.add(statesList.get(i));
-                     }
+                         stateList3[i+1] = stateName;
                  }
 
-//                statesList.remove(3);
+                int sizee=stateList3.length;
 
-//                Toast.makeText(getApplicationContext(), " " + statesList.size(), Toast.LENGTH_SHORT).show();
+                for(int i = 0; i < sizee ; i++) {
 
-//                statesList2.get(0).setName("States");
+                    if (stateList3[i].equals("Featured")) {
 
-                ArrayAdapter<States> arrayAdapterState  = new ArrayAdapter<States>(MainActivity.this,android.R.layout.simple_spinner_item,statesList2);
+                     } else {
+                        statesList2.add(stateList3[i]);
+                     }
+                }
+
+                ArrayAdapter<String> arrayAdapterState  = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,statesList2);
                 arrayAdapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerState.setAdapter(arrayAdapterState);
             }
@@ -954,7 +957,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCitySpinnerListAdapetr()
     {
-        ArrayAdapter<Cities> arrayAdapterCity=new ArrayAdapter<Cities>(MainActivity.this,android.R.layout.simple_spinner_item,spinnerArrayListCity);
+        int size = spinnerArrayListCity.size();
+
+        String CityList[] = new String[size+1];
+
+        CityList[0] = "Cities" ;
+
+        for(int i = 0; i < size ; i++) {
+
+            cityName = spinnerArrayListCity.get(i).getName();
+            CityList[i+1] = cityName;
+        }
+
+        ArrayAdapter<String> arrayAdapterCity=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,CityList);
         arrayAdapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(arrayAdapterCity);
     }
