@@ -347,7 +347,7 @@ public class Home extends Fragment {
                 }
             });
 
-            // the below code is for swap at recycler view item
+            // the below code is for swipe at recycler view item
             recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
             recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                 @Override
@@ -365,7 +365,6 @@ public class Home extends Fragment {
                 public void onSwipeOptionClicked(int viewID, int position) {
                     switch (viewID) {
                         case R.id.favourite_network:
-
 
                             customAlertDialog.clickListener();
 //                            mainActivity.blurView.setVisibility(View.VISIBLE);

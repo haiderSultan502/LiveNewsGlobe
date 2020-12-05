@@ -11,6 +11,8 @@ import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,6 +32,11 @@ import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.models.Register;
 import com.example.livenewsglobe.models.RegisterUser;
 import com.example.livenewsglobe.models.States;
+import com.github.andreilisun.swipedismissdialog.OnCancelListener;
+import com.github.andreilisun.swipedismissdialog.OnSwipeDismissListener;
+import com.github.andreilisun.swipedismissdialog.SwipeDismissDialog;
+import com.github.andreilisun.swipedismissdialog.SwipeDismissDirection;
+import com.google.android.material.behavior.SwipeDismissBehavior;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +51,7 @@ public class CustomAlertDialog {
     Dialog dialog;
     MainActivity context;
     Button btnLogin,btnSignUp;
-    TextView tvLogin,tvSignUp;
+    TextView tvLogin,tvSignUp,tvForgotPassword;
     EditText userName,email,password;
     Animation animation;
     View dialogTab3;
@@ -60,14 +67,14 @@ public class CustomAlertDialog {
     {
         dialog=new Dialog(context);
         dialog.setContentView(R.layout.custom_login_signup_dialog);
-//        dialog.setCanceledOnTouchOutside(false);
-//        dialog.setCancelable(false);
+
 
         //Set the background of the dialog's root view to transparent, because Android puts your dialog layout within a root view that hides the corners in your custom layout.
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         tvLogin=dialog.findViewById(R.id.login);
         tvSignUp=dialog.findViewById(R.id.signUp);
+        tvForgotPassword=dialog.findViewById(R.id.tv_forgot_password);
         btnLogin=dialog.findViewById(R.id.btn_login);
         userName=dialog.findViewById(R.id.username);
         userName.requestFocus();
@@ -162,6 +169,8 @@ public class CustomAlertDialog {
 
         context.blurView.setVisibility(View.VISIBLE);
         dialog.show();
+
+
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -178,6 +187,7 @@ public class CustomAlertDialog {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 context.blurView.setVisibility(View.GONE);
 
                 if(email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
@@ -226,6 +236,7 @@ public class CustomAlertDialog {
                 context.blurView.setVisibility(View.GONE);
 
 
+
                 if(userName.getText().toString().length() >= 2 && email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
                 {
                     InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/wp/v2/");
@@ -267,6 +278,8 @@ public class CustomAlertDialog {
             @Override
             public void onClick(View view) {
 
+                tvForgotPassword.setVisibility(View.GONE);
+
                 animation = AnimationUtils.loadAnimation(context,
                         R.anim.alert_bar_move_right);
                 dialogTab3.setAnimation(animation);
@@ -285,6 +298,9 @@ public class CustomAlertDialog {
         tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                tvForgotPassword.setVisibility(View.VISIBLE);
+
                 animation = AnimationUtils.loadAnimation(context,
                         R.anim.alert_bar_move_left);
                 dialogTab3.setAnimation(animation);

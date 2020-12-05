@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
 //                    ((TextView) parent.getChildAt(position)).setTextColor(Color.rgb(16, 62, 101));
 //                    ((TextView) view).setTextColor(Color.rgb(16, 62, 101));
 
-                    cityId = spinnerArrayListCity.get(position).getTermId();
+                    cityId = spinnerArrayListCity.get(position-1).getTermId();
                     String city = parent.getSelectedItem().toString();
 
                     spinnerNetwork.setEnabled(true);
@@ -292,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
                     relativeLayoutCity.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.spinner_item_select_design));
                     spinnerCity.getBackground().setColorFilter(getResources().getColor(R.color.spinnerSelectedIconColor), PorterDuff.Mode.SRC_ATOP);
                 }
-
             }
 
             @Override
@@ -970,8 +969,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ArrayAdapter<String> arrayAdapterCity=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,CityList);
+
         arrayAdapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinnerCity.setAdapter(arrayAdapterCity);
+
     }
 
     private void homeGridViewMode() {
