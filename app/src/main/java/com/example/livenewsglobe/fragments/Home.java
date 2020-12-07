@@ -366,7 +366,7 @@ public class Home extends Fragment {
                     switch (viewID) {
                         case R.id.favourite_network:
 
-                            customAlertDialog.clickListener();
+                            customAlertDialog.showDialog();
 //                            mainActivity.blurView.setVisibility(View.VISIBLE);
 //                            dialog.show();
 //                            Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
@@ -495,7 +495,7 @@ public class Home extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID) {
                                 case R.id.favourite_network:
-                                    customAlertDialog.clickListener();
+                                    customAlertDialog.showDialog();
 //                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                     break;
                             }
@@ -617,7 +617,7 @@ public class Home extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID) {
                                 case R.id.favourite_network:
-                                    customAlertDialog.clickListener();
+                                    customAlertDialog.showDialog();
                                     break;
                             }
                         }
@@ -739,7 +739,7 @@ public class Home extends Fragment {
                     public void onSwipeOptionClicked(int viewID, int position) {
                         switch (viewID) {
                             case R.id.favourite_network:
-                                customAlertDialog.clickListener();
+                                customAlertDialog.showDialog();
                                 break;
                         }
                     }
@@ -849,7 +849,7 @@ public class Home extends Fragment {
             public void onSwipeOptionClicked(int viewID, int position) {
                 switch (viewID) {
                     case R.id.favourite_network:
-                        customAlertDialog.clickListener();
+                        customAlertDialog.showDialog();
                         break;
                 }
             }

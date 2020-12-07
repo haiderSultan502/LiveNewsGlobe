@@ -32,6 +32,7 @@ import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.models.Register;
 import com.example.livenewsglobe.models.RegisterUser;
 import com.example.livenewsglobe.models.States;
+import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.github.andreilisun.swipedismissdialog.OnCancelListener;
 import com.github.andreilisun.swipedismissdialog.OnSwipeDismissListener;
 import com.github.andreilisun.swipedismissdialog.SwipeDismissDialog;
@@ -48,7 +49,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CustomAlertDialog {
-    Dialog dialog;
     MainActivity context;
     Button btnLogin,btnSignUp;
     TextView tvLogin,tvSignUp,tvForgotPassword;
@@ -56,21 +56,15 @@ public class CustomAlertDialog {
     Animation animation;
     View dialogTab3;
     ColorStateList oldColors;
-
+    SwipeDismissDialog swipeDismissDialog;
     static String userNameStr,valid_email,passwordStr;
+    View dialog;
 
     public CustomAlertDialog(Context context) {
         this.context = (MainActivity) context;
-        initialize();
     }
     public void initialize()
     {
-        dialog=new Dialog(context);
-        dialog.setContentView(R.layout.custom_login_signup_dialog);
-
-
-        //Set the background of the dialog's root view to transparent, because Android puts your dialog layout within a root view that hides the corners in your custom layout.
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         tvLogin=dialog.findViewById(R.id.login);
         tvSignUp=dialog.findViewById(R.id.signUp);
@@ -159,17 +153,37 @@ public class CustomAlertDialog {
         });
 
 
-
     }
-    public void clickListener()
+    public void showDialog()
     {
 
-
-        callWhenLoadDialog();
-
+        dialog = LayoutInflater.from(context).inflate(R.layout.custom_login_signup_dialog, null);
+        initialize();
         context.blurView.setVisibility(View.VISIBLE);
-        dialog.show();
 
+        swipeDismissDialog = new SwipeDismissDialog.Builder(context)
+                .setView(dialog)
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(View view) {
+                        context.blurView.setVisibility(View.GONE);
+                    }
+                })
+                .setOnSwipeDismissListener(new OnSwipeDismissListener() {
+                    @Override
+                    public void onSwipeDismiss(View view, SwipeDismissDirection direction) {
+                        context.blurView.setVisibility(View.GONE);
+                    }
+                })
+                .setFlingVelocity(0.01f)
+                .build()
+                .show();
+
+        viewClickListener();
+
+    }
+    public void viewClickListener()
+    {
 
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -177,18 +191,16 @@ public class CustomAlertDialog {
                 if(actionId== EditorInfo.IME_ACTION_GO)
                 {
                     context.blurView.setVisibility(View.GONE);
-                    dialog.dismiss();
+                    swipeDismissDialog.dismiss();
                 }
                 return false;
             }
         });
 
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                context.blurView.setVisibility(View.GONE);
 
                 if(email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
                 {
@@ -205,6 +217,8 @@ public class CustomAlertDialog {
                             }
                             else
                             {
+                                context.blurView.setVisibility(View.GONE);
+                                swipeDismissDialog.dismiss();
                                 Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -215,8 +229,10 @@ public class CustomAlertDialog {
                         }
                     });
 
+                    //remove it later
+                    context.blurView.setVisibility(View.GONE);
+                    swipeDismissDialog.dismiss();
 
-                    dialog.dismiss();
 
                 }
                 else
@@ -228,13 +244,9 @@ public class CustomAlertDialog {
             }
         });
 
-
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                context.blurView.setVisibility(View.GONE);
-
 
 
                 if(userName.getText().toString().length() >= 2 && email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
@@ -252,6 +264,8 @@ public class CustomAlertDialog {
                             }
                             else
                             {
+                                context.blurView.setVisibility(View.GONE);
+                                swipeDismissDialog.dismiss();
                                 Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -262,7 +276,9 @@ public class CustomAlertDialog {
                         }
                     });
 
-                    dialog.dismiss();
+                    //remove it later
+                    context.blurView.setVisibility(View.GONE);
+                    swipeDismissDialog.dismiss();
 
                 }
                 else
@@ -316,25 +332,6 @@ public class CustomAlertDialog {
             }
         });
 
-        //this method is called when we click back button when alert dialog open then its detect  back button click
-        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                // TODO Auto-generated method stub
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    context.blurView.setVisibility(View.GONE);
-                    dialog.dismiss();
-                }
-                return true;
-            }
-        });
-        //second way to do like above dialog.setOnKeyListener and also this method is called when we click outside of altert dialog great
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                context.blurView.setVisibility(View.GONE);
-            }
-        });
     }
 
     private void callWhenLoadDialog() {

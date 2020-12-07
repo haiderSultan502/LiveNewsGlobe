@@ -1,15 +1,11 @@
 package com.example.livenewsglobe.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -157,7 +153,7 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
         holder.imageVideoPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customAlertDialog.clickListener();
+                customAlertDialog.showDialog();
             }
         });
     }
