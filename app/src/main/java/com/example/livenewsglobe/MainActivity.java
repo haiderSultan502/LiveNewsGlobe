@@ -67,6 +67,9 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static Boolean checkLoginStatus=false;
+    public static int id;
+    public static String userEmail;
     EditText search;
     Button searchButton,gridView,listView,filter,navigationDrawer,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
     Boolean checkVisibilityFilter=false,checkVisibilityGrid=false,checkVisibilityList=true;

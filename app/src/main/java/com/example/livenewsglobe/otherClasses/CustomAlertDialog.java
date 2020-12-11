@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment;
 import com.example.livenewsglobe.Interface.InterfaceApi;
 import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
+import com.example.livenewsglobe.models.Login.LoginModel;
 import com.example.livenewsglobe.models.Register;
 import com.example.livenewsglobe.models.RegisterUser;
 import com.example.livenewsglobe.models.States;
@@ -205,10 +206,10 @@ public class CustomAlertDialog {
                 if(email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
                 {
                     InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/custom-plugin/");
-                    Call<Register> call= interfaceApi.loginUsre(valid_email,passwordStr);
-                    call.enqueue(new Callback<Register>() {
+                    Call<LoginModel> call= interfaceApi.loginUsre(valid_email,passwordStr);
+                    call.enqueue(new Callback<LoginModel>() {
                         @Override
-                        public void onResponse(Call<Register> call, Response<Register> response) {
+                        public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                             if(!response.isSuccessful())
                             {
 
@@ -217,21 +218,25 @@ public class CustomAlertDialog {
                             }
                             else
                             {
+                                LoginModel loginModel = response.body();
+                                context.id= loginModel.getID();
+                                context.userEmail = loginModel.getData().getUserEmail();
+                                context.checkLoginStatus=true;
                                 context.blurView.setVisibility(View.GONE);
                                 swipeDismissDialog.dismiss();
-                                Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Successfulyy Login", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<Register> call, Throwable t) {
+                        public void onFailure(Call<LoginModel> call, Throwable t) {
                             Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
 
                     //remove it later
-                    context.blurView.setVisibility(View.GONE);
-                    swipeDismissDialog.dismiss();
+//                    context.blurView.setVisibility(View.GONE);
+//                    swipeDismissDialog.dismiss();
 
 
                 }
@@ -249,13 +254,15 @@ public class CustomAlertDialog {
             public void onClick(View view) {
 
 
-                if(userName.getText().toString().length() >= 2 && email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
+                if(userName.getText().toString().trim().length() >= 2 && email.getText().toString().trim().length() > 11 && password.getText().toString().trim().length() >= 3)
                 {
                     InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/wp/v2/");
                     Call<Register> call= interfaceApi.registerUser(userNameStr,valid_email,passwordStr);
                     call.enqueue(new Callback<Register>() {
+//                        onResponce Invoked for a received HTTP response.
                         @Override
                         public void onResponse(Call<Register> call, Response<Register> response) {
+//                            Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call Response.isSuccessful() to determine if the response indicates success.
                             if(!response.isSuccessful())
                             {
 
@@ -266,19 +273,20 @@ public class CustomAlertDialog {
                             {
                                 context.blurView.setVisibility(View.GONE);
                                 swipeDismissDialog.dismiss();
-                                Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "User Successfully creata ", Toast.LENGTH_SHORT).show();
+
                             }
                         }
-
+//                      onFailure Invoked when a network exception occurred  talking to the server or when an unexpected exception occurred creating the request or processing the response.
                         @Override
                         public void onFailure(Call<Register> call, Throwable t) {
                             Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
 
-                    //remove it later
-                    context.blurView.setVisibility(View.GONE);
-                    swipeDismissDialog.dismiss();
+//                    //remove it later
+//                    context.blurView.setVisibility(View.GONE);
+//                    swipeDismissDialog.dismiss();
 
                 }
                 else

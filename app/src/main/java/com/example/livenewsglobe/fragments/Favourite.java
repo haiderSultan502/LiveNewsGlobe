@@ -48,11 +48,11 @@ public class Favourite extends Fragment {
 
         arrayListFavourites = new ArrayList<>();
         arrayListFavourites.add(new Favourites("KPTV", R.drawable.fox4));
-        arrayListFavourites.add(new Favourites("KTTV",R.drawable.fox11));
-        arrayListFavourites.add(new Favourites("KTBC",R.drawable.fox7));
-        arrayListFavourites.add(new Favourites("KNTV",R.drawable.nbc));
-        arrayListFavourites.add(new Favourites("KDFW",R.drawable.fox44));
-        arrayListFavourites.add(new Favourites("WTTE",R.drawable.fox28));
+        arrayListFavourites.add(new Favourites("KTTV",R.drawable.fox4));
+        arrayListFavourites.add(new Favourites("KTBC",R.drawable.fox4));
+        arrayListFavourites.add(new Favourites("KNTV",R.drawable.fox4));
+        arrayListFavourites.add(new Favourites("KDFW",R.drawable.fox4));
+        arrayListFavourites.add(new Favourites("WTTE",R.drawable.fox4));
     }
 
     @SuppressLint("ResourceAsColor")
@@ -166,15 +166,10 @@ public class Favourite extends Fragment {
 //            }
 //        });
 
-
-
-
-
         return view;
     }
 
-    private void getFavourites()
-    {
+    private void getFavourites(){
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 

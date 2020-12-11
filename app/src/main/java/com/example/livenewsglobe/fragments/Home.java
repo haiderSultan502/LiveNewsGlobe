@@ -617,7 +617,7 @@ public class Home extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID) {
                                 case R.id.favourite_network:
-                                    customAlertDialog.showDialog();
+                                        customAlertDialog.showDialog();
                                     break;
                             }
                         }

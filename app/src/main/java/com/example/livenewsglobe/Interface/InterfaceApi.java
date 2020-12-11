@@ -4,6 +4,7 @@ import android.provider.SyncStateContract;
 
 import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.FeaturedNetworks;
+import com.example.livenewsglobe.models.Login.LoginModel;
 import com.example.livenewsglobe.models.Register;
 import com.example.livenewsglobe.models.RegisterUser;
 import com.example.livenewsglobe.models.SearchNetwork;
@@ -53,7 +54,7 @@ public interface InterfaceApi {
     @FormUrlEncoded
 //    use must @FormUrlEncoded for form data and @FieldMap or @Field to send params
 //    Call<Register> registerUser(@FieldMap Map<String,String> params);
-    Call<Register> loginUsre( @Field("email") String email,@Field("password") String password);
+    Call<LoginModel> loginUsre(@Field("email") String email, @Field("password") String password);
 
     @GET("posts/")
     Call<List<Cities>> getCitesByStates(@Query("category") String stateName);
