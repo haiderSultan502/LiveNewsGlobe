@@ -57,6 +57,7 @@ import com.example.livenewsglobe.adapter.SearchItem;
 import com.example.livenewsglobe.adapter.StateItem;
 import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.FeaturedNetworks;
+import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
@@ -78,7 +79,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class Home extends Fragment {
 
-    View view;
+    View view,viewNewsItem;
     private RecyclerView recyclerView,recyclerViewGrid;
     RecyclerTouchListener recyclerTouchListener;
     ImageView imgLoading;
@@ -188,6 +189,7 @@ public class Home extends Fragment {
 
 //        Toast.makeText(getActivity(), "onCreateView call()", Toast.LENGTH_SHORT).show();
         view=inflater.inflate(R.layout.home,container,false);
+        viewNewsItem = inflater.inflate(R.layout.news_item,container,false);
 
         Context context;
         mainActivity = (MainActivity) getActivity();
@@ -306,7 +308,7 @@ public class Home extends Fragment {
             mainActivity.getFeaturedList=true;
 
             recyclerView.setHasFixedSize(true);
-            Context context;
+            final Context context;
             final LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(linearLayoutManager);
             NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
@@ -349,6 +351,7 @@ public class Home extends Fragment {
 
             // the below code is for swipe at recycler view item
             recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+
             recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                 @Override
                 public void onRowClicked(int position) {
@@ -357,16 +360,49 @@ public class Home extends Fragment {
 
                 @Override
                 public void onIndependentViewClicked(int independentViewID, int position) {
-
+//                    Toast.makeText(getActivity(), "ok" + networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
                 }
             }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                 @Override
-                public void onSwipeOptionClicked(int viewID, int position) {
+                public void onSwipeOptionClicked(int viewID, final int position) {
                     switch (viewID) {
                         case R.id.favourite_network:
 
-                            customAlertDialog.showDialog();
+
+                            if(mainActivity.checkLoginStatus == true)
+                            {
+                                Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
+                                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                                Call<InsertChannelResponse> call = interfaceApi.insertFavouriteChannels(mainActivity.user_id,mainActivity.userEmail,mainActivity.post_id); //retrofit create implementation for this method
+                                call.enqueue(new Callback<InsertChannelResponse>() {
+                                    @Override
+                                    public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                                        if(!response.isSuccessful())
+                                        {
+                                            Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else
+                                        {
+                                            recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+
+                                            Toast.makeText(mainActivity, "Successfully added in favourite List ", Toast.LENGTH_SHORT).show();
+//                                            Button btn = viewNewsItem.findViewById(R.id.heart);
+//                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                                        Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                customAlertDialog.showDialog();
+                            }
+
 //                            mainActivity.blurView.setVisibility(View.VISIBLE);
 //                            dialog.show();
 //                            Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();

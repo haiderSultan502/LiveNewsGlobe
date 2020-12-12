@@ -219,7 +219,7 @@ public class CustomAlertDialog {
                             else
                             {
                                 LoginModel loginModel = response.body();
-                                context.id= loginModel.getID();
+                                context.user_id= loginModel.getID();
                                 context.userEmail = loginModel.getData().getUserEmail();
                                 context.checkLoginStatus=true;
                                 context.blurView.setVisibility(View.GONE);

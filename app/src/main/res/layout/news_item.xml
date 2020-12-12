@@ -6,28 +6,46 @@
     android:layout_height="@dimen/_50sdp"
     android:layout_marginLeft="@dimen/_17sdp"
     android:layout_marginRight="@dimen/_14sdp">
-    <LinearLayout
+
+
+    <RelativeLayout
         android:id="@+id/rowBG"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_50sdp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/_7sdp"
-        android:background="@drawable/fav_bg"
-        android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/favourite_network"
-        android:layout_width="@dimen/_60sdp"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_alignParentRight="true"
-        android:gravity="center"
-        android:layout_marginRight="@dimen/_7sdp"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/favorite_icon"></ImageView>
-    </LinearLayout>
-    </LinearLayout>
+        android:background="@drawable/fav_bg">
+
+        <LinearLayout
+            android:id="@+id/favourite_network"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/heart"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_14sdp"
+                android:background="@drawable/favorite_icon"></Button>
+        </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/favourite_network_like"-->
+<!--            android:layout_width="@dimen/_60sdp"-->
+<!--            android:layout_height="@dimen/_50sdp"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:visibility="gone">-->
+<!--            <Button-->
+<!--                android:layout_width="@dimen/_15sdp"-->
+<!--                android:layout_height="@dimen/_14sdp"-->
+<!--                android:background="@drawable/like_channel"></Button>-->
+<!--        </LinearLayout>-->
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/complete_item_click"
         android:layout_width="match_parent"

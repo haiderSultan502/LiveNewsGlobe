@@ -2,10 +2,12 @@ package com.example.livenewsglobe.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -103,7 +105,8 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 //            }
 //        });
 
-
+        context.post_id = arrayListNetwork.get(position).getId();
+        Log.d("post_id","post id " + context.post_id);
 
         holder.linearLayoutItemClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,16 +191,20 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
         TextView textViewChannelName,textViewChannelNameCome;
         ImageView channelImage,imageViewNetworksCome,imageVideoPlayButton;
         LinearLayout linearLayoutItemClick;
+        Button btnHeart;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             linearLayoutItemClick=itemView.findViewById(R.id.complete_item_click);
+
             imageVideoPlayButton=itemView.findViewById(R.id.image_view_play_button);
 
             textViewChannelName=itemView.findViewById(R.id.text_view_channel_name);
 
             channelImage=itemView.findViewById(R.id.image_view_networks);
+
+            btnHeart = itemView.findViewById(R.id.heart);
         }
 
     }

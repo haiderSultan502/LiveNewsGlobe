@@ -101,7 +101,7 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     public class ItemViewHolder extends RecyclerView.ViewHolder
     {
         TextView textViewChannelName;
-        ImageView channelImage,imageFavouriteNetwroks;
+        ImageView channelImage,imageFavouriteNetwroks,imageFavouriteNetwroksLike;
         LinearLayout linearLayoutItemClick;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -110,11 +110,13 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
 
             linearLayoutItemClick=itemView.findViewById(R.id.complete_item_click);
             imageFavouriteNetwroks=itemView.findViewById(R.id.image_view_favourite_channel);
+            imageFavouriteNetwroksLike=itemView.findViewById(R.id.image_view_favourite_channel_like);
 
             textViewChannelName=itemView.findViewById(R.id.text_view_channel_name);
 
             channelImage=itemView.findViewById(R.id.image_view_networks);
         }
+
 
     }
 }

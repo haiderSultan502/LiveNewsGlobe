@@ -4,6 +4,7 @@ import android.provider.SyncStateContract;
 
 import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.FeaturedNetworks;
+import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.models.Login.LoginModel;
 import com.example.livenewsglobe.models.Register;
 import com.example.livenewsglobe.models.RegisterUser;
@@ -58,6 +59,9 @@ public interface InterfaceApi {
 
     @GET("posts/")
     Call<List<Cities>> getCitesByStates(@Query("category") String stateName);
+
+    @POST("fav_insert")
+    Call<InsertChannelResponse> insertFavouriteChannels(@Query("user_id") int userID, @Query("user_email") String userEmail, @Query("posts_id") int postID);
     
 
 }
