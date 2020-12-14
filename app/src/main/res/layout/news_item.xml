@@ -28,6 +28,12 @@
                 android:layout_width="@dimen/_15sdp"
                 android:layout_height="@dimen/_14sdp"
                 android:background="@drawable/favorite_icon"></Button>
+            <TextView
+                android:id="@+id/chectStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"></TextView>
+
         </LinearLayout>
 
 <!--        <LinearLayout-->

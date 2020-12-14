@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Trace;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -74,6 +75,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -87,6 +89,7 @@ public class Home extends Fragment {
     Boolean isScrooling=false;
     LinearLayout textViewShowTip;
 
+    Boolean status = false;
     Context context;
     Button btnLogin,btnSignUp;
     TextView tvLogin,tvSignUp;
@@ -372,9 +375,9 @@ public class Home extends Fragment {
 
                             if(mainActivity.checkLoginStatus == true)
                             {
-                                Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
+
                                 InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
-                                Call<InsertChannelResponse> call = interfaceApi.insertFavouriteChannels(mainActivity.user_id,mainActivity.userEmail,mainActivity.post_id); //retrofit create implementation for this method
+                                Call<InsertChannelResponse> call = interfaceApi.checkIsFavouriteOrNot(mainActivity.user_id,mainActivity.post_id); //retrofit create implementation for this method
                                 call.enqueue(new Callback<InsertChannelResponse>() {
                                     @Override
                                     public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
@@ -384,11 +387,68 @@ public class Home extends Fragment {
                                         }
                                         else
                                         {
-                                            recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                                            InsertChannelResponse insertChannelResponse = response.body();
+                                            int status = insertChannelResponse.getStatus();
+                                            if(status==0)
+                                            {
+                                                Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
+                                                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                                                Call<InsertChannelResponse> calls = interfaceApi.insertFavouriteChannels(mainActivity.user_id,mainActivity.userEmail,mainActivity.post_id); //retrofit create implementation for this method
+                                                calls.enqueue(new Callback<InsertChannelResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                                                        if(!response.isSuccessful())
+                                                        {
+                                                            Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                        else
+                                                        {
+                                                            InsertChannelResponse insertChannelResponse = response.body();
 
-                                            Toast.makeText(mainActivity, "Successfully added in favourite List ", Toast.LENGTH_SHORT).show();
+                                                            recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+
+                                                            Toast.makeText(mainActivity, "Successfully added in favourite List ", Toast.LENGTH_SHORT).show();
 //                                            Button btn = viewNewsItem.findViewById(R.id.heart);
 //                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                                                        Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                            else if(status==1)
+                                            {
+                                                Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
+                                                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                                                Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(mainActivity.user_id,mainActivity.post_id); //retrofit create implementation for this method
+                                                calls.enqueue(new Callback<InsertChannelResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                                                        if(!response.isSuccessful())
+                                                        {
+                                                            Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                        else
+                                                        {
+                                                            InsertChannelResponse insertChannelResponse = response.body();
+
+                                                            recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.favorite_icon));
+
+                                                            Toast.makeText(mainActivity, "Successfully added in favourite List ", Toast.LENGTH_SHORT).show();
+//                                            Button btn = viewNewsItem.findViewById(R.id.heart);
+//                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                                                        Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
                                         }
                                     }
 
@@ -397,6 +457,8 @@ public class Home extends Fragment {
                                         Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
+
+
                             }
                             else
                             {

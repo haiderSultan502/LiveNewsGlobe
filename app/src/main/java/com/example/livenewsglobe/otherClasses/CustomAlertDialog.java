@@ -219,6 +219,7 @@ public class CustomAlertDialog {
                             else
                             {
                                 LoginModel loginModel = response.body();
+                                int id = loginModel.getID();
                                 context.user_id= loginModel.getID();
                                 context.userEmail = loginModel.getData().getUserEmail();
                                 context.checkLoginStatus=true;
@@ -271,6 +272,7 @@ public class CustomAlertDialog {
                             }
                             else
                             {
+
                                 context.blurView.setVisibility(View.GONE);
                                 swipeDismissDialog.dismiss();
                                 Toast.makeText(context, "User Successfully creata ", Toast.LENGTH_SHORT).show();

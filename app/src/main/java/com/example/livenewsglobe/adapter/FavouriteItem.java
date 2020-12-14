@@ -1,12 +1,14 @@
 package com.example.livenewsglobe.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -15,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
 import com.example.livenewsglobe.models.Favourites;
+import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -25,9 +29,12 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     private Context context;
     String showItem;
     boolean check=false;
-    ArrayList<Favourites> arrayListFavouriteNetwork;
+    ArrayList<FavouritesModel> arrayListFavouriteNetwork;
+    static String content;
+    static String imgUrl;
+    NewsVideoPlayer newsVideoPlayer=new NewsVideoPlayer();
 
-    public FavouriteItem(Context context, ArrayList<Favourites> arrayListFavouriteNetwork, String showItem)
+    public FavouriteItem(Context context, ArrayList<FavouritesModel> arrayListFavouriteNetwork, String showItem)
     {
         this.context=context;
         this.arrayListFavouriteNetwork=arrayListFavouriteNetwork;
@@ -50,27 +57,42 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final FavouriteItem.ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final FavouriteItem.ItemViewHolder holder, final int position) {
 
+        holder.linearLayoutItemClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("networkUrl",arrayListFavouriteNetwork.get(position).getGuid());
+                newsVideoPlayer.setArguments(bundle);
+
+//                Toast.makeText(context,arrayListNetwork.get(position).getGuid(), Toast.LENGTH_SHORT).show();
+
+//                NewsVideoPlayer newsVideoPlayerObj=new NewsVideoPlayer();
+//                newsVideoPlayerObj.captureLinkClick=false;
+                ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_layout_player, newsVideoPlayer).addToBackStack(null)
+                        .commit();
+//                progressDialog.progressDialogVar.dismiss();
+            }
+        });
         holder.imageFavouriteNetwroks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(check==false)
-                {
-//                    CustomAlertDialog customAlertDialog=new CustomAlertDialog(context);
-//                    customAlertDialog.clickListener();
-//                    ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().addToBackStack(null)
-//                            .replace(R.id.frame_layout, new NewsVideoPlayer())
-//                            .commit();
-                    check=true;
-                }
-                else
-                {
-//                    viewDragLayout = viewDragNewsPlayer.findViewById(R.id.dragLayout);
-//                    viewDragLayout.maximize();
-                }
 
 
+                Bundle bundle = new Bundle();
+                bundle.putString("networkUrl",arrayListFavouriteNetwork.get(position).getGuid());
+                newsVideoPlayer.setArguments(bundle);
+
+//                Toast.makeText(context,arrayListNetwork.get(position).getGuid(), Toast.LENGTH_SHORT).show();
+
+//                NewsVideoPlayer newsVideoPlayerObj=new NewsVideoPlayer();
+//                newsVideoPlayerObj.captureLinkClick=false;
+                ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_layout_player, newsVideoPlayer).addToBackStack(null)
+                        .commit();
+//                progressDialog.progressDialogVar.dismiss();
 
             }
         });
@@ -87,8 +109,21 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
 //            }
 //        });
 
-        holder.textViewChannelName.setText(arrayListFavouriteNetwork.get(position).getNetworkName());
-        holder.channelImage.setImageResource(arrayListFavouriteNetwork.get(position).getNetwokImage());
+        holder.textViewChannelName.setText(arrayListFavouriteNetwork.get(position).getPostTitle());
+        content = arrayListFavouriteNetwork.get(position).getPostContent();
+
+        if(content.length() == 0)
+        {
+            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
+            Picasso.with(context).load(R.drawable.ic_baseline_image_search_24).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
+        }
+        else
+        {
+//            String imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("jpg")+3);
+//            String imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("alt")-2);
+            imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("alt")-2);
+            Picasso.with(context).load(imgUrl).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
+        }
     }
 
     @Override
@@ -110,7 +145,6 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
 
             linearLayoutItemClick=itemView.findViewById(R.id.complete_item_click);
             imageFavouriteNetwroks=itemView.findViewById(R.id.image_view_favourite_channel);
-            imageFavouriteNetwroksLike=itemView.findViewById(R.id.image_view_favourite_channel_like);
 
             textViewChannelName=itemView.findViewById(R.id.text_view_channel_name);
 

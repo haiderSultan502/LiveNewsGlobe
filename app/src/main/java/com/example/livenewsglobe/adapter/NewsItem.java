@@ -192,6 +192,7 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
         ImageView channelImage,imageViewNetworksCome,imageVideoPlayButton;
         LinearLayout linearLayoutItemClick;
         Button btnHeart;
+        TextView textViewStatus;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -205,6 +206,8 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
             channelImage=itemView.findViewById(R.id.image_view_networks);
 
             btnHeart = itemView.findViewById(R.id.heart);
+
+            textViewStatus = itemView.findViewById(R.id.chectStatus);
         }
 
     }

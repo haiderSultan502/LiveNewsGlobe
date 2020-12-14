@@ -3,6 +3,7 @@ package com.example.livenewsglobe.Interface;
 import android.provider.SyncStateContract;
 
 import com.example.livenewsglobe.models.Cities;
+import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.models.Login.LoginModel;
@@ -62,6 +63,16 @@ public interface InterfaceApi {
 
     @POST("fav_insert")
     Call<InsertChannelResponse> insertFavouriteChannels(@Query("user_id") int userID, @Query("user_email") String userEmail, @Query("posts_id") int postID);
+
+    @POST("fav_delete")
+    Call<InsertChannelResponse> deleteFavouriteChannels(@Query("user_id") int userID,@Query("posts_id") int postID);
+
+    @GET("fav_get/")
+    Call<List<FavouritesModel>> getFavouritesChannels(@Query("user_id") int userId);
+
+    @POST("fav_check")
+    Call<InsertChannelResponse> checkIsFavouriteOrNot(@Query("user_id") int userID,@Query("posts_id") int postID);
+
     
 
 }

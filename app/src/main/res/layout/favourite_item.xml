@@ -30,41 +30,25 @@
             android:background="@drawable/line_v"
             android:layout_toRightOf="@+id/image_view_networks"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/_15sdp"></View>
+            android:layout_marginLeft="@dimen/_12sdp"></View>
         <TextView
             android:id="@+id/text_view_channel_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="KPTV"
             android:textColor="#18204E"
+            android:layout_toRightOf="@+id/view_line"
             android:layout_centerInParent="true"
-            android:textSize="@dimen/_20sdp" />
+            android:textSize="@dimen/_12sdp"
+            android:layout_marginLeft="@dimen/_3sdp"/>
         <ImageView
             android:id="@+id/image_view_favourite_channel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/favorite_icon"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/_24sdp"
-            android:layout_centerInParent="true">
-
-        </ImageView>
-
-        <ImageView
-            android:id="@+id/image_view_favourite_channel_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/like_channel"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/_24sdp"
-            android:layout_centerInParent="true"
-            android:visibility="gone">
-
-        </ImageView>
-
-
-
-
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 </LinearLayout>
 

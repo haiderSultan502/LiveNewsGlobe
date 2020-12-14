@@ -9,7 +9,7 @@ public class InsertChannelResponse {
     private String msg;
     @SerializedName("status")
     @Expose
-    private String status;
+    private int status;
 
     public String getMsg() {
         return msg;
@@ -19,11 +19,11 @@ public class InsertChannelResponse {
         this.msg = msg;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

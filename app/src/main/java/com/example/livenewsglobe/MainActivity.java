@@ -44,6 +44,7 @@ import com.example.livenewsglobe.fragments.Favourite;
 import com.example.livenewsglobe.fragments.Home;
 import com.example.livenewsglobe.fragments.State;
 import com.example.livenewsglobe.models.Cities;
+import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.SearchNetwork;
@@ -68,7 +69,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public class MainActivity extends AppCompatActivity {
 
     public static Boolean checkLoginStatus=false;
-    public static int user_id,post_id;
+    public static Integer user_id,post_id;
     public static String userEmail;
     EditText search;
     Button searchButton,gridView,listView,filter,navigationDrawer,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView imgLoading;
 
-    public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false;
+    public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false,getFavouriteList=false;
     public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,regionFrag=false,favFrag=false;
 //    stateGridView=false,stateListView=false,favouriteGridView=false,favouritListView=false,ciityGridView=false,cityListView=false,homeGridView=false,homeListView=false;
 
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Cities> storeCities;
     public static ArrayList<States> storeStates;
     public static ArrayList<FeaturedNetworks> storeNetworks;
+    public static ArrayList<FavouritesModel> storeFavouriteNetworks;
 
 
     static ArrayList<FeaturedNetworks> networks;
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         storeCities = new ArrayList<>();
         storeStates = new ArrayList<>();
         storeNetworks=new ArrayList<>();
+        storeFavouriteNetworks = new ArrayList<>();
 
         statesList = new ArrayList<>();
         statesList2 = new ArrayList<String>();
