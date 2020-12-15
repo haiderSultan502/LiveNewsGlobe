@@ -28,6 +28,7 @@ import com.example.livenewsglobe.models.Favourites;
 import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
+import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,7 +189,9 @@ public class Favourite extends Fragment {
 
     private void getFavourites(){
 
-        if(mainActivity.checkLoginStatus==true)
+        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+//                            sharedPrefereneceManager.getLoginStatus();
+        if(sharedPrefereneceManager.getLoginStatus() == true)
         {
             imgLoading.setVisibility(View.VISIBLE);
 
@@ -196,7 +199,7 @@ public class Favourite extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             int id = mainActivity.user_id;
             InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
-            Call<List<FavouritesModel>> call = interfaceApi.getFavouritesChannels(mainActivity.user_id);
+            Call<List<FavouritesModel>> call = interfaceApi.getFavouritesChannels(sharedPrefereneceManager.getUserId());
             call.enqueue(new Callback<List<FavouritesModel>>() {
                 @Override
                 public void onResponse(Call<List<FavouritesModel>> call, Response<List<FavouritesModel>> response) {

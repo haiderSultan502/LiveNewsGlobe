@@ -3,6 +3,7 @@ package com.example.livenewsglobe.otherClasses;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -219,6 +220,13 @@ public class CustomAlertDialog {
                             else
                             {
                                 LoginModel loginModel = response.body();
+
+                                SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
+                                sharedPrefereneceManager.setLoginStatus(true);
+                                sharedPrefereneceManager.setUserEmail(loginModel.getData().getUserEmail());
+                                sharedPrefereneceManager.setPassword(password.getText().toString());
+                                sharedPrefereneceManager.setUserId(loginModel.getID());
+
                                 int id = loginModel.getID();
                                 context.user_id= loginModel.getID();
                                 context.userEmail = loginModel.getData().getUserEmail();

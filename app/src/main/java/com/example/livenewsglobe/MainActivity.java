@@ -69,7 +69,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public class MainActivity extends AppCompatActivity {
 
     public static Boolean checkLoginStatus=false;
-    public static Integer user_id,post_id;
+    public static int user_id,post_id;
     public static String userEmail;
     EditText search;
     Button searchButton,gridView,listView,filter,navigationDrawer,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
@@ -993,7 +993,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void homeListViewMode() {
 
-        Home home=new Home("list",storeNetworks);
+//        Home home=new Home("list",storeNetworks);
+//        Home home=new Home("featuredNetworks",storeNetworks);
+        Fragment home = new Home("featuredNetworks","featuredNetworks");
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,home);
