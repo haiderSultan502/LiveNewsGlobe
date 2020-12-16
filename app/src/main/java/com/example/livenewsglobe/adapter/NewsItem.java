@@ -17,15 +17,23 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.livenewsglobe.Interface.InterfaceApi;
 import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
 //import com.example.livenewsglobe.activties.ViewDragLayout;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
 import com.example.livenewsglobe.models.FeaturedNetworks;
+import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
+import com.example.livenewsglobe.otherClasses.RetrofitLab;
+import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> implements Animation.AnimationListener{
 
@@ -156,7 +164,101 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
         holder.imageVideoPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customAlertDialog.showDialog();
+//                customAlertDialog.showDialog();
+                final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
+//                            sharedPrefereneceManager.getLoginStatus();
+                if(sharedPrefereneceManager.getLoginStatus() == true)
+                {
+                    InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                    Call<InsertChannelResponse> call = interfaceApi.checkIsFavouriteOrNot(sharedPrefereneceManager.getUserId(),arrayListNetwork.get(position).getId()); //retrofit create implementation for this method
+                    call.enqueue(new Callback<InsertChannelResponse>() {
+                        @Override
+                        public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                            if(!response.isSuccessful())
+                            {
+                                Toast.makeText(context, "response not successfull ", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                InsertChannelResponse insertChannelResponse = response.body();
+                                int status = insertChannelResponse.getStatus();
+                                if(status==0)
+                                {
+//                                    Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
+                                    InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                                    Call<InsertChannelResponse> calls = interfaceApi.insertFavouriteChannels(sharedPrefereneceManager.getUserId(),sharedPrefereneceManager.getUserEmail(),arrayListNetwork.get(position).getId()); //retrofit create implementation for this method
+                                    calls.enqueue(new Callback<InsertChannelResponse>() {
+                                        @Override
+                                        public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                                            if(!response.isSuccessful())
+                                            {
+                                                Toast.makeText(context, "response not successfull ", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else
+                                            {
+                                                InsertChannelResponse insertChannelResponse = response.body();
+//                                                            int pos = position;
+
+                                                holder.imageVideoPlayButton.setImageDrawable(context.getResources().getDrawable(R.drawable.like_channel));
+
+
+                                                Toast.makeText(context, "Successfully added in favourite List ", Toast.LENGTH_SHORT).show();
+//                                            Button btn = viewNewsItem.findViewById(R.id.heart);
+//                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                                else if(status==1)
+                                {
+//                                    Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
+                                    InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                                    Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),arrayListNetwork.get(position).getId()); //retrofit create implementation for this method
+                                    calls.enqueue(new Callback<InsertChannelResponse>() {
+                                        @Override
+                                        public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                                            if(!response.isSuccessful())
+                                            {
+                                                Toast.makeText(context, "response not successfull ", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else
+                                            {
+                                                InsertChannelResponse insertChannelResponse = response.body();
+
+                                                holder.imageVideoPlayButton.setImageDrawable(context.getResources().getDrawable(R.drawable.like_channel));
+
+                                                Toast.makeText(context, "Successfully remove in favourite List ", Toast.LENGTH_SHORT).show();
+//                                            Button btn = viewNewsItem.findViewById(R.id.heart);
+//                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+                }
+                else
+                {
+                    customAlertDialog.showDialog();
+                }
             }
         });
     }

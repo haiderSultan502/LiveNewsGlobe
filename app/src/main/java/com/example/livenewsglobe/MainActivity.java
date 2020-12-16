@@ -51,6 +51,7 @@ import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
 import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
+import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -81,29 +82,19 @@ public class MainActivity extends AppCompatActivity {
     static Spinner spinnerCity,spinnerState,spinnerNetwork;
     String[] cityList={"City","Los Angeles","San Diego","San Jose","San Francisco","Fresno"};
     String[] networkNames={"Network","ABC","CBS","FOX","Independent","NBC"};
-    ArrayList<String> arrayList=new ArrayList<String>();
-    int check;
     String stateName,cityName;
     public static BlurView blurView;
 
     RecyclerView recyclerView,recyclerViewGrid;
 
     Animation animation;
-
     ProgressDialog progressDialog;
-
     ImageView imgLoading;
 
-    public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false,getFavouriteList=false;
-    public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,regionFrag=false,favFrag=false;
-//    stateGridView=false,stateListView=false,favouriteGridView=false,favouritListView=false,ciityGridView=false,cityListView=false,homeGridView=false,homeListView=false;
-
+    public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false;
+    public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,favFrag=false;
 
 //    static InterfaceApi interfaceApi;
-
-    Call<List<FeaturedNetworks>> call;
-    Call<List<SearchNetwork>> callNetworks;
-    Call<List<FeaturedNetworks>> callForRelatedNetwork;
     public static List<String> listCities;
     public static ArrayList<Cities> storeCities;
     public static ArrayList<States> storeStates;
@@ -112,23 +103,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     static ArrayList<FeaturedNetworks> networks;
-    static ArrayList<SearchNetwork> searchNetworks;
     public static ArrayList<Cities> spinnerArrayListCity;
     public static ArrayList<String> spinnerArrayListCityString;
     ArrayList<Cities> arrayListCity2;
     ArrayList<Cities> citiesAccordingToState;
 
-
-    GetStateCityNetwork getStateCityNetwork;
     ArrayList<States> statesList;
     ArrayList<String> statesList2;
 
-    Boolean checkGridStatus=false,checkListStatus=false, checkStatusCitySpinner=false,searchStatus=false, isScrooling=false;
-
-    int currentItems,totalItems,scrollOutItems;
-
-
-    String checkNetworkOrCity;
+    Boolean checkGridStatus=false,checkListStatus=false;
 
     //end
 
@@ -140,12 +123,9 @@ public class MainActivity extends AppCompatActivity {
     FragmentTransaction fragmentTransaction;
     Fragment home = new Home("featuredNetworks","featuredNetworks");
     State state = new State();
-    Home homef=new Home();
     Fragment city = new City("allCities");
-    City cityLists=new City();
     Fragment favourite = new Favourite();
 
-    Cities cities=new Cities();
     public static int cityId=0;
     public static int networkId=0;
 
@@ -153,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     private Toolbar toolbar;
     private  static final String TAG="MianActivity";
+    RelativeLayout userLogout;
 
 
 
@@ -161,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -187,12 +168,6 @@ public class MainActivity extends AppCompatActivity {
         statesList2 = new ArrayList<String>();
         listCities = new ArrayList<String>();
 
-
-//        animation= AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_left);
-//        animation.setAnimationListener(this);
-
-//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
-
         navigationView=findViewById(R.id.navigation);
         navigationView.setItemIconTintList(null);
 
@@ -204,12 +179,8 @@ public class MainActivity extends AppCompatActivity {
         gridView = findViewById(R.id.button_gridview);
         listView = findViewById(R.id.button_listview);
         filter=findViewById(R.id.button_filter);
-//        search=findViewById(R.id.edit_text_search);
         searchButton=findViewById(R.id.button_search);
         search=findViewById(R.id.edit_text_search);
-
-//        imgLoading=findViewById(R.id.img_loading);
-//        Glide.with(getApplicationContext()).load(R.drawable.loading).into(imgLoading);
 
 
         btnMoveBgColorfilterBottomList=findViewById(R.id.button_filterview_come_bottom_list);
@@ -227,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         relativeLayoutCity=findViewById(R.id.relative_layout_city);
         relativeLayoutState=findViewById(R.id.relative_layout_state);
         relativeLayoutNetwork=findViewById(R.id.relative_layout_network);
+        userLogout = findViewById(R.id.logout);
         spinnerCity=findViewById(R.id.spinner_city);
         spinnerState=findViewById(R.id.spinner_state);
         spinnerNetwork=findViewById(R.id.spinner_network);
@@ -238,12 +210,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         listView.setBackgroundResource(R.drawable.on_list);
-
-//        ArrayList<Integer> list = new ArrayList<>();
-//        list.add(100);
-//        list.add(200);
-//        Log.d("Ist index", "valuse"+list.get(0));
-//        Log.d("2nd index", "valuse"+list.get(1));
 
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -257,6 +223,14 @@ public class MainActivity extends AppCompatActivity {
                     fragmentTransaction.commit();
                 }
                 return false;
+            }
+        });
+
+        userLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPrefereneceManager sharedPrefereneceManager= new SharedPrefereneceManager(getApplicationContext());
+                sharedPrefereneceManager.setLoginStatus(false);
             }
         });
 
@@ -529,8 +503,6 @@ public class MainActivity extends AppCompatActivity {
                     favouriteGridViewMode();
                 }
 
-
-
                 checkVisibilityGrid=true;
 
                 if(checkVisibilityList==true)
@@ -700,10 +672,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,home);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        ft.addToBackStack(null);
         fragmentTransaction.commit();
-//        storeNetworks=homef.get();
-//        getFeaturedList=true;
 
 
         tabLayout=findViewById(R.id.tabLayout);
@@ -719,86 +688,39 @@ public class MainActivity extends AppCompatActivity {
                 //                 get the current selected tab's position and replace the fragment accordingly
                 switch (index) {
                     case 0:
-                        //these two lines code is for back from NewsVideoPlayer screen to MianActivity when click on tab
-                        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
-                            getSupportFragmentManager().popBackStackImmediate();}
-                        //end
-                            LinearLayout.LayoutParams params1 =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                            linearLayout.setLayoutParams(params1);
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
+                            checkBackStackPopFrag();
+                            setBgResource();
                             homeListViewMode();
-                            homeFrag=true;
-                            stateFrag=false;
-                            cityFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-
+                            setFragStatus("homeFrag");
                         break;
                     case 1:
-                        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
-                            getSupportFragmentManager().popBackStackImmediate();}
+                        checkBackStackPopFrag();
                         if(getStateList==true)
                         {
-                            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                            linearLayout.setLayoutParams(params);
-
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
+                            setBgResource();
                             stateListViewMode();
-                            stateFrag=true;
-                            cityFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            homeFrag=false;
+                            setFragStatus("stateFrag");
                         }
                         else if(gridStatus==true)
                         {
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            stateFrag=true;
-                            cityFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            homeFrag=false;
+                            setFragStatus("stateFrag");
                             fragmentTransaction.replace(R.id.frame_layout,state);
-                            //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                             gridStatus=false;
                         }
                         else if(filterStatus==true)
                         {
-                            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                            linearLayout.setLayoutParams(params);
-
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
-                            stateFrag=true;
-                            cityFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            homeFrag=false;
+                            setLinearLayoutparam();
+                            setBgResourceListFilter();
+                            setFragStatus("stateFrag");
                             fragmentTransaction.replace(R.id.frame_layout,state);
-                            //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                             filterStatus=false;
                         }
                         else
                         {
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
-                            stateFrag=true;
-                            cityFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            homeFrag=false;
+                            setBgResource();
+                            setFragStatus("stateFrag");
                             fragmentTransaction.replace(R.id.frame_layout,state);
                             //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
@@ -806,105 +728,56 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case 2:
-                        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
-                            getSupportFragmentManager().popBackStackImmediate();}
+                        checkBackStackPopFrag();
                         if(getCityList==true)
                         {
-                            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                            linearLayout.setLayoutParams(params);
-
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
+                            setBgResource();
                             cityListViewMode();
-                            cityFrag=true;
-                            stateFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            homeFrag=false;
+                            setFragStatus("cityFrag");
                         }
                         else if(gridStatus==true)
                         {
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            cityFrag=true;
-                            stateFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            homeFrag=false;
+                            setBgResourceListGrid();
+                            setFragStatus("cityFrag");
                             fragmentTransaction.replace(R.id.frame_layout,city);
-                            //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                             gridStatus=false;
                         }
                         else if(filterStatus==true)
                         {
-                            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                            linearLayout.setLayoutParams(params);
+                            setLinearLayoutparam();
+                            setBgResourceListFilter();
 
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
-                            cityFrag=true;
-                            stateFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            homeFrag=false;
+                            setFragStatus("cityFrag");
                             fragmentTransaction.replace(R.id.frame_layout,city);
-                            //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                             filterStatus=false;
                         }
                         else
                         {
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
-                            cityFrag=true;
-                            stateFrag=false;
-                            regionFrag=false;
-                            favFrag=false;
-                            homeFrag=false;
+                            setBgResource();
+                            setFragStatus("cityFrag");
                             fragmentTransaction.replace(R.id.frame_layout,city);
-                            //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                         }
                         break;
                     case 3:
 
-                        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
-                            getSupportFragmentManager().popBackStackImmediate();}
+                        checkBackStackPopFrag();
                         if(gridStatus==true)
                         {
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            gridView.setBackgroundResource(R.drawable.grid);
-                            favFrag=true;
-                            regionFrag=false;
-                            stateFrag=false;
-                            cityFrag=false;
-                            homeFrag=false;
+                            setBgResourceListGrid();
+                            setFragStatus("favFrag");
                             fragmentTransaction.replace(R.id.frame_layout,favourite);
-                            //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                             gridStatus=false;
                         }
                         else if(filterStatus==true)
                         {
-                            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
-                            linearLayout.setLayoutParams(params);
-
-                            listView.setBackgroundResource(R.drawable.on_list);
-                            filter.setBackgroundResource(R.drawable.filter);
-                            filter_options.setVisibility(View.GONE);
-                            favFrag=true;
-                            regionFrag=false;
-                            stateFrag=false;
-                            cityFrag=false;
-                            homeFrag=false;
+                            setLinearLayoutparam();
+                            setBgResourceListFilter();
+                            setFragStatus("favFrag");
                             fragmentTransaction.replace(R.id.frame_layout,favourite);
-                            //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                             gridStatus=false;
                             filterStatus=false;
@@ -913,13 +786,8 @@ public class MainActivity extends AppCompatActivity {
                         {
                             filter.setBackgroundResource(R.drawable.filter);
                             filter_options.setVisibility(View.GONE);
-                            favFrag=true;
-                            regionFrag=false;
-                            stateFrag=false;
-                            cityFrag=false;
-                            homeFrag=false;
+                            setFragStatus("favFrag");
                             fragmentTransaction.replace(R.id.frame_layout,favourite);
-                            //        ft.addToBackStack(null);
                             fragmentTransaction.commit();
                         }
                         break;
@@ -938,6 +806,63 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void setFragStatus(String value) {
+        switch (value)
+        {
+            case "homeFrag":
+                homeFrag=true;
+                stateFrag=false;
+                cityFrag=false;
+                favFrag=false;
+                break;
+            case "cityFrag":
+                cityFrag=true;
+                stateFrag=false;
+                homeFrag=false;
+                favFrag=false;
+                break;
+            case "stateFrag":
+                stateFrag=true;
+                homeFrag=false;
+                cityFrag=false;
+                favFrag=false;
+                break;
+            case "favFrag":
+                favFrag=true;
+                stateFrag=false;
+                homeFrag=false;
+                cityFrag=false;
+        }
+
+    }
+    public void setBgResource() {
+        LinearLayout.LayoutParams params1 =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
+        linearLayout.setLayoutParams(params1);
+        listView.setBackgroundResource(R.drawable.on_list);
+        gridView.setBackgroundResource(R.drawable.grid);
+        filter.setBackgroundResource(R.drawable.filter);
+        filter_options.setVisibility(View.GONE);
+    }
+    public void setBgResourceListGrid() {
+        listView.setBackgroundResource(R.drawable.on_list);
+        gridView.setBackgroundResource(R.drawable.grid);
+    }
+    public void setBgResourceListFilter() {
+        listView.setBackgroundResource(R.drawable.on_list);
+        filter.setBackgroundResource(R.drawable.filter);
+        filter_options.setVisibility(View.GONE);
+    }
+    public void setLinearLayoutparam() {
+        LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
+        linearLayout.setLayoutParams(params);
+    }
+    public void checkBackStackPopFrag() {
+        //these two lines code is for back from NewsVideoPlayer screen to MianActivity when click on tab
+        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
+            getSupportFragmentManager().popBackStackImmediate();}
+        //end
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -1027,8 +952,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
     }
-
-
     private void cityListViewMode() {
 
         City cityListParam=new City("list",storeCities);
@@ -1039,7 +962,6 @@ public class MainActivity extends AppCompatActivity {
 //        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
-
     private void cityGridViewMode() {
 
             City cityList=new City("grid",storeCities);
@@ -1050,7 +972,6 @@ public class MainActivity extends AppCompatActivity {
 //        ft.addToBackStack(null);
             fragmentTransaction.commit();
     }
-
     private void favouriteListViewMode() {
 
         Favourite favourite=new Favourite("list");
@@ -1061,7 +982,6 @@ public class MainActivity extends AppCompatActivity {
 //        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
-
     private void favouriteGridViewMode() {
 
         Favourite favourite=new Favourite("grid");
@@ -1071,14 +991,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
     }
-
     private void initViews() {
         drawer = findViewById(R.id.drawer_layout);
         navigationView=findViewById(R.id.navigation);
         navigationView.setItemIconTintList(null);
         toolbar=findViewById(R.id.toolbar);
     }
-
     private void setNavigationDrawer() {
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -1104,19 +1022,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public void onBackPressed() {
-//
-//        CustomAlertDialog customAlertDialog=new CustomAlertDialog(this);
-//        if(customAlertDialog.alertDialogState)
-//        {
-//            blurView.setVisibility(View.GONE);
-//        }
-////        int count = getSupportFragmentManager().getBackStackEntryCount();
-////
-////        if (count == 0 ) {
-////            super.onBackPressed();
-//
-////        }
-//    }
 }

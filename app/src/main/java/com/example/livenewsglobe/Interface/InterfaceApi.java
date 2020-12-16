@@ -28,7 +28,7 @@ import retrofit2.http.Query;
 
 public interface InterfaceApi {
 
-    @GET("post/")
+    @GET("post/")   //working
     Call<List<SearchNetwork>> getNetworks(@Query("s") String networkName);
 
     @GET("posts/2")
