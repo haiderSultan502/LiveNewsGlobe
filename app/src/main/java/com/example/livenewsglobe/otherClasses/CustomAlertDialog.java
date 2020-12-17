@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-
 import com.example.livenewsglobe.Interface.InterfaceApi;
 import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
@@ -45,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import eightbitlab.com.blurview.BlurView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -203,6 +203,12 @@ public class CustomAlertDialog {
             @Override
             public void onClick(View view) {
 
+                final SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+//                pDialog.getProgressHelper().setBarColor(Color.parseColor("#103E65"));
+                pDialog.setTitleText("Loading");
+                pDialog.setCancelable(true);
+                pDialog.setCanceledOnTouchOutside(true);
+                pDialog.show();
 
                 if(email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
                 {
@@ -231,9 +237,21 @@ public class CustomAlertDialog {
                                 context.user_id= loginModel.getID();
                                 context.userEmail = loginModel.getData().getUserEmail();
                                 context.checkLoginStatus=true;
+
                                 context.blurView.setVisibility(View.GONE);
                                 swipeDismissDialog.dismiss();
-                                Toast.makeText(context, "Successfulyy Login", Toast.LENGTH_SHORT).show();
+
+                                pDialog.dismissWithAnimation();
+
+                                SweetAlertDialog pDialogs = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
+                                pDialogs.setTitleText("Successfully Login");
+                                pDialogs.setCustomImage(R.drawable.loading);
+                                pDialogs.setCancelable(true);
+                                pDialogs.setCanceledOnTouchOutside(true);
+                                pDialogs.show();
+
+//                                Toast.makeText(context, "Successfulyy Login", Toast.LENGTH_SHORT).show();
+
                             }
                         }
 

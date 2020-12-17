@@ -75,6 +75,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -426,7 +427,6 @@ public class Home extends Fragment {
                 public void onSwipeOptionClicked(int viewID, final int position) {
                     switch (viewID) {
                         case R.id.favourite_network:
-
 
                             setFavOrUnfav(position);
                     }
@@ -908,7 +908,13 @@ public class Home extends Fragment {
                 public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
                     if(!response.isSuccessful())
                     {
-                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(mainActivity,SweetAlertDialog.WARNING_TYPE);
+                        sweetAlertDialog.setTitleText("Response not successfull");
+                        sweetAlertDialog.show();
+                        Button btn = sweetAlertDialog.findViewById(R.id.confirm_button);
+//                        btn.setBackgroundColor(getResources().getColor(R.color.blueColor));
+                        btn.setBackgroundResource(R.drawable.btn_bg);
                     }
                     else
                     {

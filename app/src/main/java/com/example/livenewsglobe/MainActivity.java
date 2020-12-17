@@ -906,7 +906,6 @@ public class MainActivity extends AppCompatActivity {
         spinnerCity.setAdapter(arrayAdapterCity);
 
     }
-
     private void homeGridViewMode() {
         Home home=new Home("grid",storeNetworks);
         fragmentManager = getSupportFragmentManager();
