@@ -11,5 +11,5 @@
     <color name="spinnerSelectedIconColor">#103E65</color>
     <color name="blueColor">#103E65</color>
     <color name="btnColor">#1c6bb1</color>
-    <color name="dialogBgColor">#fff</color>
+    <color name="dialogBgColor">#fff</color>#ed5012
 </resources>

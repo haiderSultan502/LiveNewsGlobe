@@ -27,6 +27,9 @@ public class FeaturedNetworks {
     @SerializedName("thumbnail_url")
     @Expose
     private List<String> thumbnailUrl = null;
+    @SerializedName("msg")
+    @Expose
+    private Integer msg;
 
     public String getContent() {
         return content;
@@ -58,6 +61,14 @@ public class FeaturedNetworks {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getMsg() {
+        return msg;
+    }
+
+    public void setMsg(Integer msg) {
+        this.msg = msg;
     }
 
     public String getTermTaxonomyId() {

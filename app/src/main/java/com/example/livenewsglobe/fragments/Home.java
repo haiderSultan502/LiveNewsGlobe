@@ -176,7 +176,7 @@ public class Home extends Fragment {
 
 
 
-        arrayListFeaturedStore=new ArrayList<>();
+        arrayListFeaturedStore = new ArrayList<>();
         networks = new ArrayList<>();
 
         arrayListCity = new ArrayList<>();

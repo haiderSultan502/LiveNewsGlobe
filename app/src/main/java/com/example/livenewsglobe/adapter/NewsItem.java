@@ -153,6 +153,15 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
             imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("alt")-2);
             Picasso.with(context).load(imgUrl).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
         }
+        int checkLikeStatus = arrayListNetwork.get(position).getMsg();
+        if (checkLikeStatus == 1)
+        {
+            holder.imageVideoPlayButton.setImageDrawable(context.getResources().getDrawable(R.drawable.like_channel));
+        }
+        else
+        {
+            holder.imageVideoPlayButton.setImageDrawable(context.getResources().getDrawable(R.drawable.favorite_icon));
+        }
 
 //        imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("_logo")+9);
 //        Log.e("checkT",imgUrl);

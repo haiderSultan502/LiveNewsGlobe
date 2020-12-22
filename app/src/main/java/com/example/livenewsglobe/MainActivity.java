@@ -685,6 +685,7 @@ public class MainActivity extends AppCompatActivity {
                 index = tab.getPosition();
                 tabLayout.getTabAt(index).getIcon().setColorFilter(getResources().getColor(R.color.selectedTabIconColor), PorterDuff.Mode.SRC_IN);
 
+
                 //                 get the current selected tab's position and replace the fragment accordingly
                 switch (index) {
                     case 0:
