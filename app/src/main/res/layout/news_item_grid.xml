@@ -54,17 +54,17 @@
             android:textSize="@dimen/_14sdp"
             android:layout_alignParentRight="true"
             android:visibility="invisible"/>
-        <ImageView
-            android:id="@+id/image_view_play_button"
+        <Button
+            android:id="@+id/heart"
             android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
+            android:layout_height="@dimen/_14sdp"
             android:background="@drawable/favorite_icon"
             android:layout_alignParentRight="true"
             android:layout_below="@id/view_line"
             android:layout_marginTop="@dimen/_13sdp"
             android:layout_marginRight="@dimen/_4sdp">
 
-        </ImageView>
+        </Button>
 
 
 

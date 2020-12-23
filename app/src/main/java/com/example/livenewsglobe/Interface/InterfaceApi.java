@@ -32,6 +32,9 @@ public interface InterfaceApi {
     Call<List<SearchNetwork>> getNetworks(@Query("s") String networkName);
 
     @GET("posts/2")
+    Call<List<FeaturedNetworks>> getNetworks(@Query("user_id") int userID);
+
+    @GET("posts/2")
     Call<List<FeaturedNetworks>> getNetworks();
 
     @GET("tags")

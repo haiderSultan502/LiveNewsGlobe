@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -45,6 +46,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -89,21 +91,11 @@ public class Home extends Fragment {
     private RecyclerView recyclerView,recyclerViewGrid;
     RecyclerTouchListener recyclerTouchListener;
     ImageView imgLoading;
-    ProgressDialog progressDialog,progressDialoge;
     Boolean isScrooling=false;
     LinearLayout textViewShowTip;
 
-    Boolean status = false;
-    Context context;
-    Button btnLogin,btnSignUp;
-    TextView tvLogin,tvSignUp;
-    EditText userName,email,password;
-    Animation animation;
-    View dialogTab3;
-    ColorStateList oldColors;
-
-
-//    static InterfaceApi interfaceApi;
+    InterfaceApi interfaceApiGetFeaturedNetworks;
+    Call<List<FeaturedNetworks>> callGetFeaturedNetworks;
 
     MainActivity mainActivity;
     CustomAlertDialog customAlertDialog;
@@ -121,11 +113,7 @@ public class Home extends Fragment {
     ArrayList<Cities> citiesAccordingToState;
     ArrayList<Integer> arrayList;
 
-
-    GetStateCityNetwork getStateCityNetwork;
     ArrayList<States> statesList;
-
-    static ArrayAdapter<String> arrayAdapterState;
 
     ArrayList<FeaturedNetworks> arrayListFeaturedNetwork;
     public static ArrayList<FeaturedNetworks> arrayListFeaturedStore;
@@ -292,49 +280,19 @@ public class Home extends Fragment {
 
     imgLoading.setVisibility(View.VISIBLE);
 
-//        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
-////                            sharedPrefereneceManager.getLoginStatus();
-//        if(sharedPrefereneceManager.getLoginStatus() == true)
-//        {
-//
-//            InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
-//            Call<List<FavouritesModel>> call = interfaceApi.getFavouritesChannels(sharedPrefereneceManager.getUserId());
-//            call.enqueue(new Callback<List<FavouritesModel>>() {
-//                @Override
-//                public void onResponse(Call<List<FavouritesModel>> call, Response<List<FavouritesModel>> response) {
-//                    if(!response.isSuccessful())
-//                    {
-//                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                    else
-//                    {
-//                        imgLoading.setVisibility(View.GONE);
-//                        ArrayList<FavouritesModel> arrayListFavourites=new ArrayList<>();
-//                        arrayListFavourites = (ArrayList<FavouritesModel>) response.body();
-//                        int size = arrayListFavourites.size();
-//                        for (int i = 0 ; i < size;i++)
-//                        {
-//                            arrayList.add(Integer.parseInt(arrayListFavourites.get(0).getPostsId()));
-//                        }
-//
-////
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<List<FavouritesModel>> call, Throwable t) {
-//                    Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//        }
+        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+//                            sharedPrefereneceManager.getLoginStatus();
+        interfaceApiGetFeaturedNetworks= RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
+        if(sharedPrefereneceManager.getLoginStatus() == true)
+        {
+            callGetFeaturedNetworks = interfaceApiGetFeaturedNetworks.getNetworks(sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
+        }
+        else
+        {
+            callGetFeaturedNetworks = interfaceApiGetFeaturedNetworks.getNetworks(); //retrofit create implementation for this method
+        }
 
-
-    InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
-    Call<List<FeaturedNetworks>> call = interfaceApi.getNetworks(); //retrofit create implementation for this method
-
-    call.enqueue(new Callback<List<FeaturedNetworks>>() {
+        callGetFeaturedNetworks.enqueue(new Callback<List<FeaturedNetworks>>() {
         @Override
         public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
             if(!response.isSuccessful())
@@ -362,7 +320,8 @@ public class Home extends Fragment {
 
 
 
-            NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
+            final NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
+//            newsItem.notifyDataSetChanged();
             recyclerView.setAdapter(newsItem);
 
 
@@ -372,7 +331,6 @@ public class Home extends Fragment {
 
 //                recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
 //            }
-
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 //this method call when scrooling start
@@ -414,20 +372,20 @@ public class Home extends Fragment {
             recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                 @Override
                 public void onRowClicked(int position) {
-//                    Toast.makeText(getActivity(), networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onIndependentViewClicked(int independentViewID, int position) {
-//                    Toast.makeText(getActivity(), "ok" + networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "ok" + networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
                 }
             }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+
                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                 @Override
                 public void onSwipeOptionClicked(int viewID, final int position) {
                     switch (viewID) {
                         case R.id.favourite_network:
-
                             setFavOrUnfav(position);
                     }
                 }
@@ -935,9 +893,9 @@ public class Home extends Fragment {
                                     else
                                     {
                                         InsertChannelResponse insertChannelResponse = response.body();
-//                                                            int pos = position;
+                                        //  int pos = position;
 
-                                        recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                                        recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
 
 
                                          Toast.makeText(mainActivity, "Successfully added in favourite List ", Toast.LENGTH_SHORT).show();
