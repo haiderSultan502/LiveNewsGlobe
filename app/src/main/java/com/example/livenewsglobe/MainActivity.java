@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     ImageView imgLoading;
 
-    public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false;
+    public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false,getFavouritList=false;
     public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,favFrag=false;
 
 //    static InterfaceApi interfaceApi;
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
-    Fragment home = new Home("featuredNetworks","featuredNetworks");
+    Home home;
     State state = new State();
     Fragment city = new City("allCities");
     Fragment favourite = new Favourite();
@@ -668,9 +668,10 @@ public class MainActivity extends AppCompatActivity {
         frameLayout=findViewById(R.id.frame_layout);
 
         homeFrag=true;
+        Home homee = new Home("featuredNetworks","featuredNetworks");
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout,home);
+        fragmentTransaction.replace(R.id.frame_layout,homee);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
 
@@ -765,7 +766,14 @@ public class MainActivity extends AppCompatActivity {
                     case 3:
 
                         checkBackStackPopFrag();
-                        if(gridStatus==true)
+                        if(getFavouritList==true)
+                        {
+                            filter.setBackgroundResource(R.drawable.filter);
+                            filter_options.setVisibility(View.GONE);
+                            favouriteListViewMode();
+                            setFragStatus("favFrag");
+                        }
+                        else if(gridStatus==true)
                         {
                             setBgResourceListGrid();
                             setFragStatus("favFrag");
@@ -918,9 +926,17 @@ public class MainActivity extends AppCompatActivity {
     }
     private void homeListViewMode() {
 
+//        if(getFeaturedList == true)
+//        {
+//            home=new Home("list",storeNetworks);
+//        }
+//        else
+//        {
+            home = new Home("featuredNetworks","featuredNetworks");
+//        }
 //        Home home=new Home("list",storeNetworks);
 //        Home home=new Home("featuredNetworks",storeNetworks);
-        Fragment home = new Home("featuredNetworks","featuredNetworks");
+//        Fragment home = new Home("featuredNetworks","featuredNetworks");
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,home);
@@ -974,7 +990,8 @@ public class MainActivity extends AppCompatActivity {
     }
     private void favouriteListViewMode() {
 
-        Favourite favourite=new Favourite("list");
+//        Favourite favourite=new Favourite("list",storeFavouriteNetworks);
+        Favourite favourite=new Favourite();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,favourite);
@@ -984,7 +1001,8 @@ public class MainActivity extends AppCompatActivity {
     }
     private void favouriteGridViewMode() {
 
-        Favourite favourite=new Favourite("grid");
+//        Favourite favourite=new Favourite("grid",storeFavouriteNetworks);
+        Favourite favourite=new Favourite();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,favourite);

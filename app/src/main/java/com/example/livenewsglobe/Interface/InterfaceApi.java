@@ -44,6 +44,9 @@ public interface InterfaceApi {
     Call<List<States>> getStates();
 
     @GET("city_tags/")
+    Call<List<FeaturedNetworks>> getChannelsAccordingToCities(@Query("tag_id") int tagId,@Query("user_id") int userID);
+
+    @GET("city_tags/")
     Call<List<FeaturedNetworks>> getChannelsAccordingToCities(@Query("tag_id") int tagId);
 
     @GET("tags/")

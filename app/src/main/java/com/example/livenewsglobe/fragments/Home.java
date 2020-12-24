@@ -94,9 +94,12 @@ public class Home extends Fragment {
     ImageView imgLoading;
     Boolean isScrooling=false;
     LinearLayout textViewShowTip;
+    SweetAlertDialogGeneral sweetAlertDialogGeneral;
+    static LinearLayoutManager linearLayoutManager;
 
     InterfaceApi interfaceApiGetFeaturedNetworks;
     Call<List<FeaturedNetworks>> callGetFeaturedNetworks;
+    Call<List<FeaturedNetworks>> callGetCityChannels;
 
     MainActivity mainActivity;
     CustomAlertDialog customAlertDialog;
@@ -161,9 +164,6 @@ public class Home extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Toast.makeText(getActivity(), "On create call", Toast.LENGTH_SHORT).show();
-
-
 
         arrayListFeaturedStore = new ArrayList<>();
         networks = new ArrayList<>();
@@ -185,7 +185,6 @@ public class Home extends Fragment {
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-//        Toast.makeText(getActivity(), "onCreateView call()", Toast.LENGTH_SHORT).show();
         view=inflater.inflate(R.layout.home,container,false);
         viewNewsItem = inflater.inflate(R.layout.news_item,container,false);
 
@@ -193,6 +192,8 @@ public class Home extends Fragment {
         mainActivity = (MainActivity) getActivity();
         customAlertDialog=new CustomAlertDialog(getActivity());
         cityItem=new CityItem();
+
+        linearLayoutManager=new LinearLayoutManager(getActivity());
 
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
@@ -207,6 +208,8 @@ public class Home extends Fragment {
 
         textViewShowTip=view.findViewById(R.id.text_tip_show);
         textViewShowTip.setVisibility(View.GONE);
+
+        sweetAlertDialogGeneral = new SweetAlertDialogGeneral(mainActivity);
 
 
 
@@ -279,14 +282,6 @@ public class Home extends Fragment {
 
     public void getFeaturedNetworks() {
 
-        SweetAlertDialogGeneral sweetAlertDialogGeneral = new SweetAlertDialogGeneral(mainActivity);
-        sweetAlertDialogGeneral.showSweetAlertDialog("success","try later");
-//        SweetAlertDialog pDialogs = new SweetAlertDialog(mainActivity,SweetAlertDialog.ERROR_TYPE);
-//        pDialogs.setTitleText("Successfully Login");
-//        pDialogs.setCustomImage(R.drawable.loading);
-//        pDialogs.setCancelable(true);
-//        pDialogs.setCanceledOnTouchOutside(true);
-//        pDialogs.show();
 
     imgLoading.setVisibility(View.VISIBLE);
 
@@ -310,7 +305,8 @@ public class Home extends Fragment {
             {
 //                progressDialog.progressDialogVar.dismiss();
                 imgLoading.setVisibility(View.GONE);
-//                Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
+
                 return;
             }
 
@@ -318,10 +314,8 @@ public class Home extends Fragment {
             imgLoading.setVisibility(View.GONE);
             networks = (ArrayList<FeaturedNetworks>) response.body();
 
-//            recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
-//            recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
-
             mainActivity.storeNetworks=networks;
+            arrayListFeaturedNetwork=networks;
             mainActivity.getFeaturedList=true;
 
             recyclerView.setHasFixedSize(true);
@@ -334,75 +328,7 @@ public class Home extends Fragment {
             final NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
 //            newsItem.notifyDataSetChanged();
             recyclerView.setAdapter(newsItem);
-
-
-//            int h = arrayList.get(0);
-//            for (int i = 0 ; i < arrayList.size(); i++)
-//            {
-
-//                recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
-//            }
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                //this method call when scrooling start
-                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                    {
-                        isScrooling=true;
-                    }
-                }
-
-                @Override
-                //this method call when scrooled done
-                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    currentItems=linearLayoutManager.getChildCount();//get the count of currrently visible items in recycler view
-                    totalItems=linearLayoutManager.getItemCount(); // get the count of total items in recycler view
-                    scrollOutItems=linearLayoutManager.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
-
-                    if(isScrooling && (currentItems+scrollOutItems  ==  totalItems))
-                    {
-                        isScrooling=false;
-                        if(visibilityOfTip)
-                        {
-                            textViewShowTip.setVisibility(View.VISIBLE);
-                        }
-
-                    }
-                    else if(isScrooling && (currentItems+scrollOutItems  !=  totalItems))
-                    {
-                        textViewShowTip.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-            // the below code is for swipe at recycler view item
-            recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
-
-            recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
-                @Override
-                public void onRowClicked(int position) {
-                    Toast.makeText(getActivity(), networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onIndependentViewClicked(int independentViewID, int position) {
-                    Toast.makeText(getActivity(), "ok" + networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-                }
-            }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-
-                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-                @Override
-                public void onSwipeOptionClicked(int viewID, final int position) {
-                    switch (viewID) {
-                        case R.id.favourite_network:
-                            setFavOrUnfav(position);
-                    }
-                }
-            });
-            recyclerView.addOnItemTouchListener(recyclerTouchListener);
-
+            scrollAndtouchListener(recyclerView);
             recyclerView.scheduleLayoutAnimation();
             recyclerViewGrid.scheduleLayoutAnimation();
         }
@@ -410,6 +336,7 @@ public class Home extends Fragment {
         @Override
         public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
             imgLoading.setVisibility(View.GONE);
+            sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
             Log.d("CheckMessage",t.getMessage());
         }
     });
@@ -428,6 +355,7 @@ public class Home extends Fragment {
                 if(!response.isSuccessful())
                 {
                     imgLoading.setVisibility(View.GONE);
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
 //                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -507,7 +435,6 @@ public class Home extends Fragment {
                     recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                         @Override
                         public void onRowClicked(int position) {
-//                        Toast.makeText(getActivity(), networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -520,7 +447,6 @@ public class Home extends Fragment {
                             switch (viewID) {
                                 case R.id.favourite_network:
                                     setFavOrUnfav(position);
-//                                    Toast.makeText(getActivity(), "Add in favourites", Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         }
@@ -536,29 +462,41 @@ public class Home extends Fragment {
             @Override
             public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
                 imgLoading.setVisibility(View.GONE);
+                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
             }
         });
 
     }
     public void getRelateableChannels(int cityName) {
 
+        imgLoading.setVisibility(View.VISIBLE);
 
         InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/wp/v2/");
-        https://www.livenewsglobe.com/wp-json/wp/v2/city_tags/
-        imgLoading.setVisibility(View.VISIBLE);
-        call = interfaceApi.getChannelsAccordingToCities(cityName);
-        call.enqueue(new Callback<List<FeaturedNetworks>>() {
+        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+        if(sharedPrefereneceManager.getLoginStatus() == true)
+        {
+            callGetCityChannels = interfaceApi.getChannelsAccordingToCities(cityName,sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
+        }
+        else
+        {
+            callGetCityChannels = interfaceApi.getChannelsAccordingToCities(cityName); //retrofit create implementation for this method
+        }
+
+//        call = interfaceApi.getChannelsAccordingToCities(cityName);
+        callGetCityChannels.enqueue(new Callback<List<FeaturedNetworks>>() {
             @Override
             public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
                 if(!response.isSuccessful())
                 {
                     imgLoading.setVisibility(View.GONE);
-//                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
                     return;
                 }
 
                 imgLoading.setVisibility(View.GONE);
                 networks = (ArrayList<FeaturedNetworks>) response.body();
+                mainActivity.storeNetworks=networks;
+
 
                 if(mainActivity.gridStatus==true)
                 {
@@ -629,7 +567,6 @@ public class Home extends Fragment {
                     recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                         @Override
                         public void onRowClicked(int position) {
-//                        Toast.makeText(getActivity(), networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -656,6 +593,7 @@ public class Home extends Fragment {
             @Override
             public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
                 imgLoading.setVisibility(View.GONE);
+                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
             }
         });
     }
@@ -669,7 +607,7 @@ public class Home extends Fragment {
                 if(!response.isSuccessful())
                 {
                     imgLoading.setVisibility(View.GONE);
-//                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
                     return;
                 }
 
@@ -777,6 +715,7 @@ public class Home extends Fragment {
             public void onFailure(Call<List<SearchNetwork>> call, Throwable t) {
 
                 imgLoading.setVisibility(View.GONE);
+                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
 
             }
         });
@@ -786,10 +725,17 @@ public class Home extends Fragment {
         recyclerViewGrid.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setHasFixedSize(true);
-        final LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         NewsItem newsItem = new NewsItem(getActivity(), arrayListFeaturedNetwork, "list");
         recyclerView.setAdapter(newsItem);
+
+        scrollAndtouchListener(recyclerView);
+
+        recyclerView.scheduleLayoutAnimation();
+        recyclerViewGrid.scheduleLayoutAnimation();
+    }
+
+    private void scrollAndtouchListener(RecyclerView recyclerView) {
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -848,10 +794,8 @@ public class Home extends Fragment {
             }
         });
         recyclerView.addOnItemTouchListener(recyclerTouchListener);
-
-        recyclerView.scheduleLayoutAnimation();
-        recyclerViewGrid.scheduleLayoutAnimation();
     }
+
     private void gridView() {
         recyclerViewGrid.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
@@ -869,21 +813,15 @@ public class Home extends Fragment {
 //                            sharedPrefereneceManager.getLoginStatus();
         if(sharedPrefereneceManager.getLoginStatus() == true)
         {
-            Log.d("position_data","" + networks.get(position).getId());
+            Toast.makeText(mainActivity, "", Toast.LENGTH_SHORT).show();
             InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
-            Call<InsertChannelResponse> call = interfaceApi.checkIsFavouriteOrNot(sharedPrefereneceManager.getUserId(),networks.get(position).getId()); //retrofit create implementation for this method
+            Call<InsertChannelResponse> call = interfaceApi.checkIsFavouriteOrNot(sharedPrefereneceManager.getUserId(),mainActivity.storeNetworks.get(position).getId()); //retrofit create implementation for this method
             call.enqueue(new Callback<InsertChannelResponse>() {
                 @Override
                 public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
                     if(!response.isSuccessful())
                     {
-//                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
-                        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(mainActivity,SweetAlertDialog.WARNING_TYPE);
-                        sweetAlertDialog.setTitleText("Response not successfull");
-                        sweetAlertDialog.show();
-                        Button btn = sweetAlertDialog.findViewById(R.id.confirm_button);
-//                        btn.setBackgroundColor(getResources().getColor(R.color.blueColor));
-                        btn.setBackgroundResource(R.drawable.btn_bg);
+                       sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
                     }
                     else
                     {
@@ -893,23 +831,23 @@ public class Home extends Fragment {
                         {
                             Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
                             InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
-                            Call<InsertChannelResponse> calls = interfaceApi.insertFavouriteChannels(sharedPrefereneceManager.getUserId(),sharedPrefereneceManager.getUserEmail(),networks.get(position).getId()); //retrofit create implementation for this method
+                            Call<InsertChannelResponse> calls = interfaceApi.insertFavouriteChannels(sharedPrefereneceManager.getUserId(),sharedPrefereneceManager.getUserEmail(),mainActivity.storeNetworks.get(position).getId()); //retrofit create implementation for this method
                             calls.enqueue(new Callback<InsertChannelResponse>() {
                                 @Override
                                 public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
                                     if(!response.isSuccessful())
                                     {
-                                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
                                     }
                                     else
                                     {
                                         InsertChannelResponse insertChannelResponse = response.body();
                                         //  int pos = position;
 
-                                        recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+//                                        recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
 
 
-                                         Toast.makeText(mainActivity, "Successfully added in favourite List ", Toast.LENGTH_SHORT).show();
+                                        sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully added in favourites");
 //                                            Button btn = viewNewsItem.findViewById(R.id.heart);
 //                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
                                     }
@@ -925,13 +863,14 @@ public class Home extends Fragment {
                         {
                             Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
                             InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
-                            Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),networks.get(position).getId()); //retrofit create implementation for this method
+                            Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),mainActivity.storeNetworks.get(position).getId()); //retrofit create implementation for this method
                             calls.enqueue(new Callback<InsertChannelResponse>() {
                                 @Override
                                 public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
                                     if(!response.isSuccessful())
                                     {
-                                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
                                     }
                                     else
                                     {
@@ -939,7 +878,7 @@ public class Home extends Fragment {
 
                                         recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.favorite_icon));
 
-                                        Toast.makeText(mainActivity, "Successfully remove in favourite List ", Toast.LENGTH_SHORT).show();
+                                        sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully remove from favourites");
 //                                            Button btn = viewNewsItem.findViewById(R.id.heart);
 //                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
                                     }
@@ -947,7 +886,7 @@ public class Home extends Fragment {
 
                                 @Override
                                 public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
-                                    Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
                                 }
                             });
                         }
@@ -956,7 +895,7 @@ public class Home extends Fragment {
 
                 @Override
                 public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
-                    Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
                 }
 
             });

@@ -50,7 +50,7 @@
             android:id="@+id/image_view_favourite_channel"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="wrap_content"
-            android:src="@drawable/favorite_icon"
+            android:src="@drawable/like_channel"
             android:layout_alignParentRight="true"
             android:layout_below="@id/view_line"
             android:layout_marginTop="@dimen/_13sdp"

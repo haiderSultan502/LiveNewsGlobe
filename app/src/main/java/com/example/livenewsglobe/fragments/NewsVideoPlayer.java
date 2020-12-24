@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.livenewsglobe.R;
+import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

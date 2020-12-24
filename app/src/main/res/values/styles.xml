@@ -6,6 +6,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorHint">#C5B4B4</item>
+
+        <item name="colorControlNormal">#345b7b</item>
+
+        <item name="colorControlActivated">#345b7b</item>
     </style>
     <style name="Base.Widget.Design.TabLayout" parent="android:Widget">
         <item name="tabBackground">@drawable/tabitem_background</item>

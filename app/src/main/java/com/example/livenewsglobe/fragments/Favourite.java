@@ -23,12 +23,15 @@ import com.bumptech.glide.Glide;
 import com.example.livenewsglobe.Interface.InterfaceApi;
 import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
+import com.example.livenewsglobe.adapter.CityItem;
 import com.example.livenewsglobe.adapter.FavouriteItem;
+import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.Favourites;
 import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
+import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,17 +48,22 @@ public class Favourite extends Fragment {
     private RecyclerView recyclerView,recyclerViewGrid;
 
     ArrayList<FavouritesModel> arrayListFavourites;
+    ArrayList<FavouritesModel> storeArrayListFavourites;
     String viewMode="null";
     MainActivity mainActivity;
     ImageView imgLoading;
+
+    SweetAlertDialogGeneral sweetAlertDialogGeneral;
 
     public Favourite()
     {
 
     }
-    public Favourite(String viewMode)
+    public Favourite(String viewMode,ArrayList<FavouritesModel> storeArrayListFavourites)
     {
         this.viewMode=viewMode;
+        this.storeArrayListFavourites = new ArrayList<>();
+        this.storeArrayListFavourites = storeArrayListFavourites;
     }
 
 
@@ -73,6 +81,8 @@ public class Favourite extends Fragment {
         view=inflater.inflate(R.layout.favourite,container,false);
 
         mainActivity = (MainActivity) getActivity();
+
+        sweetAlertDialogGeneral = new SweetAlertDialogGeneral(mainActivity);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
 
@@ -101,91 +111,9 @@ public class Favourite extends Fragment {
             getFavourites();
         }
 
-
-
-//        gridView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//
-//                checkVisibilityGrid=true;
-//
-//                if(checkVisibilityList==true)
-//                {
-//                    //apply animation
-//                    animation = AnimationUtils.loadAnimation(getActivity(),
-//                            R.anim.move_left);
-//                    btnMoveBgColorGridBottomList.setVisibility(View.VISIBLE);
-//                    btnMoveBgColorGridBottomList.setAnimation(animation);
-//                    btnMoveBgColorGridBottomList.setVisibility(View.INVISIBLE);
-//
-//                    checkVisibilityList=false;
-//                }
-//
-//                gridView.setBackgroundResource(R.drawable.on_grid);
-//
-//
-//                listView.setBackgroundResource(R.drawable.on);
-//
-//                recyclerViewGrid.setVisibility(View.VISIBLE);
-//                recyclerView.setVisibility(View.INVISIBLE);
-////                recyclerViewGrid.setHasFixedSize(true);
-//
-//                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),3);
-//                recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-//
-//                FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"gridFavourie");
-//                recyclerViewGrid.setAdapter(favouriteItem);
-//
-//                // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-//                recyclerView.scheduleLayoutAnimation();
-//                recyclerViewGrid.scheduleLayoutAnimation();
-//
-//
-//            }
-//        });
-//
-//        listView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//
-//                checkVisibilityList=true;
-//
-//                if(checkVisibilityGrid==true)
-//                {
-//                    //apply animation
-//                    animation = AnimationUtils.loadAnimation(getActivity(),
-//                            R.anim.move_right);
-//                    btnMoveBgColorListBottomGrid.setVisibility(View.VISIBLE);
-//                    btnMoveBgColorListBottomGrid.setAnimation(animation);
-//                    btnMoveBgColorListBottomGrid.setVisibility(View.INVISIBLE);
-//
-//                    checkVisibilityGrid=false;
-//                }
-//
-//
-//
-//                listView.setBackgroundResource(R.drawable.on_list);
-//                gridView.setBackgroundResource(R.drawable.grid);
-//
-//                recyclerViewGrid.setVisibility(View.INVISIBLE);
-//                recyclerView.setVisibility(View.VISIBLE);
-//
-//                recyclerView.setHasFixedSize(true);
-//                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//                FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"listFavourie");
-//                recyclerView.setAdapter(favouriteItem);
-//
-//                // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-//                recyclerView.scheduleLayoutAnimation();
-//                recyclerViewGrid.scheduleLayoutAnimation();
-//
-//            }
-//        });
-
         return view;
     }
+
 
     private void getFavourites(){
 
@@ -206,18 +134,15 @@ public class Favourite extends Fragment {
                     if(!response.isSuccessful())
                     {
                         imgLoading.setVisibility(View.GONE);
-                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
                         return;
                     }
                     else
                     {
                         imgLoading.setVisibility(View.GONE);
                         arrayListFavourites = (ArrayList<FavouritesModel>) response.body();
-
-//                    mainActivity.storeFavouriteNetworks=arrayListFavourites;
-//                    mainActivity.getFavouriteList=true;
-
-
+                        mainActivity.storeFavouriteNetworks = arrayListFavourites;
+                        mainActivity.getFavouritList=true;
                         FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"listFavourie");
                         recyclerView.setAdapter(favouriteItem);
                         // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
@@ -228,13 +153,14 @@ public class Favourite extends Fragment {
 
                 @Override
                 public void onFailure(Call<List<FavouritesModel>> call, Throwable t) {
-                    Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    imgLoading.setVisibility(View.GONE);
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
                 }
             });
         }
         else
         {
-            Toast.makeText(mainActivity, "First Login Please", Toast.LENGTH_SHORT).show();
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning","First login please");
         }
 
 
@@ -249,7 +175,7 @@ public class Favourite extends Fragment {
         recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"listFavourie");
+        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),storeArrayListFavourites,"listFavourie");
         recyclerView.setAdapter(favouriteItem);
         recyclerView.scheduleLayoutAnimation();
         recyclerViewGrid.scheduleLayoutAnimation();
@@ -260,7 +186,7 @@ public class Favourite extends Fragment {
         recyclerView.setVisibility(View.GONE);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"gridFavourie");
+        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),storeArrayListFavourites,"gridFavourie");
         recyclerViewGrid.setAdapter(favouriteItem);
         // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
         recyclerView.scheduleLayoutAnimation();

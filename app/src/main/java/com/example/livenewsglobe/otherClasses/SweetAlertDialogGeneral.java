@@ -21,39 +21,30 @@ public class SweetAlertDialogGeneral {
 
     public SweetAlertDialog showSweetAlertDialog(String setDialogType,String setText)
     {
-//        if(setDialogType.equals("success"))
-//        {
-//            sweetDialog = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
-//        }
-//        else if(setDialogType.equals("warning"))
-//        {
-//            sweetDialog = new SweetAlertDialog(context,SweetAlertDialog.WARNING_TYPE);
-//        }
-//        else if(setDialogType.equals("error"))
-//        {
-//            sweetDialog = new SweetAlertDialog(context,SweetAlertDialog.ERROR_TYPE);
-//        }
-//        else if(setDialogType.equals("progress"))
-//        {
-//            sweetDialog = new SweetAlertDialog(context,SweetAlertDialog.PROGRESS_TYPE);
-//        }
-//        sweetDialog.setTitleText(setText);
-//        sweetDialog.setCustomImage(R.drawable.loading);
-//        sweetDialog.setCancelable(true);
-//
-//        sweetDialog.setCanceledOnTouchOutside(true);
+        if(setDialogType.equals("success"))
+        {
+            sweetDialog = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
+        }
+        else if(setDialogType.equals("warning"))
+        {
+            sweetDialog = new SweetAlertDialog(context,SweetAlertDialog.WARNING_TYPE);
+        }
+        else if(setDialogType.equals("error"))
+        {
+            sweetDialog = new SweetAlertDialog(context,SweetAlertDialog.ERROR_TYPE);
+        }
+        else if(setDialogType.equals("progress"))
+        {
+            sweetDialog = new SweetAlertDialog(context,SweetAlertDialog.PROGRESS_TYPE);
+        }
 
-        SweetAlertDialog alertDialog = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
-        alertDialog.setTitleText("Good job!");
-        alertDialog.setContentText("You clicked the button!");
-        alertDialog.setCanceledOnTouchOutside(true);
-        alertDialog.show();
+        sweetDialog.setTitleText(setText);
+//        sweetDialog.setContentText("You clicked the button!");
+        sweetDialog.setCanceledOnTouchOutside(true);
+        sweetDialog.show();
 
-        Button btn = (Button) alertDialog.findViewById(R.id.confirm_button);
-        btn.setVisibility(View.INVISIBLE);
-
-//        sweetDialog.show();
-
+        Button btn = (Button) sweetDialog.findViewById(R.id.confirm_button);
+        btn.setVisibility(View.GONE);
 
         return sweetDialog;
     }

@@ -23,6 +23,7 @@ import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.adapter.StateItem;
 import com.example.livenewsglobe.models.States;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
+import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,8 @@ public class State extends Fragment{
     static ArrayList<States> arrayListStateStore;
     static ArrayList<States> arrayListStateParam;
     String viewMode="null";
-    String stateName;
+    String stateName,description;
+    SweetAlertDialogGeneral sweetAlertDialogGeneral;
 
     MainActivity mainActivity;
 
@@ -76,6 +78,7 @@ public class State extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.state,container,false);
 
+        sweetAlertDialogGeneral = new SweetAlertDialogGeneral(mainActivity);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
 
         recyclerView=view.findViewById(R.id.recycler_view);
@@ -94,6 +97,7 @@ public class State extends Fragment{
 
         StateItem stateItem=new StateItem(getActivity(),arrayListStates,"list");
         recyclerView.setAdapter(stateItem);
+
 
         // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
         recyclerView.scheduleLayoutAnimation();
@@ -130,7 +134,7 @@ public class State extends Fragment{
                 if(!response.isSuccessful())
                 {
                     imgLoading.setVisibility(View.GONE);
-                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
                     return;
                 }
 
@@ -142,12 +146,19 @@ public class State extends Fragment{
                 for(int i = 0; i < size ; i++) {
 
                     stateName = arrayListStates.get(i).getName();
+                    description = arrayListStates.get(i).getDescription();
 
-                    if (stateName.equals("Featured")) {
-//                     break;
+                    if (description.length() < 50) {
+                        continue;
                     } else {
                         arrayListStates2.add(arrayListStates.get(i));
                     }
+
+//                    if (stateName.equals("Featured") || stateName.equals("Alabama")) {
+//                     continue;
+//                    } else {
+//                        arrayListStates2.add(arrayListStates.get(i));
+//                    }
                 }
 
                 mainActivity.storeStates=arrayListStates2;
@@ -167,6 +178,7 @@ public class State extends Fragment{
             @Override
             public void onFailure(Call<List<States>> call, Throwable t) {
                 imgLoading.setVisibility(View.GONE);
+                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
             }
         });
 
