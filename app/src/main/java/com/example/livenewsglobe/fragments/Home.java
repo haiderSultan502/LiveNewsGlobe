@@ -71,6 +71,7 @@ import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
 import com.example.livenewsglobe.otherClasses.RecyclerTouchListener;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
+import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
 
@@ -278,7 +279,17 @@ public class Home extends Fragment {
 
     public void getFeaturedNetworks() {
 
+        SweetAlertDialogGeneral sweetAlertDialogGeneral = new SweetAlertDialogGeneral(mainActivity);
+        sweetAlertDialogGeneral.showSweetAlertDialog("success","try later");
+//        SweetAlertDialog pDialogs = new SweetAlertDialog(mainActivity,SweetAlertDialog.ERROR_TYPE);
+//        pDialogs.setTitleText("Successfully Login");
+//        pDialogs.setCustomImage(R.drawable.loading);
+//        pDialogs.setCancelable(true);
+//        pDialogs.setCanceledOnTouchOutside(true);
+//        pDialogs.show();
+
     imgLoading.setVisibility(View.VISIBLE);
+
 
         final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
 //                            sharedPrefereneceManager.getLoginStatus();
