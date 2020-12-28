@@ -347,7 +347,16 @@ public class Home extends Fragment {
 
 
         InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/wp/v2/");
-        callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(mainActivity.cityId,mainActivity.networkId); //retrofit create implementation for this method
+        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+        if(sharedPrefereneceManager.getLoginStatus() == true)
+        {
+            callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(mainActivity.cityId,mainActivity.networkId,sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
+        }
+        else
+        {
+            callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(mainActivity.cityId,mainActivity.networkId); //retrofit create implementation for this method
+        }
+
 
         callForRelatedNetwork.enqueue(new Callback<List<FeaturedNetworks>>() {
             @Override
@@ -362,6 +371,7 @@ public class Home extends Fragment {
 
                 imgLoading.setVisibility(View.GONE);
                 networks = (ArrayList<FeaturedNetworks>) response.body();
+                mainActivity.storeNetworks=networks;
 
 //                Toast.makeText(getActivity(), "tital size of related channels is " + networks.size() , Toast.LENGTH_SHORT).show();
 
@@ -843,13 +853,9 @@ public class Home extends Fragment {
                                     {
                                         InsertChannelResponse insertChannelResponse = response.body();
                                         //  int pos = position;
-
-//                                        recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
-
-
+                                        recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
                                         sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully added in favourites");
-//                                            Button btn = viewNewsItem.findViewById(R.id.heart);
-//                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+
                                     }
                                 }
 

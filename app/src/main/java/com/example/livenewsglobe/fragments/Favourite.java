@@ -29,6 +29,7 @@ import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.Favourites;
 import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.InsertChannelResponse;
+import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
 import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
@@ -54,6 +55,7 @@ public class Favourite extends Fragment {
     ImageView imgLoading;
 
     SweetAlertDialogGeneral sweetAlertDialogGeneral;
+    CustomAlertDialog customAlertDialog;
 
     public Favourite()
     {
@@ -79,6 +81,8 @@ public class Favourite extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.favourite,container,false);
+
+        customAlertDialog=new CustomAlertDialog(getActivity());
 
         mainActivity = (MainActivity) getActivity();
 
@@ -160,7 +164,8 @@ public class Favourite extends Fragment {
         }
         else
         {
-            sweetAlertDialogGeneral.showSweetAlertDialog("warning","First login please");
+//            sweetAlertDialogGeneral.showSweetAlertDialog("warning","First login please");
+            customAlertDialog.showDialog();
         }
 
 

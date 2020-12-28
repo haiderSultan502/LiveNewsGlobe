@@ -6,7 +6,12 @@ import android.content.SharedPreferences;
 public class SharedPrefereneceManager {
     Context context;
 
-    String userEmail,password;
+    String userEmail;
+    String password;
+
+
+
+    String userName;
 
     int userId;
 
@@ -22,6 +27,16 @@ public class SharedPrefereneceManager {
     public void setUserId(int userId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("userId",userId).commit();
+    }
+
+    public String getUserName() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
+        return sharedPreferences.getString("userName","");
+    }
+
+    public void setUserName(String userName) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString("userName",userName).commit();
     }
 
     public String getUserEmail() {

@@ -20,6 +20,7 @@
                 android:src="@drawable/profile21"/>
         </RelativeLayout>
     <TextView
+        android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relative_layout_image"

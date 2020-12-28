@@ -26,9 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.livenewsglobe.Interface.InterfaceApi;
 import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
+import com.example.livenewsglobe.fragments.Home;
 import com.example.livenewsglobe.models.Login.LoginModel;
 import com.example.livenewsglobe.models.Register;
 import com.example.livenewsglobe.models.RegisterUser;
@@ -60,7 +64,12 @@ public class CustomAlertDialog {
     ColorStateList oldColors;
     SwipeDismissDialog swipeDismissDialog;
     static String userNameStr,valid_email,passwordStr;
+    SweetAlertDialogGeneral sweetAlertDialogGeneral;
+    SweetAlertDialog sweetAlertDialog;
     View dialog;
+
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
 
     public CustomAlertDialog(Context context) {
         this.context = (MainActivity) context;
@@ -80,6 +89,7 @@ public class CustomAlertDialog {
         dialogTab3=dialog.findViewById(R.id.dialog_tab);
 //        lineAtSignUp=dialog.findViewById(R.id.line_at_signup);
         oldColors =  tvSignUp.getTextColors();
+        sweetAlertDialogGeneral = new SweetAlertDialogGeneral(context);
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -203,12 +213,13 @@ public class CustomAlertDialog {
             @Override
             public void onClick(View view) {
 
-                final SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-//                pDialog.getProgressHelper().setBarColor(Color.parseColor("#103E65"));
-                pDialog.setTitleText("Loading");
-                pDialog.setCancelable(true);
-                pDialog.setCanceledOnTouchOutside(true);
-                pDialog.show();
+//                final SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+////                pDialog.getProgressHelper().setBarColor(Color.parseColor("#103E65"));
+//                pDialog.setTitleText("Loading");
+//                pDialog.setCancelable(true);
+//                pDialog.setCanceledOnTouchOutside(true);
+//                pDialog.show();
+                sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("progress","Loading");
 
                 if(email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
                 {
@@ -220,7 +231,7 @@ public class CustomAlertDialog {
                             if(!response.isSuccessful())
                             {
 
-                                Toast.makeText(context, "Code  "+response.code(), Toast.LENGTH_SHORT).show();
+                                sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
                                 return;
                             }
                             else
@@ -233,6 +244,9 @@ public class CustomAlertDialog {
                                 sharedPrefereneceManager.setPassword(password.getText().toString());
                                 sharedPrefereneceManager.setUserId(loginModel.getID());
 
+                                context.setUserName(sharedPrefereneceManager.getUserName());
+                                context.replaceFragment();
+
                                 int id = loginModel.getID();
                                 context.user_id= loginModel.getID();
                                 context.userEmail = loginModel.getData().getUserEmail();
@@ -241,7 +255,7 @@ public class CustomAlertDialog {
                                 context.blurView.setVisibility(View.GONE);
                                 swipeDismissDialog.dismiss();
 
-                                pDialog.dismissWithAnimation();
+                                sweetAlertDialog.dismissWithAnimation();
 
                                 SweetAlertDialog pDialogs = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
                                 pDialogs.setTitleText("Successfully Login");
@@ -250,6 +264,7 @@ public class CustomAlertDialog {
                                 pDialogs.setCanceledOnTouchOutside(true);
                                 pDialogs.show();
 
+
 //                                Toast.makeText(context, "Successfulyy Login", Toast.LENGTH_SHORT).show();
 
                             }
@@ -257,7 +272,7 @@ public class CustomAlertDialog {
 
                         @Override
                         public void onFailure(Call<LoginModel> call, Throwable t) {
-                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                            sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
                         }
                     });
 
@@ -269,7 +284,7 @@ public class CustomAlertDialog {
                 }
                 else
                 {
-                    Toast.makeText(context, "Please fill the fields correctly", Toast.LENGTH_SHORT).show();
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please fill the fields correctly");
                 }
 
                 clearEditText();
@@ -280,15 +295,15 @@ public class CustomAlertDialog {
             @Override
             public void onClick(View view) {
 
-
+                sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("progress","Loading");
                 if(userName.getText().toString().trim().length() >= 2 && email.getText().toString().trim().length() > 11 && password.getText().toString().trim().length() >= 3)
                 {
                     InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/wp/v2/");
-                    Call<Register> call= interfaceApi.registerUser(userNameStr,valid_email,passwordStr);
-                    call.enqueue(new Callback<Register>() {
+                    Call<RegisterUser> call= interfaceApi.registerUser(userNameStr,valid_email,passwordStr);
+                    call.enqueue(new Callback<RegisterUser>() {
 //                        onResponce Invoked for a received HTTP response.
                         @Override
-                        public void onResponse(Call<Register> call, Response<Register> response) {
+                        public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
 //                            Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call Response.isSuccessful() to determine if the response indicates success.
                             if(!response.isSuccessful())
                             {
@@ -298,17 +313,23 @@ public class CustomAlertDialog {
                             }
                             else
                             {
+                                RegisterUser registerUser =  response.body();
+                                SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
+                                sharedPrefereneceManager.setUserName(registerUser.getMessage());
 
                                 context.blurView.setVisibility(View.GONE);
                                 swipeDismissDialog.dismiss();
-                                Toast.makeText(context, "User Successfully creata ", Toast.LENGTH_SHORT).show();
+                                sweetAlertDialog.dismissWithAnimation();
+                                SweetAlertDialogGeneral sweetAlertDialogGeneral= new SweetAlertDialogGeneral(context);
+                                sweetAlertDialogGeneral.showSweetAlertDialog("success","User create successfully");
+//                                Toast.makeText(context, "User Successfully creata ", Toast.LENGTH_SHORT).show();
 
                             }
                         }
 //                      onFailure Invoked when a network exception occurred  talking to the server or when an unexpected exception occurred creating the request or processing the response.
                         @Override
-                        public void onFailure(Call<Register> call, Throwable t) {
-                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                        public void onFailure(Call<RegisterUser> call, Throwable t) {
+                            sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
                         }
                     });
 
@@ -319,7 +340,7 @@ public class CustomAlertDialog {
                 }
                 else
                 {
-                    Toast.makeText(context, "Please fill the fields correctly", Toast.LENGTH_SHORT).show();
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please fill the fields correctly");
                 }
 
 //                clearEditText();

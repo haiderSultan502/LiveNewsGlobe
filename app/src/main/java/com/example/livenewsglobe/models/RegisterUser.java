@@ -2,6 +2,7 @@ package com.example.livenewsglobe.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 public class RegisterUser {
 
     @SerializedName("code")
@@ -10,6 +11,9 @@ public class RegisterUser {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("success")
+    @Expose
+    private String success;
 
     public Integer getCode() {
         return code;
@@ -25,6 +29,14 @@ public class RegisterUser {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(String success) {
+        this.success = success;
     }
 
 }

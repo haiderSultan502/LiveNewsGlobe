@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     public static int user_id,post_id;
     public static String userEmail;
     EditText search;
-    Button searchButton,gridView,listView,filter,navigationDrawer,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
+    Button searchButton,gridView,listView,filter,removeFilter,navigationDrawer,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
     Boolean checkVisibilityFilter=false,checkVisibilityGrid=false,checkVisibilityList=true;
     public static RelativeLayout filter_options,btnBack;
     LinearLayout linearLayout;
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> statesList2;
 
     Boolean checkGridStatus=false,checkListStatus=false;
+    TextView userName;
 
     //end
 
@@ -179,10 +180,11 @@ public class MainActivity extends AppCompatActivity {
         gridView = findViewById(R.id.button_gridview);
         listView = findViewById(R.id.button_listview);
         filter=findViewById(R.id.button_filter);
+        removeFilter=findViewById(R.id.button_remove_filter);
         searchButton=findViewById(R.id.button_search);
         search=findViewById(R.id.edit_text_search);
 
-
+        userName=findViewById(R.id.username);
         btnMoveBgColorfilterBottomList=findViewById(R.id.button_filterview_come_bottom_list);
         btnMoveBgColorGridBottomList=findViewById(R.id.button_filterview_come_bottom_list);
 
@@ -231,8 +233,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPrefereneceManager sharedPrefereneceManager= new SharedPrefereneceManager(getApplicationContext());
                 sharedPrefereneceManager.setLoginStatus(false);
+                drawer.closeDrawers();
+                replaceFragment();
             }
         });
+
 
         spinnerArrayListCityString.add("Cities");
         ArrayAdapter<String> arrayAdapterCity=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,spinnerArrayListCityString);
@@ -266,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                     fragmentTransaction= fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.frame_layout,home);
                     fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        ft.addToBackStack(null);
+                    //      ft.addToBackStack(null);
                     fragmentTransaction.commit();
 
                     relativeLayoutCity.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.spinner_item_select_design));
@@ -317,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 0; i < sizee ; i++) {
 
                     if (stateList3[i].equals("Featured")) {
-
+                        continue;
                      } else {
                         statesList2.add(stateList3[i]);
                      }
@@ -355,6 +360,7 @@ public class MainActivity extends AppCompatActivity {
 //                    ((TextView) view).setTextColor(Color.rgb(16, 62, 101));
                 String state = parent.getSelectedItem().toString();
                 spinnerCity.setEnabled(true);
+                removeFilter.setVisibility(View.VISIBLE);
                 Fragment city = new City(state);
                 fragmentManager = getSupportFragmentManager();
                 fragmentTransaction= fragmentManager.beginTransaction();
@@ -476,6 +482,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 drawer.openDrawer(Gravity.RIGHT);
+            }
+        });
+        removeFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    removeFilter.setVisibility(View.INVISIBLE);
+                ArrayAdapter<String> arrayAdapterState  = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,statesList2);
+                arrayAdapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerState.setEnabled(true);
+                spinnerState.setAdapter(arrayAdapterState);
+
+
+                spinnerArrayListCityString.add("Cities");
+                ArrayAdapter<String> arrayAdapterCity=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,spinnerArrayListCityString);
+                arrayAdapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerCity.setEnabled(false);
+                spinnerCity.setAdapter(arrayAdapterCity);
+
+                ArrayAdapter<String> arrayAdapterNetwork=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,networkNames);
+                arrayAdapterNetwork.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                spinnerNetwork.setEnabled(false);
+                spinnerNetwork.setAdapter(arrayAdapterNetwork);
             }
         });
 
@@ -816,7 +845,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     public void setFragStatus(String value) {
         switch (value)
         {
@@ -941,7 +969,15 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,home);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        ft.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+    public void replaceFragment()
+    {
+        home = new Home("featuredNetworks","featuredNetworks");
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction= fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout,home);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
     }
     private void stateGridViewMode(String checkViewStatus,String currentFrag) {
@@ -1038,6 +1074,13 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+    public void setUserName(String username)
+    {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        View headerView = navigationView.getHeaderView(0);
+        userName = (TextView) headerView.findViewById(R.id.tv_username);
+        userName.setText(username);
     }
 
 }

@@ -102,7 +102,16 @@
                             android:background="@drawable/filter"
                             android:layout_alignParentBottom="true"
                             android:layout_marginRight="@dimen/_7sdp"
+                            android:layout_toLeftOf="@+id/button_gridview" />
+                        <Button
+                            android:id="@+id/button_remove_filter"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/remove_filter"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginRight="@dimen/_7sdp"
                             android:layout_toLeftOf="@+id/button_gridview"
+                            android:visibility="invisible"
                             />
 
                         <Button
