@@ -1,6 +1,7 @@
 package com.example.livenewsglobe.fragments;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -116,7 +117,15 @@ return view;
 
             web.loadDataWithBaseURL(networkUrl,document.toString(),"text/html","utf-8","");
             web.getSettings().setCacheMode( WebSettings.LOAD_CACHE_ELSE_NETWORK );
-            //after adding below these two lines webview able to load the images and videos
+            web.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                // chromium, enable hardware acceleration
+//                web.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+//            } else {
+//                // older android version, disable hardware acceleration
+//                web.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//            }
+//            after adding below these two lines webview able to load the images and videos
             web.getSettings().setJavaScriptEnabled(true);
             web.getSettings().setUseWideViewPort(true);
 //            web.loadUrl(networkUrl);

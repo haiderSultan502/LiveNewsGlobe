@@ -23,6 +23,17 @@ public class SearchNetwork {
     @SerializedName("thumbnail_url")
     @Expose
     private List<String> thumbnailUrl = null;
+    @SerializedName("msg")
+    @Expose
+    private Integer msg;
+
+    public Integer getMsg() {
+        return msg;
+    }
+
+    public void setMsg(Integer msg) {
+        this.msg = msg;
+    }
 
     public String getContent() {
         return content;

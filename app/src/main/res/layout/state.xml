@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/home_bg"
     android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/img_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:visibility="gone"
         />
     <androidx.recyclerview.widget.RecyclerView

@@ -16,7 +16,7 @@
         android:id="@+id/linear_layout_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="10"
+        android:weightSum="9.7"
         android:orientation="vertical">
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
@@ -41,8 +41,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="5"
-                    android:weightSum="5"
+                    android:layout_weight="4"
+                    android:weightSum="4"
                     android:orientation="vertical"
                     android:background="@drawable/design_top">
                     <RelativeLayout
@@ -73,18 +73,19 @@
                             android:src="@drawable/home_logo" />
                         <Button
                             android:id="@+id/button_navigation_drawer"
-                            android:layout_width="@dimen/_20sdp"
-                            android:layout_height="@dimen/_15sdp"
-                            android:layout_marginTop="@dimen/_25sdp"
-                            android:layout_marginRight="@dimen/_20sdp"
-                            android:background="@drawable/menu"
-                            android:layout_alignParentRight="true"/>
+                            android:layout_width="@dimen/_25sdp"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_marginTop="35dp"
+                            android:layout_marginRight="@dimen/_15sdp"
+                            android:background="@drawable/ic_round_filter_list_24"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"/>
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="2">
+                        android:layout_weight="1">
 
                         <Button
                             android:id="@+id/button_filterview_come_bottom_grid"
@@ -290,20 +291,20 @@
                     android:id="@+id/linear_layout_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="6.3"
-                    android:weightSum="6.3"
+                    android:layout_weight="7.3"
+                    android:weightSum="7.3"
                     android:orientation="vertical">
                 <FrameLayout
                     android:id="@+id/frame_layout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="6.3"
-                    android:weightSum="6.3">
+                    android:layout_weight="7.3"
+                    android:weightSum="7.3">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="6.3"
+                        android:layout_weight="7.3"
                         android:visibility="gone">
 
                     </RelativeLayout>
@@ -320,12 +321,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="0.7">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="73dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="top"
                 android:background="#fff"
                 app:tabGravity="fill"

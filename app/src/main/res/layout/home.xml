@@ -5,15 +5,14 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@drawable/home_bg"
     android:fitsSystemWindows="true">
 
             <ImageView
                 android:id="@+id/img_loading"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:visibility="gone" />
+                android:scaleType="fitCenter"
+                android:visibility="gone"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

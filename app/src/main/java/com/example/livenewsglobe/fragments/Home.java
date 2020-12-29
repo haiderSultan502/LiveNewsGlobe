@@ -106,12 +106,12 @@ public class Home extends Fragment {
     CityItem cityItem;
 
     Call<List<FeaturedNetworks>> call;
-    Call<List<SearchNetwork>> callNetworks;
+    Call<List<FeaturedNetworks>> callNetworks;
     Call<List<FeaturedNetworks>> callForRelatedNetwork;
 
 
     static ArrayList<FeaturedNetworks> networks;
-    static ArrayList<SearchNetwork> searchNetworks;
+    static ArrayList<FeaturedNetworks> searchNetworks;
     static ArrayList<Cities> arrayListCity;
     ArrayList<Cities> arrayListCity2;
     ArrayList<Cities> citiesAccordingToState;
@@ -610,10 +610,19 @@ public class Home extends Fragment {
     public void searchNetworks(String networkName) {
         InterfaceApi interfaceApi = RetrofitLab.connect("http://www.livenewsglobe.com/wp-json/Newspaper/v2/");
         imgLoading.setVisibility(View.VISIBLE);
-        callNetworks = interfaceApi.getNetworks(networkName);
-        callNetworks.enqueue(new Callback<List<SearchNetwork>>() {
+        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+        if(sharedPrefereneceManager.getLoginStatus() == true)
+        {
+            callNetworks = interfaceApi.getNetworks(sharedPrefereneceManager.getUserId(),networkName);
+        }
+        else
+        {
+            callNetworks = interfaceApi.getNetworks(networkName);
+        }
+
+        callNetworks.enqueue(new Callback<List<FeaturedNetworks>>() {
             @Override
-            public void onResponse(Call<List<SearchNetwork>> call, Response<List<SearchNetwork>> response) {
+            public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
                 if(!response.isSuccessful())
                 {
                     imgLoading.setVisibility(View.GONE);
@@ -622,7 +631,10 @@ public class Home extends Fragment {
                 }
 
                 imgLoading.setVisibility(View.GONE);
-                searchNetworks = (ArrayList<SearchNetwork>) response.body();
+                searchNetworks = (ArrayList<FeaturedNetworks>) response.body();
+                mainActivity.storeNetworks=searchNetworks;
+
+
 
                 final LinearLayoutManager linearLayoutManagersss=new LinearLayoutManager(getActivity());
 
@@ -632,8 +644,8 @@ public class Home extends Fragment {
                     recyclerView.setVisibility(View.GONE);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
                     recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-                    SearchItem searchItem = new SearchItem(getActivity(), searchNetworks,"grid");
-                    recyclerViewGrid.setAdapter(searchItem);
+                    NewsItem newsItem = new NewsItem(getActivity(), searchNetworks,"grid");
+                    recyclerViewGrid.setAdapter(newsItem);
                     // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
                     recyclerView.scheduleLayoutAnimation();
                     recyclerViewGrid.scheduleLayoutAnimation();
@@ -645,8 +657,8 @@ public class Home extends Fragment {
                     recyclerView.setVisibility(View.VISIBLE);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(linearLayoutManagersss);
-                    SearchItem searchItem = new SearchItem(getActivity(), searchNetworks,"list");
-                    recyclerView.setAdapter(searchItem);
+                    NewsItem newsItem = new NewsItem(getActivity(), searchNetworks,"list");
+                    recyclerView.setAdapter(newsItem);
                     recyclerView.scheduleLayoutAnimation();
                     recyclerViewGrid.scheduleLayoutAnimation();
                 }
@@ -722,11 +734,9 @@ public class Home extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<SearchNetwork>> call, Throwable t) {
-
+            public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
                 imgLoading.setVisibility(View.GONE);
                 sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-
             }
         });
     }
@@ -823,7 +833,7 @@ public class Home extends Fragment {
 //                            sharedPrefereneceManager.getLoginStatus();
         if(sharedPrefereneceManager.getLoginStatus() == true)
         {
-            Toast.makeText(mainActivity, "", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mainActivity, "", Toast.LENGTH_SHORT).show();
             InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
             Call<InsertChannelResponse> call = interfaceApi.checkIsFavouriteOrNot(sharedPrefereneceManager.getUserId(),mainActivity.storeNetworks.get(position).getId()); //retrofit create implementation for this method
             call.enqueue(new Callback<InsertChannelResponse>() {
@@ -861,7 +871,7 @@ public class Home extends Fragment {
 
                                 @Override
                                 public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
-                                    Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

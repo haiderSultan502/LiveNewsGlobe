@@ -1,5 +1,7 @@
 package com.example.livenewsglobe.Interface;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.SyncStateContract;
 
 import com.example.livenewsglobe.models.Cities;
@@ -11,7 +13,10 @@ import com.example.livenewsglobe.models.Register;
 import com.example.livenewsglobe.models.RegisterUser;
 import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
+import com.example.livenewsglobe.models.UserProfile;
 
+import java.io.File;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +30,14 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface InterfaceApi {
 
     @GET("post/")   //working
-    Call<List<SearchNetwork>> getNetworks(@Query("s") String networkName);
+    Call<List<FeaturedNetworks>> getNetworks(@Query("user_id") int userID,@Query("s") String networkName);
+    @GET("post/")   //working
+    Call<List<FeaturedNetworks>> getNetworks(@Query("s") String networkName);
 
     @GET("posts/2")
     Call<List<FeaturedNetworks>> getNetworks(@Query("user_id") int userID);
@@ -81,6 +89,12 @@ public interface InterfaceApi {
 
     @POST("fav_check")
     Call<InsertChannelResponse> checkIsFavouriteOrNot(@Query("user_id") int userID,@Query("posts_id") int postID);
+
+    @POST("avatar_add/") //post request in body form-data parameter
+    @FormUrlEncoded
+//    use must @FormUrlEncoded for form data and @FieldMap or @Field to send params
+//    Call<Register> registerUser(@FieldMap Map<String,String> params);
+    Call<UserProfile> uploadImage(@Field("avatar") Uri imgUrl);
 
     
 

@@ -1,9 +1,15 @@
 package com.example.livenewsglobe;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -25,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
@@ -49,17 +56,25 @@ import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
+import com.example.livenewsglobe.models.UserProfile;
 import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
+import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
+import info.androidhive.fontawesome.FontDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -112,7 +127,14 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> statesList2;
 
     Boolean checkGridStatus=false,checkListStatus=false;
+
+    NavigationView navigationViews;
+    View headerView;
     TextView userName;
+    ImageView imageViewUser,imagePicker,imageUpload;
+    static Bitmap bitmaps;
+    Uri path;
+    private  static final int IMAGE = 100;
 
     //end
 
@@ -122,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+    SweetAlertDialogGeneral sweetAlertDialogGeneral;
     Home home;
     State state = new State();
     Fragment city = new City("allCities");
@@ -148,8 +171,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        navigationView = (NavigationView) findViewById(R.id.navigation);
+        headerView = navigationView.getHeaderView(0);
+
+        userName = (TextView) headerView.findViewById(R.id.tv_username);
+        imageViewUser = headerView.findViewById(R.id.user_image);
+        imagePicker = headerView.findViewById(R.id.image_picker);
+        imageUpload = headerView.findViewById(R.id.image_upload);
+
 
         progressDialog =  new ProgressDialog("Loading...");
+        sweetAlertDialogGeneral = new SweetAlertDialogGeneral(this);
 
         recyclerView=findViewById(R.id.recycler_view);
         recyclerViewGrid=findViewById(R.id.recycler_view_gridView);
@@ -175,6 +207,16 @@ public class MainActivity extends AppCompatActivity {
         btnBack=findViewById(R.id.back_btn_relativeLayout);
 
         navigationDrawer=findViewById(R.id.button_navigation_drawer);
+
+//        // using paper plane icon for FAB
+//        FontDrawable drawable = new FontDrawable(this, R.string.fa_list_solid, true, false);
+//
+//// white color to icon
+//        drawable.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+//        drawable.setTextSize(25);
+//        navigationDrawer.setBackground(drawable);
+
+
         drawerLayout=findViewById(R.id.drawer_layout);
 
         gridView = findViewById(R.id.button_gridview);
@@ -210,6 +252,19 @@ public class MainActivity extends AppCompatActivity {
 
         blurbackground();
 
+        imagePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+                Toast.makeText(MainActivity.this, "Select image", Toast.LENGTH_SHORT).show();
+            }
+        });
+        imageUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImage();
+            }
+        });
 
         listView.setBackgroundResource(R.drawable.on_list);
 
@@ -469,10 +524,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String networkName =  search.getText().toString();
-                fragmentTransaction= getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout,new Home(networkName,"search"));
-                //        ft.addToBackStack(null);
-                fragmentTransaction.commit();
+
+                if (networkName.length() == 0)
+                {
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Type some keyword to search");
+                }
+                else {
+
+                    fragmentTransaction= getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_layout,new Home(networkName,"search"));
+                    //        ft.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
 
 
             }
@@ -568,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
                 filter.setBackgroundResource(R.drawable.filter);
 
 
-                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
+                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 7.3f);
                 linearLayout.setLayoutParams(params);
             }
         });
@@ -630,7 +693,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
+                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 7.3f);
                 linearLayout.setLayoutParams(params);
             }
         });
@@ -680,7 +743,7 @@ public class MainActivity extends AppCompatActivity {
 
                 filter_options.scheduleLayoutAnimation();
 
-                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 5.3f);
+                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
                 linearLayout.setLayoutParams(params);
             }
         });
@@ -875,7 +938,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void setBgResource() {
-        LinearLayout.LayoutParams params1 =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
+        LinearLayout.LayoutParams params1 =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 7.3f);
         linearLayout.setLayoutParams(params1);
         listView.setBackgroundResource(R.drawable.on_list);
         gridView.setBackgroundResource(R.drawable.grid);
@@ -892,7 +955,7 @@ public class MainActivity extends AppCompatActivity {
         filter_options.setVisibility(View.GONE);
     }
     public void setLinearLayoutparam() {
-        LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 6.3f);
+        LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(MATCH_PARENT, 0, 7.3f);
         linearLayout.setLayoutParams(params);
     }
     public void checkBackStackPopFrag() {
@@ -1077,10 +1140,69 @@ public class MainActivity extends AppCompatActivity {
     }
     public void setUserName(String username)
     {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
-        View headerView = navigationView.getHeaderView(0);
-        userName = (TextView) headerView.findViewById(R.id.tv_username);
+
         userName.setText(username);
+
+    }
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode== IMAGE && resultCode==RESULT_OK && data!=null)
+        {
+            path = data.getData();
+//            path = Uri.fromFile(new File(pa))
+
+            try {
+                bitmaps = MediaStore.Images.Media.getBitmap(getContentResolver(),path);
+                imageViewUser.setImageBitmap(bitmaps);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadImage(){
+
+        String image = convertToString();
+
+        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
+
+        Call<UserProfile>    call = interfaceApi.uploadImage(path) ;
+
+        call.enqueue(new Callback<UserProfile>() {
+            @Override
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                if(!response.isSuccessful())
+                {
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
+//                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                UserProfile userProfile = response.body();
+                String status = userProfile.getStatus();
+                sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
+            }
+
+            @Override
+            public void onFailure(Call<UserProfile> call, Throwable t) {
+                sweetAlertDialogGeneral.showSweetAlertDialog("error","Issue found");
+            }
+        });
+
+    }
+    private String convertToString()
+    {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmaps.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        byte[] imgByte = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(imgByte,Base64.DEFAULT);
+    }
 }
