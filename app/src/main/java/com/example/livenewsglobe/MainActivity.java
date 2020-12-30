@@ -1,6 +1,8 @@
 package com.example.livenewsglobe;
 
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
@@ -67,14 +69,19 @@ import com.google.android.material.tabs.TabLayout;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import info.androidhive.fontawesome.FontDrawable;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -134,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageViewUser,imagePicker,imageUpload;
     static Bitmap bitmaps;
     Uri path;
-    private  static final int IMAGE = 100;
+    String imagePath;
+    private  static final int IMAGE = 0;
 
     //end
 
@@ -262,7 +270,37 @@ public class MainActivity extends AppCompatActivity {
         imageUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImage();
+                File file = new File(imagePath);
+                RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("file",file.getName(),requestBody);
+
+                InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
+                String imgName = file.getName();
+
+//        File file = new File("test_image.jpg");
+                Call<UserProfile>  call = interfaceApi.uploadImages(body);
+
+                call.enqueue(new Callback<UserProfile>() {
+                    @Override
+                    public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                        if(!response.isSuccessful())
+                        {
+                            sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
+//                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        UserProfile userProfile = response.body();
+                        String status = userProfile.getStatus();
+                        sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserProfile> call, Throwable t) {
+                        sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                    }
+                });
+//                uploadImage();
             }
         });
 
@@ -1146,8 +1184,8 @@ public class MainActivity extends AppCompatActivity {
     }
     private void selectImage() {
         Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_PICK);
+        intent.setType("*/*");
         startActivityForResult(intent, IMAGE);
     }
 
@@ -1157,6 +1195,9 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode== IMAGE && resultCode==RESULT_OK && data!=null)
         {
             path = data.getData();
+            imagePath = getRealPathFromUri(path);
+
+//            filePath = getPath(path);
 //            path = Uri.fromFile(new File(pa))
 
             try {
@@ -1167,42 +1208,160 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-    private void uploadImage(){
-
-        String image = convertToString();
-
-        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
-
-        Call<UserProfile>    call = interfaceApi.uploadImage(path) ;
-
-        call.enqueue(new Callback<UserProfile>() {
-            @Override
-            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-                if(!response.isSuccessful())
-                {
-                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
-//                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                UserProfile userProfile = response.body();
-                String status = userProfile.getStatus();
-                sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
-            }
-
-            @Override
-            public void onFailure(Call<UserProfile> call, Throwable t) {
-                sweetAlertDialogGeneral.showSweetAlertDialog("error","Issue found");
-            }
-        });
-
-    }
-    private String convertToString()
+    private String getRealPathFromUri(Uri uri)
     {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmaps.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
-        byte[] imgByte = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        String[] projection = {MediaStore.Images.Media.DATA};
+        CursorLoader cursorLoader = new CursorLoader(getApplicationContext(),uri,projection,null,null,null);
+        Cursor cursor = cursorLoader.loadInBackground();
+        int col_inex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(col_inex);
+        cursor.close();
+        return result;
     }
+//    public byte[] getBytes(InputStream is) throws IOException {
+//        ByteArrayOutputStream byteBuff = new ByteArrayOutputStream();
+//
+//        int buffSize = 1024;
+//        byte[] buff = new byte[buffSize];
+//
+//        int len = 0;
+//        while ((len = is.read(buff)) != -1) {
+//            byteBuff.write(buff, 0, len);
+//        }
+//
+//        return byteBuff.toByteArray();
+//    }
+
+//    private void uploadImage(byte[] imageBytes) {
+//
+//        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
+//
+//        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
+//
+//        MultipartBody.Part body = MultipartBody.Part.createFormData("image", "test_image.jpg", requestFile);
+//        Call<UserProfile> call = interfaceApi.uploadImages(body);
+//        call.enqueue(new Callback<UserProfile>() {
+//            @Override
+//            public void onResponse(Call<UserProfile> call, retrofit2.Response<UserProfile> response) {
+//
+//
+//                if (response.isSuccessful()) {
+//
+//                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
+////                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+//                    return;
+//
+//                } else {
+//                    UserProfile userProfile = response.body();
+//                    String status = userProfile.getStatus();
+//                    sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
+//
+////                    ResponseBody errorBody = response.errorBody();
+////
+////                    Gson gson = new Gson();
+////
+////                    try {
+////
+////                        Response errorResponse = gson.fromJson(errorBody.string(), Response.class);
+////                        Snackbar.make(findViewById(R.id.content), errorResponse.getMessage(),Snackbar.LENGTH_SHORT).show();
+////
+////                    } catch (IOException e) {
+////                        e.printStackTrace();
+////                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserProfile> call, Throwable t) {
+//
+//                sweetAlertDialogGeneral.showSweetAlertDialog("error","Issue found");
+//            }
+//        });
+//    }
+
+//    public String getPath(Uri uri) {
+//        String[] projection = {MediaStore.MediaColumns.DATA};
+//        Cursor cursor = managedQuery(uri, projection, null, null, null);
+//        int column_index = cursor
+//                .getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+//        cursor.moveToFirst();
+//        String imagePath = cursor.getString(column_index);
+//
+//        return cursor.getString(column_index);
+//    }
+
+//    private void uploadImage(){
+//
+////        String image = convertToString();
+////        String image = "remove_filter.png";
+////        File file = new File(path.getPath());
+//
+//        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
+//
+////        File file = new File("test_image.jpg");
+//        Call<UserProfile>  call = interfaceApi.uploadImage(image);
+//
+//        call.enqueue(new Callback<UserProfile>() {
+//            @Override
+//            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+//                if(!response.isSuccessful())
+//                {
+//                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
+////                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                UserProfile userProfile = response.body();
+//                String status = userProfile.getStatus();
+//                sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserProfile> call, Throwable t) {
+//                sweetAlertDialogGeneral.showSweetAlertDialog("error","Issue found");
+//            }
+//        });
+//
+//    }
+//    private void uploads()
+//    {
+////        File file = new File(mediaPath);
+////
+////        // Parsing any Media type file
+////        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+////        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+////        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+//
+//        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
+//
+//        Call<UserProfile> call = interfaceApi.uploadImage()
+//        call.enqueue(new Callback<UserProfile>() {
+//            @Override
+//            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+//                if(!response.isSuccessful())
+//                {
+//                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
+////                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                UserProfile userProfile = response.body();
+//                String status = userProfile.getStatus();
+//                sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserProfile> call, Throwable t) {
+//                sweetAlertDialogGeneral.showSweetAlertDialog("error","Issue found");
+//            }
+//        });
+//    }
+//    private String convertToString()
+//    {
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        bitmaps.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+//        byte[] imgByte = byteArrayOutputStream.toByteArray();
+//        return Base64.encodeToString(imgByte,Base64.DEFAULT);
+//    }
 }

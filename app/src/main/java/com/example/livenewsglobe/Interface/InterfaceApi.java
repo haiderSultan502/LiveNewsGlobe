@@ -1,5 +1,6 @@
 package com.example.livenewsglobe.Interface;
 
+import android.database.Observable;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.SyncStateContract;
@@ -20,6 +21,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -90,12 +93,16 @@ public interface InterfaceApi {
     @POST("fav_check")
     Call<InsertChannelResponse> checkIsFavouriteOrNot(@Query("user_id") int userID,@Query("posts_id") int postID);
 
-    @POST("avatar_add/") //post request in body form-data parameter
     @FormUrlEncoded
+    @POST("avatar_add/") //post request in body form-data parameter
 //    use must @FormUrlEncoded for form data and @FieldMap or @Field to send params
 //    Call<Register> registerUser(@FieldMap Map<String,String> params);
-    Call<UserProfile> uploadImage(@Field("avatar") Uri imgUrl);
+    Call<UserProfile> uploadImage(@Field("avatar") String image);
 
-    
+    @Multipart
+    @POST("avatar_add/")
+    Call<UserProfile> uploadImages(@Part MultipartBody.Part file);
+
+
 
 }
