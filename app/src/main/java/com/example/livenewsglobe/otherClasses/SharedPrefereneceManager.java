@@ -13,6 +13,10 @@ public class SharedPrefereneceManager {
 
     String userName;
 
+
+
+    String userProfileUrl;
+
     int userId;
 
     public SharedPrefereneceManager(Context context) {
@@ -29,6 +33,15 @@ public class SharedPrefereneceManager {
         sharedPreferences.edit().putInt("userId",userId).commit();
     }
 
+    public String getUserProfileUrl() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
+        return sharedPreferences.getString("userProfileUrl","");
+    }
+
+    public void setUserProfileUrl(String userProfileUrl) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString("userProfileUrl",userProfileUrl).commit();
+    }
     public String getUserName() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
         return sharedPreferences.getString("userName","");

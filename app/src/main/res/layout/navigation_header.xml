@@ -13,12 +13,14 @@
             android:layout_marginRight="@dimen/_40sdp"
             android:layout_alignParentRight="true"
             android:background="@drawable/img_bg">
-            <ImageView
-                android:id="@+id/user_image"
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_70sdp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/profile21"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/user_image"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/user_profile"
+            />
         </RelativeLayout>
     <TextView
         android:id="@+id/tv_username"
@@ -40,13 +42,6 @@
         android:layout_below="@+id/relative_layout_image"
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginRight="@dimen/_20sdp"></ImageView>
-    <ImageView
-        android:id="@+id/image_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_sharp_edit_24"
-        android:layout_below="@+id/relative_layout_image"
         android:layout_marginRight="@dimen/_20sdp"></ImageView>
 
 </RelativeLayout>

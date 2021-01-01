@@ -1,7 +1,9 @@
 package com.example.livenewsglobe;
 
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,12 +61,14 @@ import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
 import com.example.livenewsglobe.models.UserProfile;
+import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
 import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -138,11 +142,12 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationViews;
     View headerView;
     TextView userName;
-    ImageView imageViewUser,imagePicker,imageUpload;
+    ImageView imageViewUser,imagePicker;
     static Bitmap bitmaps;
     Uri path;
     String imagePath;
     private  static final int IMAGE = 0;
+    String status,userProfileURL;
 
     //end
 
@@ -153,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     SweetAlertDialogGeneral sweetAlertDialogGeneral;
+    CustomAlertDialog customAlertDialog;
     Home home;
     State state = new State();
     Fragment city = new City("allCities");
@@ -185,11 +191,11 @@ public class MainActivity extends AppCompatActivity {
         userName = (TextView) headerView.findViewById(R.id.tv_username);
         imageViewUser = headerView.findViewById(R.id.user_image);
         imagePicker = headerView.findViewById(R.id.image_picker);
-        imageUpload = headerView.findViewById(R.id.image_upload);
 
 
         progressDialog =  new ProgressDialog("Loading...");
         sweetAlertDialogGeneral = new SweetAlertDialogGeneral(this);
+        customAlertDialog=new CustomAlertDialog(this);
 
         recyclerView=findViewById(R.id.recycler_view);
         recyclerViewGrid=findViewById(R.id.recycler_view_gridView);
@@ -258,6 +264,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(this);
+//                            sharedPrefereneceManager.getLoginStatus();
+        if (sharedPrefereneceManager.getLoginStatus() == true) {
+                if (sharedPrefereneceManager.getUserProfileUrl().length() != 0)
+                {
+                    userName = (TextView) headerView.findViewById(R.id.tv_username);
+                    userName.setText(sharedPrefereneceManager.getUserName());
+
+                    imageViewUser = headerView.findViewById(R.id.user_image);
+                    String url = sharedPrefereneceManager.getUserProfileUrl();
+                    Picasso.with(this).load(url).placeholder(R.drawable.user_profile).error(R.drawable.user_profile).into(imageViewUser);
+                }
+        }
+
         blurbackground();
 
         imagePicker.setOnClickListener(new View.OnClickListener() {
@@ -267,42 +287,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Select image", Toast.LENGTH_SHORT).show();
             }
         });
-        imageUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File file = new File(imagePath);
-                RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("file",file.getName(),requestBody);
 
-                InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
-                String imgName = file.getName();
 
-//        File file = new File("test_image.jpg");
-                Call<UserProfile>  call = interfaceApi.uploadImages(body);
 
-                call.enqueue(new Callback<UserProfile>() {
-                    @Override
-                    public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-                        if(!response.isSuccessful())
-                        {
-                            sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
-//                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        UserProfile userProfile = response.body();
-                        String status = userProfile.getStatus();
-                        sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserProfile> call, Throwable t) {
-                        sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
-                    }
-                });
-//                uploadImage();
-            }
-        });
 
         listView.setBackgroundResource(R.drawable.on_list);
 
@@ -907,6 +894,7 @@ public class MainActivity extends AppCompatActivity {
                         {
                             setBgResourceListGrid();
                             setFragStatus("favFrag");
+//                            Fragment favourites = new Favourite("grid",storeFavouriteNetworks);
                             fragmentTransaction.replace(R.id.frame_layout,favourite);
                             fragmentTransaction.commit();
                             gridStatus=false;
@@ -1138,11 +1126,11 @@ public class MainActivity extends AppCompatActivity {
     }
     private void favouriteGridViewMode() {
 
-//        Favourite favourite=new Favourite("grid",storeFavouriteNetworks);
-        Favourite favourite=new Favourite();
+        Favourite favourites=new Favourite("grid",storeFavouriteNetworks);
+//        Favourite favourite=new Favourite();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout,favourite);
+        fragmentTransaction.replace(R.id.frame_layout,favourites);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
     }
@@ -1161,13 +1149,14 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = menuItem.getItemId();
                 // check selected menu item's id and replace a Fragment Accordingly
                 if (itemId == R.id.home) {
-                    Toast.makeText(getApplicationContext(), "Home", Toast.LENGTH_SHORT).show();
+                    homeListViewMode();
                 } else if (itemId == R.id.profile) {
                     Toast.makeText(getApplicationContext(), "Profile", Toast.LENGTH_SHORT).show();
-                } else if (itemId == R.id.setting) {
-                    Toast.makeText(getApplicationContext(), "Setting", Toast.LENGTH_SHORT).show();
                 }  else if (itemId == R.id.favourite) {
-                    Toast.makeText(getApplicationContext(), "Favourite", Toast.LENGTH_SHORT).show();
+                    Fragment favourite = new Favourite();
+                    fragmentTransaction= getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_layout,favourite);
+                    fragmentTransaction.commit();
                 } else if (itemId == R.id.about_us) {
                     Toast.makeText(getApplicationContext(), "About_us", Toast.LENGTH_SHORT).show();
                 }
@@ -1179,13 +1168,14 @@ public class MainActivity extends AppCompatActivity {
     public void setUserName(String username)
     {
 
+        userName = (TextView) headerView.findViewById(R.id.tv_username);
         userName.setText(username);
 
     }
     private void selectImage() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_PICK);
-        intent.setType("*/*");
+        intent.setType("image/*");
         startActivityForResult(intent, IMAGE);
     }
 
@@ -1196,16 +1186,7 @@ public class MainActivity extends AppCompatActivity {
         {
             path = data.getData();
             imagePath = getRealPathFromUri(path);
-
-//            filePath = getPath(path);
-//            path = Uri.fromFile(new File(pa))
-
-            try {
-                bitmaps = MediaStore.Images.Media.getBitmap(getContentResolver(),path);
-                imageViewUser.setImageBitmap(bitmaps);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            uploadUserProfile();
         }
     }
     private String getRealPathFromUri(Uri uri)
@@ -1219,149 +1200,54 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
         return result;
     }
-//    public byte[] getBytes(InputStream is) throws IOException {
-//        ByteArrayOutputStream byteBuff = new ByteArrayOutputStream();
-//
-//        int buffSize = 1024;
-//        byte[] buff = new byte[buffSize];
-//
-//        int len = 0;
-//        while ((len = is.read(buff)) != -1) {
-//            byteBuff.write(buff, 0, len);
-//        }
-//
-//        return byteBuff.toByteArray();
-//    }
+    private void uploadUserProfile() {
+        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(this);
+//                            sharedPrefereneceManager.getLoginStatus();
+        if (sharedPrefereneceManager.getLoginStatus() == true) {
+            File file = new File(imagePath);
+//                RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", file.getName(), requestBody);
 
-//    private void uploadImage(byte[] imageBytes) {
-//
-//        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
-//
-//        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
-//
-//        MultipartBody.Part body = MultipartBody.Part.createFormData("image", "test_image.jpg", requestFile);
-//        Call<UserProfile> call = interfaceApi.uploadImages(body);
-//        call.enqueue(new Callback<UserProfile>() {
-//            @Override
-//            public void onResponse(Call<UserProfile> call, retrofit2.Response<UserProfile> response) {
-//
-//
-//                if (response.isSuccessful()) {
-//
-//                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
-////                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
-//                    return;
-//
-//                } else {
-//                    UserProfile userProfile = response.body();
-//                    String status = userProfile.getStatus();
-//                    sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
-//
-////                    ResponseBody errorBody = response.errorBody();
-////
-////                    Gson gson = new Gson();
-////
-////                    try {
-////
-////                        Response errorResponse = gson.fromJson(errorBody.string(), Response.class);
-////                        Snackbar.make(findViewById(R.id.content), errorResponse.getMessage(),Snackbar.LENGTH_SHORT).show();
-////
-////                    } catch (IOException e) {
-////                        e.printStackTrace();
-////                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserProfile> call, Throwable t) {
-//
-//                sweetAlertDialogGeneral.showSweetAlertDialog("error","Issue found");
-//            }
-//        });
-//    }
+            InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
 
-//    public String getPath(Uri uri) {
-//        String[] projection = {MediaStore.MediaColumns.DATA};
-//        Cursor cursor = managedQuery(uri, projection, null, null, null);
-//        int column_index = cursor
-//                .getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-//        cursor.moveToFirst();
-//        String imagePath = cursor.getString(column_index);
-//
-//        return cursor.getString(column_index);
-//    }
+            Call<UserProfile> call = interfaceApi.uploadImages(body);
 
-//    private void uploadImage(){
-//
-////        String image = convertToString();
-////        String image = "remove_filter.png";
-////        File file = new File(path.getPath());
-//
-//        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
-//
-////        File file = new File("test_image.jpg");
-//        Call<UserProfile>  call = interfaceApi.uploadImage(image);
-//
-//        call.enqueue(new Callback<UserProfile>() {
-//            @Override
-//            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-//                if(!response.isSuccessful())
-//                {
-//                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
-////                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                UserProfile userProfile = response.body();
-//                String status = userProfile.getStatus();
-//                sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserProfile> call, Throwable t) {
-//                sweetAlertDialogGeneral.showSweetAlertDialog("error","Issue found");
-//            }
-//        });
-//
-//    }
-//    private void uploads()
-//    {
-////        File file = new File(mediaPath);
-////
-////        // Parsing any Media type file
-////        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
-////        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-////        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-//
-//        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
-//
-//        Call<UserProfile> call = interfaceApi.uploadImage()
-//        call.enqueue(new Callback<UserProfile>() {
-//            @Override
-//            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-//                if(!response.isSuccessful())
-//                {
-//                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Something goes wromg");
-////                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                UserProfile userProfile = response.body();
-//                String status = userProfile.getStatus();
-//                sweetAlertDialogGeneral.showSweetAlertDialog("success",status);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserProfile> call, Throwable t) {
-//                sweetAlertDialogGeneral.showSweetAlertDialog("error","Issue found");
-//            }
-//        });
-//    }
-//    private String convertToString()
-//    {
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        bitmaps.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
-//        byte[] imgByte = byteArrayOutputStream.toByteArray();
-//        return Base64.encodeToString(imgByte,Base64.DEFAULT);
-//    }
+            call.enqueue(new Callback<UserProfile>() {
+                @Override
+                public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                    if (!response.isSuccessful()) {
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning", "Something goes wromg");
+//                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    UserProfile userProfile = response.body();
+                    status = userProfile.getStatus();
+                    userProfileURL = userProfile.getUrl();
+
+                    SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(getApplicationContext());
+                    sharedPrefereneceManager.setUserProfileUrl(userProfileURL);
+
+                    Picasso.with(getApplicationContext()).load(userProfileURL).placeholder(R.drawable.user_profile).error(R.drawable.user_profile).into(imageViewUser);
+                    SharedPreferences prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE );
+
+
+
+
+                    sweetAlertDialogGeneral.showSweetAlertDialog("success", status);
+                }
+
+                @Override
+                public void onFailure(Call<UserProfile> call, Throwable t) {
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error", t.getMessage());
+                }
+            });
+        }
+        else
+        {
+            customAlertDialog.showDialog();
+        }
+    }
+
 }

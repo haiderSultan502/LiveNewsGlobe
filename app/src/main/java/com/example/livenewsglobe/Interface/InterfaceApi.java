@@ -93,12 +93,6 @@ public interface InterfaceApi {
     @POST("fav_check")
     Call<InsertChannelResponse> checkIsFavouriteOrNot(@Query("user_id") int userID,@Query("posts_id") int postID);
 
-    @FormUrlEncoded
-    @POST("avatar_add/") //post request in body form-data parameter
-//    use must @FormUrlEncoded for form data and @FieldMap or @Field to send params
-//    Call<Register> registerUser(@FieldMap Map<String,String> params);
-    Call<UserProfile> uploadImage(@Field("avatar") String image);
-
     @Multipart
     @POST("avatar_add/")
     Call<UserProfile> uploadImages(@Part MultipartBody.Part file);
