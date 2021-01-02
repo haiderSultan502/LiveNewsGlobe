@@ -4,25 +4,127 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/splash2"
-    android:orientation="vertical"
-    android:layout_weight="10"
-    android:weightSum="10">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:orientation="vertical"
         android:background="@drawable/about_top_bg">
+
+        <RelativeLayout
+            android:id="@+id/back_btn_relativeLayout"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_60sdp">
+
+            <Button
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:background="@drawable/back_btn"
+                android:layout_alignParentLeft="true"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_130sdp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/home_logo" />
+        <Button
+            android:id="@+id/button_navigation_drawer2"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:background="@drawable/ic_round_filter_list_24"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
         <TextView
+            android:id="@+id/about_us"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="About Us"
             android:textColor="#fff"
-            android:textSize="@dimen/_30sdp"
-            android:textStyle="bold"></TextView>
+            android:textSize="@dimen/_25sdp"
+            android:textStyle="bold"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"></TextView>
 
-    </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:padding="30dp">
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/aboutUs"
+            android:textSize="@dimen/_16sdp"
+            android:textColor="#fff"
+            android:layout_centerHorizontal="true"
+            ></TextView>
+        <TextView
+            android:layout_below="@+id/about"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LiveNewsGlobe.com"
+            android:textSize="@dimen/_16sdp"
+            android:textColor="#fff"></TextView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3">
+        <TextView
+            android:id="@+id/contact_us"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Us"
+            android:textColor="#fff"
+            android:textSize="@dimen/_23sdp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"></TextView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contact_us"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_centerInParent="true">
+            <ImageView
+                android:id="@+id/twitter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/twitter"
+                android:layout_marginLeft="@dimen/_10sdp"/>
+            <ImageView
+                android:id="@+id/fb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fb"
+                android:layout_marginLeft="@dimen/_10sdp"/>
+            <ImageView
+                android:id="@+id/insta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/insta"
+                android:layout_marginLeft="@dimen/_10sdp"/>
+            <ImageView
+                android:id="@+id/pintrest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pintrest"
+                android:layout_marginLeft="@dimen/_10sdp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

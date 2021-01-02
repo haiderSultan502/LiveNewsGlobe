@@ -25,6 +25,12 @@
             android:id="@+id/toolbar"
             android:visibility="gone"
             android:elevation="@dimen/_4sdp"/>
+        <include
+            android:id="@+id/view_about_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/about_us"
+            android:visibility="gone"/>
         <FrameLayout
             android:id="@+id/frame_layout_player"
             android:layout_width="match_parent"
@@ -61,7 +67,8 @@
                             android:layout_marginTop="@dimen/_25sdp"
                             android:layout_marginLeft="@dimen/_20sdp"
                             android:background="@drawable/back_btn"
-                            android:layout_alignParentLeft="true"/>
+                            android:layout_alignParentLeft="true"
+                            android:visibility="gone"/>
 
                         </RelativeLayout>
 

@@ -93,13 +93,13 @@ import retrofit2.Response;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static Boolean checkLoginStatus=false;
     public static int user_id,post_id;
     public static String userEmail;
     EditText search;
-    Button searchButton,gridView,listView,filter,removeFilter,navigationDrawer,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
+    Button searchButton,gridView,listView,filter,removeFilter,navigationDrawer,navigationDrawer2,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
     Boolean checkVisibilityFilter=false,checkVisibilityGrid=false,checkVisibilityList=true;
     public static RelativeLayout filter_options,btnBack;
     LinearLayout linearLayout;
@@ -173,6 +173,10 @@ public class MainActivity extends AppCompatActivity {
     private  static final String TAG="MianActivity";
     RelativeLayout userLogout;
 
+    TextView aboutUs;
+    View include;
+    ImageView imTwitter,imFb,imPintrest,imInsta;
+
 
 
 
@@ -184,6 +188,12 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        include = findViewById(R.id.view_about_us);
+        imTwitter= findViewById(R.id.twitter);
+        imFb=findViewById(R.id.fb);
+        imInsta=findViewById(R.id.insta);
+        imPintrest=findViewById(R.id.pintrest);
 
         navigationView = (NavigationView) findViewById(R.id.navigation);
         headerView = navigationView.getHeaderView(0);
@@ -221,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
         btnBack=findViewById(R.id.back_btn_relativeLayout);
 
         navigationDrawer=findViewById(R.id.button_navigation_drawer);
+        navigationDrawer2=findViewById(R.id.button_navigation_drawer2);
 
 //        // using paper plane icon for FAB
 //        FontDrawable drawable = new FontDrawable(this, R.string.fa_list_solid, true, false);
@@ -566,6 +577,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        navigationDrawer2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.openDrawer(Gravity.RIGHT);
+            }
+        });
         navigationDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1150,6 +1167,8 @@ public class MainActivity extends AppCompatActivity {
                 // check selected menu item's id and replace a Fragment Accordingly
                 if (itemId == R.id.home) {
                     homeListViewMode();
+                    include.setVisibility(View.GONE);
+//                    include.setVisibility(View.GONE);
                 } else if (itemId == R.id.profile) {
                     Toast.makeText(getApplicationContext(), "Profile", Toast.LENGTH_SHORT).show();
                 }  else if (itemId == R.id.favourite) {
@@ -1158,7 +1177,7 @@ public class MainActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.frame_layout,favourite);
                     fragmentTransaction.commit();
                 } else if (itemId == R.id.about_us) {
-                    Toast.makeText(getApplicationContext(), "About_us", Toast.LENGTH_SHORT).show();
+                    include.setVisibility(View.VISIBLE);
                 }
                 drawer.closeDrawers();
                 return false;
@@ -1250,4 +1269,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }
