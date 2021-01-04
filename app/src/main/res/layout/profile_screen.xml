@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="10"
+    android:weightSum="10"
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="@drawable/about_top_bg">
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_image"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_90sdp"
+            android:background="@drawable/img_bg"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_image"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/boss" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button_navigation_drawer_profile"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:background="@drawable/ic_round_filter_list_24"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:paddingTop="@dimen/_60sdp"
+        android:paddingLeft="@dimen/_60sdp"
+        android:paddingRight="@dimen/_50sdp">
+        <EditText
+            android:id="@+id/tv_username_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Null"
+            android:inputType="none"
+            android:drawableLeft="@drawable/ic_sharp_person_24"
+            android:drawablePadding="5dp"
+            android:textSize="@dimen/_15sdp"/>
+        <EditText
+            android:id="@+id/tv_email_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Null"
+            android:textSize="@dimen/_15sdp"
+            android:drawablePadding="5dp"
+            android:inputType="none"
+            android:layout_below="@+id/tv_username_profile"
+            android:drawableLeft="@drawable/ic_sharp_email_24"
+            android:layout_marginTop="15dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3">
+        <TextView
+            android:id="@+id/tv_logout_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textColor="@color/blueColor"
+            android:textSize="@dimen/_15sdp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+</LinearLayout>

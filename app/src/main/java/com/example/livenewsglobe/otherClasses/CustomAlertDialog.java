@@ -244,7 +244,8 @@ public class CustomAlertDialog {
                                 sharedPrefereneceManager.setPassword(password.getText().toString());
                                 sharedPrefereneceManager.setUserId(loginModel.getID());
 
-                                context.setUserName(sharedPrefereneceManager.getUserName());
+                                context.setUserNameAndEmail(sharedPrefereneceManager.getUserName(),sharedPrefereneceManager.getUserEmail());
+
                                 context.replaceFragment();
 
                                 int id = loginModel.getID();
@@ -308,7 +309,8 @@ public class CustomAlertDialog {
                             if(!response.isSuccessful())
                             {
 
-                                Toast.makeText(context, "Code  "+response.code(), Toast.LENGTH_SHORT).show();
+                                SweetAlertDialogGeneral sweetAlertDialogGeneral= new SweetAlertDialogGeneral(context);
+                                sweetAlertDialogGeneral.showSweetAlertDialog("warning",response.body().getMessage());
                                 return;
                             }
                             else
@@ -323,7 +325,6 @@ public class CustomAlertDialog {
                                 SweetAlertDialogGeneral sweetAlertDialogGeneral= new SweetAlertDialogGeneral(context);
                                 sweetAlertDialogGeneral.showSweetAlertDialog("success","User create successfully");
 //                                Toast.makeText(context, "User Successfully creata ", Toast.LENGTH_SHORT).show();
-
                             }
                         }
 //                      onFailure Invoked when a network exception occurred  talking to the server or when an unexpected exception occurred creating the request or processing the response.

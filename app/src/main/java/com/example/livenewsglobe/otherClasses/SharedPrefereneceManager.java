@@ -19,6 +19,11 @@ public class SharedPrefereneceManager {
 
     int userId;
 
+
+
+    boolean setSignUpStatus;
+
+
     public SharedPrefereneceManager(Context context) {
         this.context = context;
     }
@@ -44,7 +49,7 @@ public class SharedPrefereneceManager {
     }
     public String getUserName() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
-        return sharedPreferences.getString("userName","");
+        return sharedPreferences.getString("userName","Null");
     }
 
     public void setUserName(String userName) {
@@ -54,7 +59,7 @@ public class SharedPrefereneceManager {
 
     public String getUserEmail() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
-        return sharedPreferences.getString("userEmail","");
+        return sharedPreferences.getString("userEmail","Null");
     }
 
     public void setUserEmail(String userEmail) {
@@ -84,4 +89,6 @@ public class SharedPrefereneceManager {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean("loginStatus",false);
     }
+
+
 }

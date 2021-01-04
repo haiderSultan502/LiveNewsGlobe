@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int user_id,post_id;
     public static String userEmail;
     EditText search;
-    Button searchButton,gridView,listView,filter,removeFilter,navigationDrawer,navigationDrawer2,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
+    Button searchButton,gridView,listView,filter,removeFilter,navigationDrawer,navigationDrawer2,navigationDrawerProfile,btnMoveBgColorGridBottomList,btnMoveBgColorfilterBottomList,btnMoveBgColorListBottomGrid,btnMoveBgColorFilterBottomGrid,btnMoveBgColorListBottomFilter,btnMoveBgColorGridBottomFilter;
     Boolean checkVisibilityFilter=false,checkVisibilityGrid=false,checkVisibilityList=true;
     public static RelativeLayout filter_options,btnBack;
     LinearLayout linearLayout;
@@ -173,9 +173,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  static final String TAG="MianActivity";
     RelativeLayout userLogout;
 
-    TextView aboutUs;
-    View include;
+    TextView tvLogoutProfile;
+    View includeAboutUs,includeProfileScreen;
     ImageView imTwitter,imFb,imPintrest,imInsta;
+
+    EditText edUsername,edEmail;
+
+    SharedPrefereneceManager sharedPrefereneceManager;
+
 
 
 
@@ -189,11 +194,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        include = findViewById(R.id.view_about_us);
+        includeAboutUs = findViewById(R.id.view_about_us);
+        includeProfileScreen = findViewById(R.id.view_profile);
         imTwitter= findViewById(R.id.twitter);
         imFb=findViewById(R.id.fb);
         imInsta=findViewById(R.id.insta);
         imPintrest=findViewById(R.id.pintrest);
+
+        edUsername=findViewById(R.id.tv_username_profile);
+        edEmail=findViewById(R.id.tv_email_profile);
+        tvLogoutProfile=findViewById(R.id.tv_logout_profile);
 
         navigationView = (NavigationView) findViewById(R.id.navigation);
         headerView = navigationView.getHeaderView(0);
@@ -232,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         navigationDrawer=findViewById(R.id.button_navigation_drawer);
         navigationDrawer2=findViewById(R.id.button_navigation_drawer2);
+        navigationDrawerProfile=findViewById(R.id.button_navigation_drawer_profile);
 
 //        // using paper plane icon for FAB
 //        FontDrawable drawable = new FontDrawable(this, R.string.fa_list_solid, true, false);
@@ -275,7 +286,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(this);
+        sharedPrefereneceManager = new SharedPrefereneceManager(this);
+
+        if (sharedPrefereneceManager.getLoginStatus() == true)
+        {
+            setUserNameAndEmail(sharedPrefereneceManager.getUserName(),sharedPrefereneceManager.getUserEmail());
+        }
 //                            sharedPrefereneceManager.getLoginStatus();
         if (sharedPrefereneceManager.getLoginStatus() == true) {
                 if (sharedPrefereneceManager.getUserProfileUrl().length() != 0)
@@ -289,6 +305,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         }
 
+
+
         blurbackground();
 
         imagePicker.setOnClickListener(new View.OnClickListener() {
@@ -300,7 +318,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
+        tvLogoutProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPrefereneceManager sharedPrefereneceManager= new SharedPrefereneceManager(getApplicationContext());
+                sharedPrefereneceManager.setLoginStatus(false);
+                setUserNameAndEmail("Null","Null");
+                replaceFragment();
+                includeProfileScreen.setVisibility(View.GONE);
 
+            }
+        });
 
         listView.setBackgroundResource(R.drawable.on_list);
 
@@ -324,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 SharedPrefereneceManager sharedPrefereneceManager= new SharedPrefereneceManager(getApplicationContext());
                 sharedPrefereneceManager.setLoginStatus(false);
+                setUserNameAndEmail("Null","Null");
                 drawer.closeDrawers();
                 replaceFragment();
             }
@@ -578,6 +607,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         navigationDrawer2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.openDrawer(Gravity.RIGHT);
+            }
+        });
+        navigationDrawerProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(Gravity.RIGHT);
@@ -1167,28 +1202,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // check selected menu item's id and replace a Fragment Accordingly
                 if (itemId == R.id.home) {
                     homeListViewMode();
-                    include.setVisibility(View.GONE);
+                    includeAboutUs.setVisibility(View.GONE);
+                    includeProfileScreen.setVisibility(View.GONE);
 //                    include.setVisibility(View.GONE);
                 } else if (itemId == R.id.profile) {
-                    Toast.makeText(getApplicationContext(), "Profile", Toast.LENGTH_SHORT).show();
+                    includeProfileScreen.setVisibility(View.VISIBLE);
+                    includeAboutUs.setVisibility(View.GONE);
+
+
                 }  else if (itemId == R.id.favourite) {
+                    includeAboutUs.setVisibility(View.GONE);
+                    includeProfileScreen.setVisibility(View.GONE);
                     Fragment favourite = new Favourite();
                     fragmentTransaction= getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.frame_layout,favourite);
                     fragmentTransaction.commit();
                 } else if (itemId == R.id.about_us) {
-                    include.setVisibility(View.VISIBLE);
+                    includeProfileScreen.setVisibility(View.GONE);
+                    includeAboutUs.setVisibility(View.VISIBLE);
                 }
                 drawer.closeDrawers();
                 return false;
             }
         });
     }
-    public void setUserName(String username)
+    public void setUserNameAndEmail(String username,String email)
     {
 
         userName = (TextView) headerView.findViewById(R.id.tv_username);
         userName.setText(username);
+
+        edUsername.setText(username);
+        edEmail.setText(email);
 
     }
     private void selectImage() {
@@ -1220,7 +1265,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return result;
     }
     private void uploadUserProfile() {
-        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(this);
 //                            sharedPrefereneceManager.getLoginStatus();
         if (sharedPrefereneceManager.getLoginStatus() == true) {
             File file = new File(imagePath);
