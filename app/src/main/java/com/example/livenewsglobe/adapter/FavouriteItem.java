@@ -14,14 +14,23 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.livenewsglobe.Interface.InterfaceApi;
 import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
 import com.example.livenewsglobe.models.Favourites;
 import com.example.livenewsglobe.models.FavouritesModel;
+import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
+import com.example.livenewsglobe.otherClasses.RetrofitLab;
+import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
+import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHolder>{
 
@@ -33,6 +42,7 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     static String content;
     static String imgUrl;
     NewsVideoPlayer newsVideoPlayer=new NewsVideoPlayer();
+    SweetAlertDialogGeneral sweetAlertDialogGeneral;
 
     public FavouriteItem(Context context, ArrayList<FavouritesModel> arrayListFavouriteNetwork, String showItem)
     {
@@ -45,6 +55,7 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     @Override
     public FavouriteItem.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        sweetAlertDialogGeneral = new SweetAlertDialogGeneral(context);
         if(showItem.equals("listFavourie"))
         {
             view = LayoutInflater.from(context).inflate(R.layout.favourite_item, parent, false);
@@ -124,6 +135,49 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
             imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("alt")-2);
             Picasso.with(context).load(imgUrl).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
         }
+        holder.imageFavouriteNetwroks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
+
+
+                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),Integer.parseInt(arrayListFavouriteNetwork.get(position).getId())); //retrofit create implementation for this method
+                calls.enqueue(new Callback<InsertChannelResponse>() {
+                    @Override
+                    public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                        if(!response.isSuccessful())
+                        {
+//                                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                            sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
+                        }
+                        else
+                        {
+                            InsertChannelResponse insertChannelResponse = response.body();
+
+                            sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully remove from favourites");
+                            holder.imageFavouriteNetwroks.setImageResource(R.drawable.favorite_icon);
+
+                            arrayListFavouriteNetwork.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position,arrayListFavouriteNetwork.size());
+                            notifyDataSetChanged();
+
+//                                            Button btn = viewNewsItem.findViewById(R.id.heart);
+//                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                        sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                    }
+                });
+
+
+            }
+        });
     }
 
     @Override
@@ -136,7 +190,7 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     public class ItemViewHolder extends RecyclerView.ViewHolder
     {
         TextView textViewChannelName;
-        ImageView channelImage,imageFavouriteNetwroks,imageFavouriteNetwroksLike;
+        ImageView channelImage,imageFavouriteNetwroks;
         LinearLayout linearLayoutItemClick;
 
         public ItemViewHolder(@NonNull View itemView) {

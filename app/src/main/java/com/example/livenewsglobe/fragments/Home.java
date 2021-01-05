@@ -63,8 +63,6 @@ import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.InsertChannelResponse;
-import com.example.livenewsglobe.models.ProgressDialog;
-import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
 import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
@@ -877,7 +875,7 @@ public class Home extends Fragment {
                         }
                         else if(status==1)
                         {
-                            Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id );
+                            Log.d("check value", "values" +mainActivity.user_id + mainActivity.userEmail + mainActivity.post_id);
                             InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
                             Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),mainActivity.storeNetworks.get(position).getId()); //retrofit create implementation for this method
                             calls.enqueue(new Callback<InsertChannelResponse>() {
@@ -895,6 +893,13 @@ public class Home extends Fragment {
                                         recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.favorite_icon));
 
                                         sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully remove from favourites");
+
+                                        networks.remove(position);
+
+//                                        recyclerView.notifyItemRemoved(position);
+//                                        notifyItemRangeChanged(position,arrayListFavouriteNetwork.size());
+//                                        notifyDataSetChanged();
+
 //                                            Button btn = viewNewsItem.findViewById(R.id.heart);
 //                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
                                     }

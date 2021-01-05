@@ -279,7 +279,7 @@
                             android:background="@drawable/seach_bg"
                             android:hint="Search"
                             android:imeOptions="actionSearch"
-                            android:inputType="text"
+                            android:inputType="textPassword"
                             android:paddingLeft="@dimen/_15sdp">
 
                             <requestFocus />

@@ -8,6 +8,7 @@ import android.provider.SyncStateContract;
 import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.FeaturedNetworks;
+import com.example.livenewsglobe.models.ForgetPassword;
 import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.models.Login.LoginModel;
 import com.example.livenewsglobe.models.Register;
@@ -96,6 +97,12 @@ public interface InterfaceApi {
     @Multipart
     @POST("avatar_add/")
     Call<UserProfile> uploadImages(@Part MultipartBody.Part file);
+
+    @POST("reset-password")
+    Call<ForgetPassword> passwordForget(@Query("email") String userEmail);
+
+    @POST("set-password")
+    Call<ForgetPassword> passwordReset(@Query("email") String userEmail,@Query("password") String password,@Query("code") String code);
 
 
 

@@ -91,7 +91,7 @@ public class CustomAlertDialog {
         oldColors =  tvSignUp.getTextColors();
         sweetAlertDialogGeneral = new SweetAlertDialogGeneral(context);
 
-        email.addTextChangedListener(new TextWatcher() {
+           email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -110,10 +110,12 @@ public class CustomAlertDialog {
                 if (edt.getText().toString() == null) {
                     edt.setError("Invalid Email Address");
                     valid_email = null;
-                } else if (isEmailValid(edt.getText().toString()) == false) {
+                }
+                else if (isEmailValid(edt.getText().toString()) == false) {
                     edt.setError("Invalid Email Address");
                     valid_email = null;
-                } else {
+                }
+                else {
                     valid_email = edt.getText().toString();
                 }
             }
@@ -308,9 +310,8 @@ public class CustomAlertDialog {
 //                            Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call Response.isSuccessful() to determine if the response indicates success.
                             if(!response.isSuccessful())
                             {
-
-                                SweetAlertDialogGeneral sweetAlertDialogGeneral= new SweetAlertDialogGeneral(context);
-                                sweetAlertDialogGeneral.showSweetAlertDialog("warning",response.body().getMessage());
+                                sweetAlertDialogGeneral.showSweetAlertDialog("warning","code "+ response.code());
+                                sweetAlertDialog.dismiss();
                                 return;
                             }
                             else
@@ -387,6 +388,13 @@ public class CustomAlertDialog {
                 userName.setVisibility(View.GONE);
                 btnSignUp.setVisibility(View.GONE);
                 btnLogin.setVisibility(View.VISIBLE);
+            }
+        });
+        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ForgetPasswordDialog forgetPasswordDialog = new ForgetPasswordDialog(context);
+                forgetPasswordDialog.alertDialogDemo();
             }
         });
 

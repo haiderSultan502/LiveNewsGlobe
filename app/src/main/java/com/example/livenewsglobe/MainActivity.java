@@ -57,7 +57,6 @@ import com.example.livenewsglobe.fragments.State;
 import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.FeaturedNetworks;
-import com.example.livenewsglobe.models.ProgressDialog;
 import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
 import com.example.livenewsglobe.models.UserProfile;
@@ -82,7 +81,6 @@ import java.util.Observable;
 
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
-import info.androidhive.fontawesome.FontDrawable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -114,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView recyclerView,recyclerViewGrid;
 
     Animation animation;
-    ProgressDialog progressDialog;
     ImageView imgLoading;
 
     public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false,getFavouritList=false;
@@ -213,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imagePicker = headerView.findViewById(R.id.image_picker);
 
 
-        progressDialog =  new ProgressDialog("Loading...");
+//        progressDialog =  new ProgressDialog("Loading...");
         sweetAlertDialogGeneral = new SweetAlertDialogGeneral(this);
         customAlertDialog=new CustomAlertDialog(this);
 
