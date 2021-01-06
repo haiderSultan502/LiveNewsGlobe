@@ -41,6 +41,10 @@
             android:layout_centerInParent="true"
             android:textSize="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_3sdp"/>
+        <RelativeLayout
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentRight="true"/>
         <ImageView
             android:id="@+id/image_view_favourite_channel"
             android:layout_width="wrap_content"

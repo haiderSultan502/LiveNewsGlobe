@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -38,11 +39,20 @@ public class ForgetPasswordDialog {
     Window window;
     String email,password,code;
     SweetAlertDialog sweetAlertDialog;
+
     public ForgetPasswordDialog(MainActivity context) {
         this.context = context;
     }
 
     void alertDialogDemo() {
+
+//        Dialog dialog = new Dialog(context);
+//        dialog.setContentView(R.layout.foget_password);
+//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+//        dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_corner);
+//        dialog.setCancelable(false);
+//        dialog.show();
+
 
         sweetAlertDialogGeneral = new SweetAlertDialogGeneral(context);
 
@@ -65,7 +75,7 @@ public class ForgetPasswordDialog {
 
         dialog.show();
 
-        window.setLayout(1070, 900);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 
         btnSend.setOnClickListener(new View.OnClickListener() {
 
@@ -129,7 +139,7 @@ public class ForgetPasswordDialog {
 
                 dialog.show();
 
-                window.setLayout(1070, 1100);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 
                 userEmail = dialog.findViewById(R.id.et_email);
                 newPassword = dialog.findViewById(R.id.setPassword);

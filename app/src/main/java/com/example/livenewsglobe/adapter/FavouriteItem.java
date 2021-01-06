@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.livenewsglobe.Interface.InterfaceApi;
+import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
 import com.example.livenewsglobe.models.Favourites;
@@ -31,11 +32,12 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tyrantgit.explosionfield.ExplosionField;
 
 public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHolder>{
 
     static View view;
-    private Context context;
+    private MainActivity context;
     String showItem;
     boolean check=false;
     ArrayList<FavouritesModel> arrayListFavouriteNetwork;
@@ -43,10 +45,11 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     static String imgUrl;
     NewsVideoPlayer newsVideoPlayer=new NewsVideoPlayer();
     SweetAlertDialogGeneral sweetAlertDialogGeneral;
+    ExplosionField mExplosionField;
 
     public FavouriteItem(Context context, ArrayList<FavouritesModel> arrayListFavouriteNetwork, String showItem)
     {
-        this.context=context;
+        this.context= (MainActivity) context;
         this.arrayListFavouriteNetwork=arrayListFavouriteNetwork;
         this.showItem=showItem;
     }
@@ -54,6 +57,8 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     @NonNull
     @Override
     public FavouriteItem.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        mExplosionField = ExplosionField.attach2Window(context);
 
         sweetAlertDialogGeneral = new SweetAlertDialogGeneral(context);
         if(showItem.equals("listFavourie"))
@@ -156,8 +161,10 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
                         {
                             InsertChannelResponse insertChannelResponse = response.body();
 
-                            sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully remove from favourites");
+//                            sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully remove from favourites");
                             holder.imageFavouriteNetwroks.setImageResource(R.drawable.favorite_icon);
+
+//                            mExplosionField.explode(holder.linearLayoutItemClick);
 
                             arrayListFavouriteNetwork.remove(position);
                             notifyItemRemoved(position);

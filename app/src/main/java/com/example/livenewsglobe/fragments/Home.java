@@ -827,6 +827,7 @@ public class Home extends Fragment {
         recyclerViewGrid.scheduleLayoutAnimation();
     }
     public void setFavOrUnfav(final int position) {
+
         final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
 //                            sharedPrefereneceManager.getLoginStatus();
         if(sharedPrefereneceManager.getLoginStatus() == true)
@@ -843,6 +844,8 @@ public class Home extends Fragment {
                     }
                     else
                     {
+                        mainActivity.favStatus = true;
+                        mainActivity.getFeaturedList = false;
                         InsertChannelResponse insertChannelResponse = response.body();
                         int status = insertChannelResponse.getStatus();
                         if(status==0)
@@ -928,6 +931,9 @@ public class Home extends Fragment {
             customAlertDialog.showDialog();
         }
     }
+
+
+
 
 
 }

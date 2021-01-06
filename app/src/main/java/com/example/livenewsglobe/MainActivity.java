@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -57,11 +55,9 @@ import com.example.livenewsglobe.fragments.State;
 import com.example.livenewsglobe.models.Cities;
 import com.example.livenewsglobe.models.FavouritesModel;
 import com.example.livenewsglobe.models.FeaturedNetworks;
-import com.example.livenewsglobe.models.SearchNetwork;
 import com.example.livenewsglobe.models.States;
 import com.example.livenewsglobe.models.UserProfile;
 import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
-import com.example.livenewsglobe.otherClasses.GetStateCityNetwork;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
 import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
@@ -69,15 +65,9 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
@@ -93,7 +83,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static Boolean checkLoginStatus=false;
+    public static Boolean checkLoginStatus=false, favStatus = true;
     public static int user_id,post_id;
     public static String userEmail;
     EditText search;
@@ -124,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static ArrayList<FeaturedNetworks> storeNetworks;
     public static ArrayList<FavouritesModel> storeFavouriteNetworks;
 
-
-    static ArrayList<FeaturedNetworks> networks;
     public static ArrayList<Cities> spinnerArrayListCity;
     public static ArrayList<String> spinnerArrayListCityString;
     ArrayList<Cities> arrayListCity2;
@@ -179,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SharedPrefereneceManager sharedPrefereneceManager;
 
 
+    public static ArrayList<FavouritesModel> arrayListFavourites;
+//    public static ArrayList<FeaturedNetworks> networkss;
+//    public static ArrayList<FeaturedNetworks> arrayListFeaturedNetwork;
+
+
 
 
 
@@ -217,7 +210,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView=findViewById(R.id.recycler_view);
         recyclerViewGrid=findViewById(R.id.recycler_view_gridView);
 
-        networks = new ArrayList<>();
+        arrayListFavourites = new ArrayList<>();
+
+//        networkss = new ArrayList<>();
+//        arrayListFeaturedNetwork = new ArrayList<>();
 
         spinnerArrayListCity = new ArrayList<>();
         spinnerArrayListCityString = new ArrayList<String>();
@@ -1092,14 +1088,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void homeListViewMode() {
 
-//        if(getFeaturedList == true)
-//        {
-//            home=new Home("list",storeNetworks);
-//        }
-//        else
-//        {
+        if(getFeaturedList == true)
+        {
+            home=new Home("list",storeNetworks);
+        }
+        else
+        {
             home = new Home("featuredNetworks","featuredNetworks");
-//        }
+        }
 //        Home home=new Home("list",storeNetworks);
 //        Home home=new Home("featuredNetworks",storeNetworks);
 //        Fragment home = new Home("featuredNetworks","featuredNetworks");
@@ -1164,7 +1160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void favouriteListViewMode() {
 
-//        Favourite favourite=new Favourite("list",storeFavouriteNetworks);
+//        Favourite favourite=new Favourite("list");
         Favourite favourite=new Favourite();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
@@ -1175,7 +1171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void favouriteGridViewMode() {
 
-        Favourite favourites=new Favourite("grid",storeFavouriteNetworks);
+        Favourite favourites=new Favourite("grid");
 //        Favourite favourite=new Favourite();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();

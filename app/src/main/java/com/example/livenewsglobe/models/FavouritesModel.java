@@ -25,6 +25,7 @@ public class FavouritesModel {
     @Expose
     private String guid;
 
+
     public String getPostsId() {
         return postsId;
     }

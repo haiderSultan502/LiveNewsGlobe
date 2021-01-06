@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,12 +45,8 @@ import retrofit2.Response;
 public class Favourite extends Fragment {
 
     View view;
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
     private RecyclerView recyclerView,recyclerViewGrid;
 
-    ArrayList<FavouritesModel> arrayListFavourites;
-    ArrayList<FavouritesModel> storeArrayListFavourites;
     String viewMode="null";
     MainActivity mainActivity;
     ImageView imgLoading;
@@ -57,15 +54,15 @@ public class Favourite extends Fragment {
     SweetAlertDialogGeneral sweetAlertDialogGeneral;
     CustomAlertDialog customAlertDialog;
 
+    FavouriteItem favouriteItem;
+
     public Favourite()
     {
 
     }
-    public Favourite(String viewMode,ArrayList<FavouritesModel> storeArrayListFavourites)
+    public Favourite(String viewMode)
     {
         this.viewMode=viewMode;
-        this.storeArrayListFavourites = new ArrayList<>();
-        this.storeArrayListFavourites = storeArrayListFavourites;
     }
 
 
@@ -73,7 +70,6 @@ public class Favourite extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        arrayListFavourites = new ArrayList<>();
     }
 
     @SuppressLint("ResourceAsColor")
@@ -125,42 +121,55 @@ public class Favourite extends Fragment {
 //                            sharedPrefereneceManager.getLoginStatus();
         if(sharedPrefereneceManager.getLoginStatus() == true)
         {
-            imgLoading.setVisibility(View.VISIBLE);
+            if (mainActivity.favStatus == true)
+            {
+                mainActivity.favStatus=false;
 
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            int id = mainActivity.user_id;
-            InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
-            Call<List<FavouritesModel>> call = interfaceApi.getFavouritesChannels(sharedPrefereneceManager.getUserId());
-            call.enqueue(new Callback<List<FavouritesModel>>() {
-                @Override
-                public void onResponse(Call<List<FavouritesModel>> call, Response<List<FavouritesModel>> response) {
-                    if(!response.isSuccessful())
-                    {
-                        imgLoading.setVisibility(View.GONE);
-                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
-                        return;
-                    }
-                    else
-                    {
-                        imgLoading.setVisibility(View.GONE);
-                        arrayListFavourites = (ArrayList<FavouritesModel>) response.body();
-                        mainActivity.storeFavouriteNetworks = arrayListFavourites;
-                        mainActivity.getFavouritList=true;
-                        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),arrayListFavourites,"listFavourie");
-                        recyclerView.setAdapter(favouriteItem);
-                        // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-                        recyclerView.scheduleLayoutAnimation();
-                        recyclerViewGrid.scheduleLayoutAnimation();
-                    }
-                }
+                imgLoading.setVisibility(View.VISIBLE);
 
-                @Override
-                public void onFailure(Call<List<FavouritesModel>> call, Throwable t) {
-                    imgLoading.setVisibility(View.GONE);
-                    sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-                }
-            });
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                int id = mainActivity.user_id;
+                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                Call<List<FavouritesModel>> call = interfaceApi.getFavouritesChannels(sharedPrefereneceManager.getUserId());
+                call.enqueue(new Callback<List<FavouritesModel>>() {
+                    @Override
+                    public void onResponse(Call<List<FavouritesModel>> call, Response<List<FavouritesModel>> response) {
+                        if(!response.isSuccessful())
+                        {
+                            imgLoading.setVisibility(View.GONE);
+                            sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
+                            return;
+                        }
+                        else
+                        {
+                            imgLoading.setVisibility(View.GONE);
+                            mainActivity.arrayListFavourites = (ArrayList<FavouritesModel>) response.body();
+//                        mainActivity.storeFavouriteNetworks = arrayListFavourites;
+                            mainActivity.getFavouritList=true;
+                            favouriteItem=new FavouriteItem(getActivity(),mainActivity.arrayListFavourites,"listFavourie");
+
+                            new ItemTouchHelper(itemtouchHelper).attachToRecyclerView(recyclerView);
+
+                            recyclerView.setAdapter(favouriteItem);
+                            // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
+                            recyclerView.scheduleLayoutAnimation();
+                            recyclerViewGrid.scheduleLayoutAnimation();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<FavouritesModel>> call, Throwable t) {
+                        imgLoading.setVisibility(View.GONE);
+                        sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
+                    }
+                });
+            }
+            else
+            {
+                listView();
+            }
+
         }
         else
         {
@@ -180,7 +189,8 @@ public class Favourite extends Fragment {
         recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),storeArrayListFavourites,"listFavourie");
+        favouriteItem=new FavouriteItem(getActivity(),mainActivity.arrayListFavourites,"listFavourie");
+        new ItemTouchHelper(itemtouchHelper).attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(favouriteItem);
         recyclerView.scheduleLayoutAnimation();
         recyclerViewGrid.scheduleLayoutAnimation();
@@ -191,11 +201,51 @@ public class Favourite extends Fragment {
         recyclerView.setVisibility(View.GONE);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-        FavouriteItem favouriteItem=new FavouriteItem(getActivity(),storeArrayListFavourites,"gridFavourie");
+        favouriteItem=new FavouriteItem(getActivity(),mainActivity.arrayListFavourites,"gridFavourie");
+        new ItemTouchHelper(itemtouchHelper).attachToRecyclerView(recyclerView);
         recyclerViewGrid.setAdapter(favouriteItem);
         // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
         recyclerView.scheduleLayoutAnimation();
         recyclerViewGrid.scheduleLayoutAnimation();
     }
+    ItemTouchHelper.SimpleCallback itemtouchHelper = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT| ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(getActivity());
+
+
+            InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+            Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),Integer.parseInt(mainActivity.arrayListFavourites.get(viewHolder.getAdapterPosition()).getId())); //retrofit create implementation for this method
+            mainActivity.arrayListFavourites.remove(viewHolder.getAdapterPosition());
+            favouriteItem.notifyDataSetChanged();
+
+            calls.enqueue(new Callback<InsertChannelResponse>() {
+                @Override
+                public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                    if(!response.isSuccessful())
+                    {
+//                                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
+                    }
+                    else
+                    {
+                        InsertChannelResponse insertChannelResponse = response.body();
+//                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                }
+            });
+        }
+    };
 }
 
