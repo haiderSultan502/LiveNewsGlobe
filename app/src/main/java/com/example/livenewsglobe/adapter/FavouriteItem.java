@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,26 +93,26 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
 //                progressDialog.progressDialogVar.dismiss();
             }
         });
-        holder.imageFavouriteNetwroks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                Bundle bundle = new Bundle();
-                bundle.putString("networkUrl",arrayListFavouriteNetwork.get(position).getGuid());
-                newsVideoPlayer.setArguments(bundle);
-
-//                Toast.makeText(context,arrayListNetwork.get(position).getGuid(), Toast.LENGTH_SHORT).show();
-
-//                NewsVideoPlayer newsVideoPlayerObj=new NewsVideoPlayer();
-//                newsVideoPlayerObj.captureLinkClick=false;
-                ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout_player, newsVideoPlayer).addToBackStack(null)
-                        .commit();
-//                progressDialog.progressDialogVar.dismiss();
-
-            }
-        });
+//        holder.imageFavouriteNetwroks.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//
+//                Bundle bundle = new Bundle();
+//                bundle.putString("networkUrl",arrayListFavouriteNetwork.get(position).getGuid());
+//                newsVideoPlayer.setArguments(bundle);
+//
+////                Toast.makeText(context,arrayListNetwork.get(position).getGuid(), Toast.LENGTH_SHORT).show();
+//
+////                NewsVideoPlayer newsVideoPlayerObj=new NewsVideoPlayer();
+////                newsVideoPlayerObj.captureLinkClick=false;
+//                ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.frame_layout_player, newsVideoPlayer).addToBackStack(null)
+//                        .commit();
+////                progressDialog.progressDialogVar.dismiss();
+//
+//            }
+//        });
 
 
 //        holder.linearLayoutItemClick.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +131,7 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
 
         if(content.length() == 0)
         {
-            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
             Picasso.with(context).load(R.drawable.ic_baseline_image_search_24).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
         }
         else
@@ -145,7 +146,6 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
             public void onClick(View v) {
 
                 final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
-
 
                 InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
                 Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),Integer.parseInt(arrayListFavouriteNetwork.get(position).getId())); //retrofit create implementation for this method
@@ -162,7 +162,7 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
                             InsertChannelResponse insertChannelResponse = response.body();
 
 //                            sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully remove from favourites");
-                            holder.imageFavouriteNetwroks.setImageResource(R.drawable.favorite_icon);
+                            holder.favImageSet.setBackgroundResource(R.drawable.favorite_icon);
 
 //                            mExplosionField.explode(holder.linearLayoutItemClick);
 
@@ -170,6 +170,9 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
                             notifyItemRemoved(position);
                             notifyItemRangeChanged(position,arrayListFavouriteNetwork.size());
                             notifyDataSetChanged();
+
+                            context.favStatus = true;
+                            context.getFeaturedList = false;
 
 //                                            Button btn = viewNewsItem.findViewById(R.id.heart);
 //                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
@@ -197,7 +200,8 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
     public class ItemViewHolder extends RecyclerView.ViewHolder
     {
         TextView textViewChannelName;
-        ImageView channelImage,imageFavouriteNetwroks;
+        ImageView channelImage,favImageSet;
+        RelativeLayout imageFavouriteNetwroks;
         LinearLayout linearLayoutItemClick;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -205,11 +209,14 @@ public class FavouriteItem extends RecyclerView.Adapter<FavouriteItem.ItemViewHo
 
 
             linearLayoutItemClick=itemView.findViewById(R.id.complete_item_click);
+
             imageFavouriteNetwroks=itemView.findViewById(R.id.image_view_favourite_channel);
 
             textViewChannelName=itemView.findViewById(R.id.text_view_channel_name);
 
             channelImage=itemView.findViewById(R.id.image_view_networks);
+
+            favImageSet=itemView.findViewById(R.id.image_view_favourite_channel_set);
         }
 
 

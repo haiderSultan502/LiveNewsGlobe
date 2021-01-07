@@ -21,12 +21,14 @@ import com.example.livenewsglobe.Interface.InterfaceApi;
 import com.example.livenewsglobe.MainActivity;
 import com.example.livenewsglobe.R;
 //import com.example.livenewsglobe.activties.ViewDragLayout;
+import com.example.livenewsglobe.fragments.Home;
 import com.example.livenewsglobe.fragments.NewsVideoPlayer;
 import com.example.livenewsglobe.models.FeaturedNetworks;
 import com.example.livenewsglobe.models.InsertChannelResponse;
 import com.example.livenewsglobe.otherClasses.CustomAlertDialog;
 import com.example.livenewsglobe.otherClasses.RetrofitLab;
 import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
+import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -47,6 +49,8 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
     static String imgUrl;
 
     CustomAlertDialog customAlertDialog;
+
+    SweetAlertDialogGeneral sweetAlertDialogGeneral;
 
 //    String content;
 
@@ -70,6 +74,7 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 
 //        viewDragNewsPlayer=LayoutInflater.from(context).inflate(R.layout.news_video_player, parent, false);
         customAlertDialog=new CustomAlertDialog(context);
+        sweetAlertDialogGeneral = new SweetAlertDialogGeneral(context);
 
         if(showItem.equals("list"))
         {
@@ -143,7 +148,7 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 
         if(content.length() == 0)
         {
-            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
             Picasso.with(context).load(R.drawable.ic_baseline_image_search_24).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.channelImage);
         }
         else
@@ -165,6 +170,13 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 //            holder.imageVideoPlayButton.setImageDrawable(context.getResources().getDrawable(R.drawable.favorite_icon));
             holder.btnHeart.setBackground(context.getResources().getDrawable(R.drawable.favorite_icon));
         }
+
+        holder.btnHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFavOrUnfav(position,holder);
+            }
+        });
 
 //        imgUrl = content.substring(content.indexOf("src")+5,content.indexOf("_logo")+9);
 //        Log.e("checkT",imgUrl);
@@ -275,6 +287,119 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
 //        });
     }
 
+    public void setFavOrUnfav(final int position, final ItemViewHolder holder) {
+        try {
+            final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
+//                            sharedPrefereneceManager.getLoginStatus();
+            if(sharedPrefereneceManager.getLoginStatus() == true)
+            {
+//            Toast.makeText(mainActivity, "", Toast.LENGTH_SHORT).show();
+                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                Call<InsertChannelResponse> call = interfaceApi.checkIsFavouriteOrNot(sharedPrefereneceManager.getUserId(),context.storeNetworks.get(position).getId()); //retrofit create implementation for this method
+                call.enqueue(new Callback<InsertChannelResponse>() {
+                    @Override
+                    public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                        if(!response.isSuccessful())
+                        {
+                            sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                        }
+                        else
+                        {
+                            context.favStatus = true;
+                            context.getFeaturedList = false;
+                            InsertChannelResponse insertChannelResponse = response.body();
+                            int status = insertChannelResponse.getStatus();
+                            if(status==0)
+                            {
+                                Log.d("check value", "values" +context.user_id + context.userEmail + context.post_id );
+                                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                                Call<InsertChannelResponse> calls = interfaceApi.insertFavouriteChannels(sharedPrefereneceManager.getUserId(),sharedPrefereneceManager.getUserEmail(),context.storeNetworks.get(position).getId()); //retrofit create implementation for this method
+                                calls.enqueue(new Callback<InsertChannelResponse>() {
+                                    @Override
+                                    public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                                        if(!response.isSuccessful())
+                                        {
+                                            sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                                        }
+                                        else
+                                        {
+                                            InsertChannelResponse insertChannelResponse = response.body();
+                                            //  int pos = position;
+
+                                            holder.btnHeart.setBackgroundResource(R.drawable.like_channel);
+                                            sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully added in favourites");
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+//                                    Toast.makeText(mainActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                            else if(status==1)
+                            {
+
+                                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                                Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),context.storeNetworks.get(position).getId()); //retrofit create implementation for this method
+                                calls.enqueue(new Callback<InsertChannelResponse>() {
+                                    @Override
+                                    public void onResponse(Call<InsertChannelResponse> call, Response<InsertChannelResponse> response) {
+                                        if(!response.isSuccessful())
+                                        {
+//                                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
+                                            sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                                        }
+                                        else
+                                        {
+                                            InsertChannelResponse insertChannelResponse = response.body();
+
+                                            holder.btnHeart.setBackgroundResource(R.drawable.like_channel);
+
+                                            sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully remove from favourites");
+
+//                                        networks.remove(position);
+
+//                                        recyclerView.notifyItemRemoved(position);
+//                                        notifyItemRangeChanged(position,arrayListFavouriteNetwork.size());
+//                                        notifyDataSetChanged();
+
+//                                            Button btn = viewNewsItem.findViewById(R.id.heart);
+//                                            btn.setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                                        sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
+                        sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                    }
+
+                });
+
+
+            }
+            else
+            {
+                customAlertDialog.showDialog();
+            }
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
+
+
+    }
     @Override
     public int getItemCount() {
         return arrayListNetwork.size();

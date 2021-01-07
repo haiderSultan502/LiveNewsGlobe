@@ -107,7 +107,7 @@ public class CityItem extends RecyclerView.Adapter<CityItem.ItemViewHolder> {
         String content = arrayListCity.get(position).getDescription();
         if(content.length() == 0)
         {
-            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "empty", Toast.LENGTH_SHORT).show();
             Picasso.with(context).load(R.drawable.ic_baseline_image_search_24).placeholder(R.drawable.ic_baseline_image_search_24).error(R.drawable.ic_baseline_image_search_24).into(holder.cityImage);
         }
         else

@@ -26,7 +26,7 @@
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_70sdp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/boss" />
+                android:src="@drawable/avatar_img" />
         </RelativeLayout>
 
         <Button
@@ -47,25 +47,27 @@
         android:paddingTop="@dimen/_60sdp"
         android:paddingLeft="@dimen/_60sdp"
         android:paddingRight="@dimen/_50sdp">
-        <EditText
+        <TextView
             android:id="@+id/tv_username_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Null"
-            android:inputType="none"
+            android:text=""
+            android:background="@drawable/bg_intro"
             android:drawableLeft="@drawable/ic_sharp_person_24"
-            android:drawablePadding="5dp"
-            android:textSize="@dimen/_15sdp"/>
-        <EditText
+            android:drawablePadding="10dp"
+            android:textSize="@dimen/_15sdp"
+            android:paddingTop="5dp"/>
+        <TextView
             android:id="@+id/tv_email_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Null"
+            android:text=""
             android:textSize="@dimen/_15sdp"
             android:drawablePadding="5dp"
             android:inputType="none"
+            android:background="@drawable/bg_intro"
             android:layout_below="@+id/tv_username_profile"
             android:drawableLeft="@drawable/ic_sharp_email_24"
             android:layout_marginTop="15dp"/>

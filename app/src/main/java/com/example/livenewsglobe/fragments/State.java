@@ -123,64 +123,70 @@ public class State extends Fragment{
 
     public void getStates()
     {
+        try {
+            Call<List<States>> call = interfaceApi.getStates(); //retrofit create implementation for this method
 
-        Call<List<States>> call = interfaceApi.getStates(); //retrofit create implementation for this method
+            imgLoading.setVisibility(View.VISIBLE);
 
-        imgLoading.setVisibility(View.VISIBLE);
-
-        call.enqueue(new Callback<List<States>>() {
-            @Override
-            public void onResponse(Call<List<States>> call, Response<List<States>> response) {
-                if(!response.isSuccessful())
-                {
-                    imgLoading.setVisibility(View.GONE);
-                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
-                    return;
-                }
-
-                imgLoading.setVisibility(View.GONE);
-                arrayListStates = (ArrayList<States>) response.body();
-
-                int size = arrayListStates.size();
-
-                for(int i = 0; i < size ; i++) {
-
-                    stateName = arrayListStates.get(i).getName();
-                    description = arrayListStates.get(i).getDescription();
-
-                    if (description.length() < 50) {
-                        continue;
-                    } else {
-                        arrayListStates2.add(arrayListStates.get(i));
+            call.enqueue(new Callback<List<States>>() {
+                @Override
+                public void onResponse(Call<List<States>> call, Response<List<States>> response) {
+                    if(!response.isSuccessful())
+                    {
+                        imgLoading.setVisibility(View.GONE);
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                        return;
                     }
+
+                    imgLoading.setVisibility(View.GONE);
+                    arrayListStates = (ArrayList<States>) response.body();
+
+                    int size = arrayListStates.size();
+
+                    for(int i = 0; i < size ; i++) {
+
+                        stateName = arrayListStates.get(i).getName();
+                        description = arrayListStates.get(i).getDescription();
+
+                        if (description.length() < 50) {
+                            continue;
+                        } else {
+                            arrayListStates2.add(arrayListStates.get(i));
+                        }
 
 //                    if (stateName.equals("Featured") || stateName.equals("Alabama")) {
 //                     continue;
 //                    } else {
 //                        arrayListStates2.add(arrayListStates.get(i));
 //                    }
-                }
+                    }
 
-                mainActivity.storeStates=arrayListStates2;
-                mainActivity.getStateList=true;
+                    mainActivity.storeStates=arrayListStates2;
+                    mainActivity.getStateList=true;
 
 //                arrayListStates.remove(3);
 
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                StateItem stateItem=new StateItem(getActivity(),arrayListStates2,"list");
-                recyclerView.setAdapter(stateItem);
-                recyclerView.scheduleLayoutAnimation();
-                recyclerViewGrid.scheduleLayoutAnimation();
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    StateItem stateItem=new StateItem(getActivity(),arrayListStates2,"list");
+                    recyclerView.setAdapter(stateItem);
+                    recyclerView.scheduleLayoutAnimation();
+                    recyclerViewGrid.scheduleLayoutAnimation();
 
-            }
+                }
 
-            @Override
-            public void onFailure(Call<List<States>> call, Throwable t) {
-                imgLoading.setVisibility(View.GONE);
-                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-            }
-        });
+                @Override
+                public void onFailure(Call<List<States>> call, Throwable t) {
+                    imgLoading.setVisibility(View.GONE);
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
+
 
 
     }

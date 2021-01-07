@@ -156,6 +156,7 @@ public class City extends Fragment {
 
     public void  getAllCities(final String checkParam)
     {
+        try {
             imgLoading.setVisibility(View.VISIBLE);
 
             Call<List<Cities>> call = interfaceApi.getCites(); //retrofit create implementation for this method
@@ -166,7 +167,7 @@ public class City extends Fragment {
                 public void onResponse(Call<List<Cities>> call, Response<List<Cities>> response) {
                     if (!response.isSuccessful()) {
                         imgLoading.setVisibility(View.GONE);
-                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
                         return;
                     }
 
@@ -184,13 +185,13 @@ public class City extends Fragment {
                     mainActivity.getCityList=true;
 
                     recyclerViewGrid.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        CityItem cityItem = new CityItem(getActivity(), arrayListCity, "list");
-                        recyclerView.setAdapter(cityItem);
-                        recyclerView.scheduleLayoutAnimation();
-                        recyclerViewGrid.scheduleLayoutAnimation();
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    CityItem cityItem = new CityItem(getActivity(), arrayListCity, "list");
+                    recyclerView.setAdapter(cityItem);
+                    recyclerView.scheduleLayoutAnimation();
+                    recyclerViewGrid.scheduleLayoutAnimation();
 
 
                 }
@@ -198,97 +199,112 @@ public class City extends Fragment {
                 @Override
                 public void onFailure(Call<List<Cities>> call, Throwable t) {
                     imgLoading.setVisibility(View.GONE);
-                    sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
                 }
             });
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
+
+
 
 
 
     }
 
     public void getCitiesByStatess(final String stateName) {
+        try {
+            interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/salman/v2/");
+            imgLoading.setVisibility(View.VISIBLE);
 
-        interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/salman/v2/");
-        imgLoading.setVisibility(View.VISIBLE);
+            Call<List<Cities>> call = interfaceApi.getCitesByStates(stateName); //retrofit create implementation for this method
 
-        Call<List<Cities>> call = interfaceApi.getCitesByStates(stateName); //retrofit create implementation for this method
+            call.enqueue(new Callback<List<Cities>>() {
+                @Override
+                public void onResponse(Call<List<Cities>> call, Response<List<Cities>> response) {
+                    if(!response.isSuccessful())
+                    {
+                        imgLoading.setVisibility(View.GONE);
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                        return;
+                    }
 
-        call.enqueue(new Callback<List<Cities>>() {
-            @Override
-            public void onResponse(Call<List<Cities>> call, Response<List<Cities>> response) {
-                if(!response.isSuccessful())
-                {
                     imgLoading.setVisibility(View.GONE);
-                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
-                    return;
-                }
 
-                imgLoading.setVisibility(View.GONE);
+                    arrayListCity = (ArrayList<Cities>) response.body();
 
-                arrayListCity = (ArrayList<Cities>) response.body();
+                    HashSet<Cities> hashSet = new HashSet<>(arrayListCity);
 
-                HashSet<Cities> hashSet = new HashSet<>(arrayListCity);
+                    ArrayList<Cities> arrayList = new ArrayList<>(hashSet);
 
-                ArrayList<Cities> arrayList = new ArrayList<>(hashSet);
+                    int size = arrayList.size();
 
-                int size = arrayList.size();
+                    for(int i = 0; i < size ; i++)
+                    {
 
-                 for(int i = 0; i < size ; i++)
-                {
+                        cityName = arrayList.get(i).getName();
 
-                 cityName = arrayList.get(i).getName();
-
-                 if (cityName.equals("ABC") || cityName.equals("CBS") || cityName.equals("Fox") || cityName.equals("Independent") || cityName.equals("NBC"))
-                 {
+                        if (cityName.equals("ABC") || cityName.equals("CBS") || cityName.equals("Fox") || cityName.equals("Independent") || cityName.equals("NBC"))
+                        {
 //                     break;
-                 }
-                 else
-                 {
-                     cityList.add(arrayList.get(i));
-                 }
+                        }
+                        else
+                        {
+                            cityList.add(arrayList.get(i));
+                        }
+
+                    }
+
+                    mainActivity.spinnerArrayListCity=cityList;
+
+                    mainActivity.setCitySpinnerListAdapetr();
+
+                    MainActivity mainActivity= (MainActivity) getActivity();
+
+                    if(mainActivity.gridStatus == true)
+                    {
+                        recyclerViewGrid.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                        recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
+                        CityItem cityItem=new CityItem(getActivity(),cityList,"grid");
+                        recyclerViewGrid.setAdapter(cityItem);
+                        // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
+                        recyclerView.scheduleLayoutAnimation();
+                        recyclerViewGrid.scheduleLayoutAnimation();
+
+                    }
+                    else
+                    {
+                        recyclerViewGrid.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        CityItem cityItem=new CityItem(getActivity(),cityList,"list");
+                        recyclerView.setAdapter(cityItem);
+                        recyclerView.scheduleLayoutAnimation();
+                        recyclerViewGrid.scheduleLayoutAnimation();
+                    }
+
 
                 }
 
-                mainActivity.spinnerArrayListCity=cityList;
-
-                 mainActivity.setCitySpinnerListAdapetr();
-
-                MainActivity mainActivity= (MainActivity) getActivity();
-
-                if(mainActivity.gridStatus == true)
-                {
-                    recyclerViewGrid.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-                    recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-                    CityItem cityItem=new CityItem(getActivity(),cityList,"grid");
-                    recyclerViewGrid.setAdapter(cityItem);
-                    // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-                    recyclerView.scheduleLayoutAnimation();
-                    recyclerViewGrid.scheduleLayoutAnimation();
-
+                @Override
+                public void onFailure(Call<List<Cities>> call, Throwable t) {
+                    imgLoading.setVisibility(View.GONE);
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
                 }
-                else
-                {
-                    recyclerViewGrid.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    CityItem cityItem=new CityItem(getActivity(),cityList,"list");
-                    recyclerView.setAdapter(cityItem);
-                    recyclerView.scheduleLayoutAnimation();
-                    recyclerViewGrid.scheduleLayoutAnimation();
-                }
+            });
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
 
 
-            }
 
-            @Override
-            public void onFailure(Call<List<Cities>> call, Throwable t) {
-                imgLoading.setVisibility(View.GONE);
-                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-            }
-        });
 
     }
 }

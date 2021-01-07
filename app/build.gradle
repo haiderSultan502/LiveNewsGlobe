@@ -86,4 +86,7 @@ dependencies {
     //anim exploide
     implementation 'tyrantgit:explosionfield:1.0.1'
 
+    // Dexter runtime permissions
+    implementation 'com.karumi:dexter:6.2.2'
+
 }

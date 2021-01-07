@@ -278,11 +278,9 @@
                             android:layout_marginRight="@dimen/_40sdp"
                             android:background="@drawable/seach_bg"
                             android:hint="Search"
+                            android:inputType="text"
                             android:imeOptions="actionSearch"
-                            android:inputType="textPassword"
                             android:paddingLeft="@dimen/_15sdp">
-
-                            <requestFocus />
                         </EditText>
 
                         <Button

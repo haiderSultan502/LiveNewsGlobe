@@ -81,6 +81,7 @@ return view;
     private class MyAsynTask extends AsyncTask<Void,Void,Document>
     {
 
+
         @Override
         protected Document doInBackground(Void... voids) {
             if (captureLinkClick==false)

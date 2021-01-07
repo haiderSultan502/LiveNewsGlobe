@@ -35,29 +35,25 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:textSize="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_8sdp"/>
-        <TextView
-            android:id="@+id/text_view_channel_name_come"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="KPTV"
-            android:textColor="#18204E"
-            android:layout_below="@id/view_line"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:textSize="@dimen/_14sdp"
-            android:layout_alignParentRight="true"
-            android:visibility="invisible"/>
-        <ImageView
+
+        <RelativeLayout
             android:id="@+id/image_view_favourite_channel"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/view_line">
+
+        <ImageView
+            android:id="@+id/image_view_favourite_channel_set"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="wrap_content"
             android:src="@drawable/like_channel"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/view_line"
             android:layout_marginTop="@dimen/_13sdp"
             android:layout_marginRight="@dimen/_4sdp">
 
         </ImageView>
-
+        </RelativeLayout>
 
 
 

@@ -116,70 +116,71 @@ public class Favourite extends Fragment {
 
 
     private void getFavourites(){
-
-        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+        try {
+            final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
 //                            sharedPrefereneceManager.getLoginStatus();
-        if(sharedPrefereneceManager.getLoginStatus() == true)
-        {
-            if (mainActivity.favStatus == true)
+            if(sharedPrefereneceManager.getLoginStatus() == true)
             {
-                mainActivity.favStatus=false;
+                if (mainActivity.favStatus == true)
+                {
+                    mainActivity.favStatus=false;
 
-                imgLoading.setVisibility(View.VISIBLE);
+                    imgLoading.setVisibility(View.VISIBLE);
 
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                int id = mainActivity.user_id;
-                InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
-                Call<List<FavouritesModel>> call = interfaceApi.getFavouritesChannels(sharedPrefereneceManager.getUserId());
-                call.enqueue(new Callback<List<FavouritesModel>>() {
-                    @Override
-                    public void onResponse(Call<List<FavouritesModel>> call, Response<List<FavouritesModel>> response) {
-                        if(!response.isSuccessful())
-                        {
-                            imgLoading.setVisibility(View.GONE);
-                            sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
-                            return;
-                        }
-                        else
-                        {
-                            imgLoading.setVisibility(View.GONE);
-                            mainActivity.arrayListFavourites = (ArrayList<FavouritesModel>) response.body();
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    int id = mainActivity.user_id;
+                    InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/newspaper/v2/");
+                    Call<List<FavouritesModel>> call = interfaceApi.getFavouritesChannels(sharedPrefereneceManager.getUserId());
+                    call.enqueue(new Callback<List<FavouritesModel>>() {
+                        @Override
+                        public void onResponse(Call<List<FavouritesModel>> call, Response<List<FavouritesModel>> response) {
+                            if(!response.isSuccessful())
+                            {
+                                imgLoading.setVisibility(View.GONE);
+                                sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                                return;
+                            }
+                            else
+                            {
+                                imgLoading.setVisibility(View.GONE);
+                                mainActivity.arrayListFavourites = (ArrayList<FavouritesModel>) response.body();
 //                        mainActivity.storeFavouriteNetworks = arrayListFavourites;
-                            mainActivity.getFavouritList=true;
-                            favouriteItem=new FavouriteItem(getActivity(),mainActivity.arrayListFavourites,"listFavourie");
+                                mainActivity.getFavouritList=true;
+                                favouriteItem=new FavouriteItem(getActivity(),mainActivity.arrayListFavourites,"listFavourie");
 
-                            new ItemTouchHelper(itemtouchHelper).attachToRecyclerView(recyclerView);
+                                new ItemTouchHelper(itemtouchHelper).attachToRecyclerView(recyclerView);
 
-                            recyclerView.setAdapter(favouriteItem);
-                            // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-                            recyclerView.scheduleLayoutAnimation();
-                            recyclerViewGrid.scheduleLayoutAnimation();
+                                recyclerView.setAdapter(favouriteItem);
+                                // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
+                                recyclerView.scheduleLayoutAnimation();
+                                recyclerViewGrid.scheduleLayoutAnimation();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<List<FavouritesModel>> call, Throwable t) {
-                        imgLoading.setVisibility(View.GONE);
-                        sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<List<FavouritesModel>> call, Throwable t) {
+                            imgLoading.setVisibility(View.GONE);
+                            sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                        }
+                    });
+                }
+                else
+                {
+                    listView();
+                }
+
             }
             else
             {
-                listView();
-            }
-
-        }
-        else
-        {
 //            sweetAlertDialogGeneral.showSweetAlertDialog("warning","First login please");
-            customAlertDialog.showDialog();
+                customAlertDialog.showDialog();
+            }
         }
-
-
-
-
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
 
     }
 
@@ -224,6 +225,7 @@ public class Favourite extends Fragment {
             Call<InsertChannelResponse> calls = interfaceApi.deleteFavouriteChannels(sharedPrefereneceManager.getUserId(),Integer.parseInt(mainActivity.arrayListFavourites.get(viewHolder.getAdapterPosition()).getId())); //retrofit create implementation for this method
             mainActivity.arrayListFavourites.remove(viewHolder.getAdapterPosition());
             favouriteItem.notifyDataSetChanged();
+            mainActivity.favStatus = true;
 
             calls.enqueue(new Callback<InsertChannelResponse>() {
                 @Override
@@ -231,7 +233,7 @@ public class Favourite extends Fragment {
                     if(!response.isSuccessful())
                     {
 //                                        Toast.makeText(mainActivity, "response not successfull ", Toast.LENGTH_SHORT).show();
-                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
                     }
                     else
                     {

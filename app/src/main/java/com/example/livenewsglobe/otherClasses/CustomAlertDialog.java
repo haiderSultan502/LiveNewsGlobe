@@ -170,50 +170,57 @@ public class CustomAlertDialog {
     }
     public void showDialog()
     {
+        try {
+            dialog = LayoutInflater.from(context).inflate(R.layout.custom_login_signup_dialog, null);
+            initialize();
+            context.blurView.setVisibility(View.VISIBLE);
 
-        dialog = LayoutInflater.from(context).inflate(R.layout.custom_login_signup_dialog, null);
-        initialize();
-        context.blurView.setVisibility(View.VISIBLE);
+            swipeDismissDialog = new SwipeDismissDialog.Builder(context)
+                    .setView(dialog)
+                    .setOnCancelListener(new OnCancelListener() {
+                        @Override
+                        public void onCancel(View view) {
+                            context.blurView.setVisibility(View.GONE);
+                        }
+                    })
+                    .setOnSwipeDismissListener(new OnSwipeDismissListener() {
+                        @Override
+                        public void onSwipeDismiss(View view, SwipeDismissDirection direction) {
+                            context.blurView.setVisibility(View.GONE);
+                        }
+                    })
+                    .setFlingVelocity(0.01f)
+                    .build()
+                    .show();
 
-        swipeDismissDialog = new SwipeDismissDialog.Builder(context)
-                .setView(dialog)
-                .setOnCancelListener(new OnCancelListener() {
-                    @Override
-                    public void onCancel(View view) {
-                        context.blurView.setVisibility(View.GONE);
-                    }
-                })
-                .setOnSwipeDismissListener(new OnSwipeDismissListener() {
-                    @Override
-                    public void onSwipeDismiss(View view, SwipeDismissDirection direction) {
-                        context.blurView.setVisibility(View.GONE);
-                    }
-                })
-                .setFlingVelocity(0.01f)
-                .build()
-                .show();
+            viewClickListener();
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
 
-        viewClickListener();
+
 
     }
     public void viewClickListener()
     {
-
-        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_GO)
-                {
-                    context.blurView.setVisibility(View.GONE);
-                    swipeDismissDialog.dismiss();
+        try {
+            password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(actionId== EditorInfo.IME_ACTION_GO)
+                    {
+                        context.blurView.setVisibility(View.GONE);
+                        swipeDismissDialog.dismiss();
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            btnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
 //                final SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
 ////                pDialog.getProgressHelper().setBarColor(Color.parseColor("#103E65"));
@@ -221,182 +228,191 @@ public class CustomAlertDialog {
 //                pDialog.setCancelable(true);
 //                pDialog.setCanceledOnTouchOutside(true);
 //                pDialog.show();
-                sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("progress","Loading");
+                    sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("progress","Loading");
 
-                if(email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
-                {
-                    InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/custom-plugin/");
-                    Call<LoginModel> call= interfaceApi.loginUsre(valid_email,passwordStr);
-                    call.enqueue(new Callback<LoginModel>() {
-                        @Override
-                        public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
-                            if(!response.isSuccessful())
-                            {
+                    if(email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
+                    {
+                        InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/custom-plugin/");
+                        Call<LoginModel> call= interfaceApi.loginUsre(valid_email,passwordStr);
+                        call.enqueue(new Callback<LoginModel>() {
+                            @Override
+                            public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
+                                if(!response.isSuccessful())
+                                {
 
-                                sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
-                                return;
-                            }
-                            else
-                            {
-                                LoginModel loginModel = response.body();
+                                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
+                                    return;
+                                }
+                                else
+                                {
+                                    LoginModel loginModel = response.body();
 
-                                SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
-                                sharedPrefereneceManager.setLoginStatus(true);
-                                sharedPrefereneceManager.setUserEmail(loginModel.getData().getUserEmail());
-                                sharedPrefereneceManager.setPassword(password.getText().toString());
-                                sharedPrefereneceManager.setUserId(loginModel.getID());
+                                    SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
+                                    sharedPrefereneceManager.setLoginStatus(true);
+                                    sharedPrefereneceManager.setUserEmail(loginModel.getData().getUserEmail());
+                                    sharedPrefereneceManager.setPassword(password.getText().toString());
+                                    sharedPrefereneceManager.setUserId(loginModel.getID());
 
-                                context.setUserNameAndEmail(sharedPrefereneceManager.getUserName(),sharedPrefereneceManager.getUserEmail());
+                                    context.setUserNameAndEmail(sharedPrefereneceManager.getUserName(),sharedPrefereneceManager.getUserEmail());
 
-                                context.replaceFragment();
+                                    context.replaceFragment();
 
-                                int id = loginModel.getID();
-                                context.user_id= loginModel.getID();
-                                context.userEmail = loginModel.getData().getUserEmail();
-                                context.checkLoginStatus=true;
+                                    int id = loginModel.getID();
+                                    context.user_id= loginModel.getID();
+                                    context.userEmail = loginModel.getData().getUserEmail();
+                                    context.checkLoginStatus=true;
 
-                                context.blurView.setVisibility(View.GONE);
-                                swipeDismissDialog.dismiss();
+                                    context.blurView.setVisibility(View.GONE);
+                                    swipeDismissDialog.dismiss();
 
-                                sweetAlertDialog.dismissWithAnimation();
+                                    sweetAlertDialog.dismissWithAnimation();
 
-                                SweetAlertDialog pDialogs = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
-                                pDialogs.setTitleText("Successfully Login");
-                                pDialogs.setCustomImage(R.drawable.loading);
-                                pDialogs.setCancelable(true);
-                                pDialogs.setCanceledOnTouchOutside(true);
-                                pDialogs.show();
+                                    sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully Login");
+
+//                                SweetAlertDialog pDialogs = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
+//                                pDialogs.setTitleText("Successfully Login");
+//                                pDialogs.setCustomImage(R.drawable.loading);
+//                                pDialogs.setCancelable(true);
+//                                pDialogs.setCanceledOnTouchOutside(true);
+//                                pDialogs.show();
 
 
 //                                Toast.makeText(context, "Successfulyy Login", Toast.LENGTH_SHORT).show();
 
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<LoginModel> call, Throwable t) {
-                            sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<LoginModel> call, Throwable t) {
+                                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
+                            }
+                        });
 
-                    //remove it later
+                        //remove it later
 //                    context.blurView.setVisibility(View.GONE);
 //                    swipeDismissDialog.dismiss();
 
 
+                    }
+                    else
+                    {
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please fill the fields correctly");
+                    }
+
+                    clearEditText();
                 }
-                else
-                {
-                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please fill the fields correctly");
-                }
+            });
 
-                clearEditText();
-            }
-        });
+            btnSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("progress","Loading");
-                if(userName.getText().toString().trim().length() >= 2 && email.getText().toString().trim().length() > 11 && password.getText().toString().trim().length() >= 3)
-                {
-                    InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/wp/v2/");
-                    Call<RegisterUser> call= interfaceApi.registerUser(userNameStr,valid_email,passwordStr);
-                    call.enqueue(new Callback<RegisterUser>() {
-//                        onResponce Invoked for a received HTTP response.
-                        @Override
-                        public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
+                    sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("progress","Loading");
+                    if(userName.getText().toString().trim().length() >= 2 && email.getText().toString().trim().length() > 11 && password.getText().toString().trim().length() >= 3)
+                    {
+                        InterfaceApi interfaceApi = RetrofitLab.connect("https://livenewsglobe.com/wp-json/wp/v2/");
+                        Call<RegisterUser> call= interfaceApi.registerUser(userNameStr,valid_email,passwordStr);
+                        call.enqueue(new Callback<RegisterUser>() {
+                            //                        onResponce Invoked for a received HTTP response.
+                            @Override
+                            public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
 //                            Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call Response.isSuccessful() to determine if the response indicates success.
-                            if(!response.isSuccessful())
-                            {
-                                sweetAlertDialogGeneral.showSweetAlertDialog("warning","code "+ response.code());
-                                sweetAlertDialog.dismiss();
-                                return;
-                            }
-                            else
-                            {
-                                RegisterUser registerUser =  response.body();
-                                SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
-                                sharedPrefereneceManager.setUserName(registerUser.getMessage());
+                                if(!response.isSuccessful())
+                                {
+                                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","code "+ response.code());
+                                    sweetAlertDialog.dismiss();
+                                    return;
+                                }
+                                else
+                                {
+                                    RegisterUser registerUser =  response.body();
+                                    SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
+                                    sharedPrefereneceManager.setUserName(registerUser.getMessage());
 
-                                context.blurView.setVisibility(View.GONE);
-                                swipeDismissDialog.dismiss();
-                                sweetAlertDialog.dismissWithAnimation();
-                                SweetAlertDialogGeneral sweetAlertDialogGeneral= new SweetAlertDialogGeneral(context);
-                                sweetAlertDialogGeneral.showSweetAlertDialog("success","User create successfully");
+                                    context.blurView.setVisibility(View.GONE);
+                                    swipeDismissDialog.dismiss();
+                                    sweetAlertDialog.dismissWithAnimation();
+                                    SweetAlertDialogGeneral sweetAlertDialogGeneral= new SweetAlertDialogGeneral(context);
+                                    sweetAlertDialogGeneral.showSweetAlertDialog("success","User create successfully");
 //                                Toast.makeText(context, "User Successfully creata ", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-//                      onFailure Invoked when a network exception occurred  talking to the server or when an unexpected exception occurred creating the request or processing the response.
-                        @Override
-                        public void onFailure(Call<RegisterUser> call, Throwable t) {
-                            sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-                        }
-                    });
+                            //                      onFailure Invoked when a network exception occurred  talking to the server or when an unexpected exception occurred creating the request or processing the response.
+                            @Override
+                            public void onFailure(Call<RegisterUser> call, Throwable t) {
+                                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
+                            }
+                        });
 
 //                    //remove it later
 //                    context.blurView.setVisibility(View.GONE);
 //                    swipeDismissDialog.dismiss();
 
-                }
-                else
-                {
-                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please fill the fields correctly");
-                }
+                    }
+                    else
+                    {
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please fill the fields correctly");
+                    }
 
 //                clearEditText();
-            }
-        });
+                }
+            });
 
-        tvSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            tvSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                tvForgotPassword.setVisibility(View.GONE);
+                    tvForgotPassword.setVisibility(View.GONE);
 
-                animation = AnimationUtils.loadAnimation(context,
-                        R.anim.alert_bar_move_right);
-                dialogTab3.setAnimation(animation);
+                    animation = AnimationUtils.loadAnimation(context,
+                            R.anim.alert_bar_move_right);
+                    dialogTab3.setAnimation(animation);
 
-                tvSignUp.setTextColor(Color.parseColor("#103E65"));
-                tvLogin.setTextColor(oldColors);
+                    tvSignUp.setTextColor(Color.parseColor("#103E65"));
+                    tvLogin.setTextColor(oldColors);
 
-                clearEditText();
+                    clearEditText();
 
-                userName.setVisibility(View.VISIBLE);
-                btnSignUp.setVisibility(View.VISIBLE);
-                btnLogin.setVisibility(View.GONE);
-            }
-        });
+                    userName.setVisibility(View.VISIBLE);
+                    btnSignUp.setVisibility(View.VISIBLE);
+                    btnLogin.setVisibility(View.GONE);
+                }
+            });
 
-        tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            tvLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                tvForgotPassword.setVisibility(View.VISIBLE);
+                    tvForgotPassword.setVisibility(View.VISIBLE);
 
-                animation = AnimationUtils.loadAnimation(context,
-                        R.anim.alert_bar_move_left);
-                dialogTab3.setAnimation(animation);
+                    animation = AnimationUtils.loadAnimation(context,
+                            R.anim.alert_bar_move_left);
+                    dialogTab3.setAnimation(animation);
 
-                tvLogin.setTextColor(Color.parseColor("#103E65"));
-                tvSignUp.setTextColor(oldColors);
+                    tvLogin.setTextColor(Color.parseColor("#103E65"));
+                    tvSignUp.setTextColor(oldColors);
 
-                clearEditText();
+                    clearEditText();
 
-                userName.setVisibility(View.GONE);
-                btnSignUp.setVisibility(View.GONE);
-                btnLogin.setVisibility(View.VISIBLE);
-            }
-        });
-        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ForgetPasswordDialog forgetPasswordDialog = new ForgetPasswordDialog(context);
-                forgetPasswordDialog.alertDialogDemo();
-            }
-        });
+                    userName.setVisibility(View.GONE);
+                    btnSignUp.setVisibility(View.GONE);
+                    btnLogin.setVisibility(View.VISIBLE);
+                }
+            });
+            tvForgotPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ForgetPasswordDialog forgetPasswordDialog = new ForgetPasswordDialog(context);
+                    forgetPasswordDialog.alertDialogDemo();
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
+
+
 
     }
 

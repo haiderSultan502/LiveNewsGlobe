@@ -280,254 +280,411 @@ public class Home extends Fragment {
 
     public void getFeaturedNetworks() {
 
+        try {
+            imgLoading.setVisibility(View.VISIBLE);
 
-    imgLoading.setVisibility(View.VISIBLE);
 
-
-        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+            final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
 //                            sharedPrefereneceManager.getLoginStatus();
-        interfaceApiGetFeaturedNetworks= RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
-        if(sharedPrefereneceManager.getLoginStatus() == true)
-        {
-            callGetFeaturedNetworks = interfaceApiGetFeaturedNetworks.getNetworks(sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
-        }
-        else
-        {
-            callGetFeaturedNetworks = interfaceApiGetFeaturedNetworks.getNetworks(); //retrofit create implementation for this method
-        }
-
-        callGetFeaturedNetworks.enqueue(new Callback<List<FeaturedNetworks>>() {
-        @Override
-        public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
-            if(!response.isSuccessful())
+            interfaceApiGetFeaturedNetworks= RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/Newspaper/v2/");
+            if(sharedPrefereneceManager.getLoginStatus() == true)
             {
-//                progressDialog.progressDialogVar.dismiss();
-                imgLoading.setVisibility(View.GONE);
-                sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
-
-                return;
+                callGetFeaturedNetworks = interfaceApiGetFeaturedNetworks.getNetworks(sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
+            }
+            else
+            {
+                callGetFeaturedNetworks = interfaceApiGetFeaturedNetworks.getNetworks(); //retrofit create implementation for this method
             }
 
+            callGetFeaturedNetworks.enqueue(new Callback<List<FeaturedNetworks>>() {
+                @Override
+                public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
+                    if(!response.isSuccessful())
+                    {
+//                progressDialog.progressDialogVar.dismiss();
+                        imgLoading.setVisibility(View.GONE);
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+
+                        return;
+                    }
+
 //            progressDialog.progressDialogVar.dismiss();
-            imgLoading.setVisibility(View.GONE);
-            networks = (ArrayList<FeaturedNetworks>) response.body();
+                    imgLoading.setVisibility(View.GONE);
+                    networks = (ArrayList<FeaturedNetworks>) response.body();
 
-            mainActivity.storeNetworks=networks;
-            arrayListFeaturedNetwork=networks;
-            mainActivity.getFeaturedList=true;
+                    mainActivity.storeNetworks=networks;
+                    arrayListFeaturedNetwork=networks;
+                    mainActivity.getFeaturedList=true;
 
-            recyclerView.setHasFixedSize(true);
-            final Context context;
-            final LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setHasFixedSize(true);
+                    final Context context;
+                    final LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
+                    recyclerView.setLayoutManager(linearLayoutManager);
 
 
 
-            final NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
+                    final NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
 //            newsItem.notifyDataSetChanged();
-            recyclerView.setAdapter(newsItem);
-            scrollAndtouchListener(recyclerView);
-            recyclerView.scheduleLayoutAnimation();
-            recyclerViewGrid.scheduleLayoutAnimation();
+                    recyclerView.setAdapter(newsItem);
+                    scrollAndtouchListener(recyclerView);
+                    recyclerView.scheduleLayoutAnimation();
+                    recyclerViewGrid.scheduleLayoutAnimation();
+                }
+
+                @Override
+                public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
+                    imgLoading.setVisibility(View.GONE);
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                    Log.d("CheckMessage",t.getMessage());
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
         }
 
-        @Override
-        public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
-            imgLoading.setVisibility(View.GONE);
-            sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-            Log.d("CheckMessage",t.getMessage());
-        }
-    });
+
 }
     public void getRelatedNetworks(final String network) {
 
-        imgLoading.setVisibility(View.VISIBLE);
+        try {
+            imgLoading.setVisibility(View.VISIBLE);
 
 
-        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/wp/v2/");
-        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
-        if(sharedPrefereneceManager.getLoginStatus() == true)
-        {
-            callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(mainActivity.cityId,mainActivity.networkId,sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
-        }
-        else
-        {
-            callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(mainActivity.cityId,mainActivity.networkId); //retrofit create implementation for this method
-        }
+            InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/wp/v2/");
+            final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+            if(sharedPrefereneceManager.getLoginStatus() == true)
+            {
+                callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(mainActivity.cityId,mainActivity.networkId,sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
+            }
+            else
+            {
+                callForRelatedNetwork = interfaceApi.getChannelsAccordingToMianNetworks(mainActivity.cityId,mainActivity.networkId); //retrofit create implementation for this method
+            }
 
 
-        callForRelatedNetwork.enqueue(new Callback<List<FeaturedNetworks>>() {
-            @Override
-            public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
-                if(!response.isSuccessful())
-                {
-                    imgLoading.setVisibility(View.GONE);
-                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
+            callForRelatedNetwork.enqueue(new Callback<List<FeaturedNetworks>>() {
+                @Override
+                public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
+                    if(!response.isSuccessful())
+                    {
+                        imgLoading.setVisibility(View.GONE);
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
 //                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                        return;
+                    }
 
-                imgLoading.setVisibility(View.GONE);
-                networks = (ArrayList<FeaturedNetworks>) response.body();
-                mainActivity.storeNetworks=networks;
+                    imgLoading.setVisibility(View.GONE);
+                    networks = (ArrayList<FeaturedNetworks>) response.body();
+                    mainActivity.storeNetworks=networks;
 
 //                Toast.makeText(getActivity(), "tital size of related channels is " + networks.size() , Toast.LENGTH_SHORT).show();
 
-                if(mainActivity.gridStatus==true)
-                {
+                    if(mainActivity.gridStatus==true)
+                    {
 
-                    recyclerViewGrid.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-                    recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-                    NewsItem newsItem=new NewsItem(getActivity(), networks,"grid");
-                    recyclerViewGrid.setAdapter(newsItem);
-                    // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-                    recyclerView.scheduleLayoutAnimation();
-                    recyclerViewGrid.scheduleLayoutAnimation();
+                        recyclerViewGrid.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                        recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
+                        NewsItem newsItem=new NewsItem(getActivity(), networks,"grid");
+                        recyclerViewGrid.setAdapter(newsItem);
+                        // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
+                        recyclerView.scheduleLayoutAnimation();
+                        recyclerViewGrid.scheduleLayoutAnimation();
 
-                    mainActivity.gridStatus = false;
-                }
-                else
-                {
-                    recyclerView.setHasFixedSize(true);
-                    final LinearLayoutManager linearLayoutManagerss=new LinearLayoutManager(getActivity());
-                    recyclerView.setLayoutManager(linearLayoutManagerss);
-                    NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
-                    recyclerView.setAdapter(newsItem);
+                        mainActivity.gridStatus = false;
+                    }
+                    else
+                    {
+                        recyclerView.setHasFixedSize(true);
+                        final LinearLayoutManager linearLayoutManagerss=new LinearLayoutManager(getActivity());
+                        recyclerView.setLayoutManager(linearLayoutManagerss);
+                        NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
+                        recyclerView.setAdapter(newsItem);
 
-                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        //this method call when scrooling start
-                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                            super.onScrollStateChanged(recyclerView, newState);
-                            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                            {
-                                isScrooling=true;
-                            }
-                        }
-
-                        @Override
-                        //this method call when scrooled done
-                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                            super.onScrolled(recyclerView, dx, dy);
-                            currentItems=linearLayoutManagerss.getChildCount();//get the count of currrently visible items in recycler view
-                            totalItems=linearLayoutManagerss.getItemCount(); // get the count of total items in recycler view
-                            scrollOutItems=linearLayoutManagerss.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
-
-                            if(isScrooling && (currentItems+scrollOutItems  ==  totalItems))
-                            {
-                                isScrooling=false;
-                                if(visibilityOfTip)
+                        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            //this method call when scrooling start
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
                                 {
-                                    textViewShowTip.setVisibility(View.VISIBLE);
-                                }
-
-                            }
-                            else if(currentItems<=5)
-                            {
-                                if(visibilityOfTip)
-                                {
-                                    textViewShowTip.setVisibility(View.VISIBLE);
+                                    isScrooling=true;
                                 }
                             }
-                            else if(isScrooling && (currentItems+scrollOutItems  !=  totalItems))
-                            {
-                                textViewShowTip.setVisibility(View.GONE);
+
+                            @Override
+                            //this method call when scrooled done
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                currentItems=linearLayoutManagerss.getChildCount();//get the count of currrently visible items in recycler view
+                                totalItems=linearLayoutManagerss.getItemCount(); // get the count of total items in recycler view
+                                scrollOutItems=linearLayoutManagerss.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
+
+                                if(isScrooling && (currentItems+scrollOutItems  ==  totalItems))
+                                {
+                                    isScrooling=false;
+                                    if(visibilityOfTip)
+                                    {
+                                        textViewShowTip.setVisibility(View.VISIBLE);
+                                    }
+
+                                }
+                                else if(currentItems<=5)
+                                {
+                                    if(visibilityOfTip)
+                                    {
+                                        textViewShowTip.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                                else if(isScrooling && (currentItems+scrollOutItems  !=  totalItems))
+                                {
+                                    textViewShowTip.setVisibility(View.GONE);
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    // the below code is for swap at recycler view item
-                    recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
-                    recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
-                        @Override
-                        public void onRowClicked(int position) {
-                        }
-
-                        @Override
-                        public void onIndependentViewClicked(int independentViewID, int position) {
-
-                        }
-                    }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-                        @Override
-                        public void onSwipeOptionClicked(int viewID, int position) {
-                            switch (viewID) {
-                                case R.id.favourite_network:
-                                    setFavOrUnfav(position);
-                                    break;
+                        // the below code is for swap at recycler view item
+                        recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+                        recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                            @Override
+                            public void onRowClicked(int position) {
                             }
-                        }
-                    });
-                    recyclerView.addOnItemTouchListener(recyclerTouchListener);
 
-                    recyclerView.scheduleLayoutAnimation();
-                    recyclerViewGrid.scheduleLayoutAnimation();
+                            @Override
+                            public void onIndependentViewClicked(int independentViewID, int position) {
+
+                            }
+                        }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                            @Override
+                            public void onSwipeOptionClicked(int viewID, int position) {
+                                switch (viewID) {
+                                    case R.id.favourite_network:
+//                                    setFavOrUnfav(position);
+                                        break;
+                                }
+                            }
+                        });
+                        recyclerView.addOnItemTouchListener(recyclerTouchListener);
+
+                        recyclerView.scheduleLayoutAnimation();
+                        recyclerViewGrid.scheduleLayoutAnimation();
+                    }
+
                 }
 
-            }
+                @Override
+                public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
+                    imgLoading.setVisibility(View.GONE);
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
 
-            @Override
-            public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
-                imgLoading.setVisibility(View.GONE);
-                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-            }
-        });
+
 
     }
     public void getRelateableChannels(int cityName) {
 
-        imgLoading.setVisibility(View.VISIBLE);
+        try {
+            imgLoading.setVisibility(View.VISIBLE);
 
-        InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/wp/v2/");
-        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
-        if(sharedPrefereneceManager.getLoginStatus() == true)
-        {
-            callGetCityChannels = interfaceApi.getChannelsAccordingToCities(cityName,sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
-        }
-        else
-        {
-            callGetCityChannels = interfaceApi.getChannelsAccordingToCities(cityName); //retrofit create implementation for this method
-        }
+            InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/wp/v2/");
+            final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+            if(sharedPrefereneceManager.getLoginStatus() == true)
+            {
+                callGetCityChannels = interfaceApi.getChannelsAccordingToCities(cityName,sharedPrefereneceManager.getUserId()); //retrofit create implementation for this method
+            }
+            else
+            {
+                callGetCityChannels = interfaceApi.getChannelsAccordingToCities(cityName); //retrofit create implementation for this method
+            }
 
 //        call = interfaceApi.getChannelsAccordingToCities(cityName);
-        callGetCityChannels.enqueue(new Callback<List<FeaturedNetworks>>() {
-            @Override
-            public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
-                if(!response.isSuccessful())
-                {
+            callGetCityChannels.enqueue(new Callback<List<FeaturedNetworks>>() {
+                @Override
+                public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
+                    if(!response.isSuccessful())
+                    {
+                        imgLoading.setVisibility(View.GONE);
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                        return;
+                    }
+
                     imgLoading.setVisibility(View.GONE);
-                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
-                    return;
+                    networks = (ArrayList<FeaturedNetworks>) response.body();
+                    mainActivity.storeNetworks=networks;
+
+
+                    if(mainActivity.gridStatus==true)
+                    {
+                        recyclerViewGrid.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                        recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
+                        NewsItem newsItem=new NewsItem(getActivity(), networks,"grid");
+                        recyclerViewGrid.setAdapter(newsItem);
+                        // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
+                        recyclerView.scheduleLayoutAnimation();
+                        recyclerViewGrid.scheduleLayoutAnimation();
+                        mainActivity.gridStatus = false;
+                    }
+                    else
+                    {
+                        recyclerViewGrid.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        recyclerView.setHasFixedSize(true);
+                        final LinearLayoutManager linearLayoutManagers = new LinearLayoutManager(getActivity());
+                        recyclerView.setLayoutManager(linearLayoutManagers);
+                        NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
+                        recyclerView.setAdapter(newsItem);
+
+                        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            //this method call when scrooling start
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
+                                {
+                                    isScrooling=true;
+                                }
+                            }
+
+                            @Override
+                            //this method call when scrooled done
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                currentItems=linearLayoutManagers.getChildCount();//get the count of currrently visible items in recycler view
+                                totalItems=linearLayoutManagers.getItemCount(); // get the count of total items in recycler view
+                                scrollOutItems=linearLayoutManagers.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
+
+                                if(isScrooling && (currentItems+scrollOutItems  ==  totalItems))
+                                {
+                                    isScrooling=false;
+                                    if(visibilityOfTip)
+                                    {
+                                        textViewShowTip.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                                else if(currentItems<=5)
+                                {
+                                    if(visibilityOfTip)
+                                    {
+                                        textViewShowTip.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                                else if(isScrooling && (currentItems+scrollOutItems  !=  totalItems))
+                                {
+                                    textViewShowTip.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+
+                        // the below code is for swap at recycler view item
+                        recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+                        recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                            @Override
+                            public void onRowClicked(int position) {
+                            }
+
+                            @Override
+                            public void onIndependentViewClicked(int independentViewID, int position) {
+
+                            }
+                        }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                            @Override
+                            public void onSwipeOptionClicked(int viewID, int position) {
+                                switch (viewID) {
+                                    case R.id.favourite_network:
+//                                    setFavOrUnfav(position);
+                                        break;
+                                }
+                            }
+                        });
+                        recyclerView.addOnItemTouchListener(recyclerTouchListener);
+
+                        recyclerView.scheduleLayoutAnimation();
+                        recyclerViewGrid.scheduleLayoutAnimation();
+                    }
                 }
 
-                imgLoading.setVisibility(View.GONE);
-                networks = (ArrayList<FeaturedNetworks>) response.body();
-                mainActivity.storeNetworks=networks;
-
-
-                if(mainActivity.gridStatus==true)
-                {
-                    recyclerViewGrid.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-                    recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-                    NewsItem newsItem=new NewsItem(getActivity(), networks,"grid");
-                    recyclerViewGrid.setAdapter(newsItem);
-                    // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-                    recyclerView.scheduleLayoutAnimation();
-                    recyclerViewGrid.scheduleLayoutAnimation();
-                    mainActivity.gridStatus = false;
+                @Override
+                public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
+                    imgLoading.setVisibility(View.GONE);
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
                 }
-                else
-                {
-                    recyclerViewGrid.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    recyclerView.setHasFixedSize(true);
-                    final LinearLayoutManager linearLayoutManagers = new LinearLayoutManager(getActivity());
-                    recyclerView.setLayoutManager(linearLayoutManagers);
-                    NewsItem newsItem=new NewsItem(getActivity(), networks,"list");
-                    recyclerView.setAdapter(newsItem);
+            });
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
+
+
+    }
+    public void searchNetworks(String networkName) {
+
+        try {
+            InterfaceApi interfaceApi = RetrofitLab.connect("http://www.livenewsglobe.com/wp-json/Newspaper/v2/");
+            imgLoading.setVisibility(View.VISIBLE);
+            final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
+            if(sharedPrefereneceManager.getLoginStatus() == true)
+            {
+                callNetworks = interfaceApi.getNetworks(sharedPrefereneceManager.getUserId(),networkName);
+            }
+            else
+            {
+                callNetworks = interfaceApi.getNetworks(networkName);
+            }
+
+            callNetworks.enqueue(new Callback<List<FeaturedNetworks>>() {
+                @Override
+                public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
+                    if(!response.isSuccessful())
+                    {
+                        imgLoading.setVisibility(View.GONE);
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                        return;
+                    }
+
+                    imgLoading.setVisibility(View.GONE);
+                    searchNetworks = (ArrayList<FeaturedNetworks>) response.body();
+                    mainActivity.storeNetworks=searchNetworks;
+
+
+
+                    final LinearLayoutManager linearLayoutManagersss=new LinearLayoutManager(getActivity());
+
+                    if(mainActivity.gridStatus == true)
+                    {
+                        recyclerViewGrid.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                        recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
+                        NewsItem newsItem = new NewsItem(getActivity(), searchNetworks,"grid");
+                        recyclerViewGrid.setAdapter(newsItem);
+                        // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
+                        recyclerView.scheduleLayoutAnimation();
+                        recyclerViewGrid.scheduleLayoutAnimation();
+
+                    }
+                    else
+                    {
+                        recyclerViewGrid.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(linearLayoutManagersss);
+                        NewsItem newsItem = new NewsItem(getActivity(), searchNetworks,"list");
+                        recyclerView.setAdapter(newsItem);
+                        recyclerView.scheduleLayoutAnimation();
+                        recyclerViewGrid.scheduleLayoutAnimation();
+                    }
 
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -544,9 +701,9 @@ public class Home extends Fragment {
                         //this method call when scrooled done
                         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
-                            currentItems=linearLayoutManagers.getChildCount();//get the count of currrently visible items in recycler view
-                            totalItems=linearLayoutManagers.getItemCount(); // get the count of total items in recycler view
-                            scrollOutItems=linearLayoutManagers.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
+                            currentItems=linearLayoutManagersss.getChildCount();//get the count of currrently visible items in recycler view
+                            totalItems=linearLayoutManagersss.getItemCount(); // get the count of total items in recycler view
+                            scrollOutItems=linearLayoutManagersss.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
 
                             if(isScrooling && (currentItems+scrollOutItems  ==  totalItems))
                             {
@@ -575,6 +732,7 @@ public class Home extends Fragment {
                     recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                         @Override
                         public void onRowClicked(int position) {
+//                        Toast.makeText(getActivity(), networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -586,7 +744,7 @@ public class Home extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID) {
                                 case R.id.favourite_network:
-                                    setFavOrUnfav(position);
+//                                setFavOrUnfav(position);
                                     break;
                             }
                         }
@@ -595,148 +753,21 @@ public class Home extends Fragment {
 
                     recyclerView.scheduleLayoutAnimation();
                     recyclerViewGrid.scheduleLayoutAnimation();
+
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
-                imgLoading.setVisibility(View.GONE);
-                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-            }
-        });
-    }
-    public void searchNetworks(String networkName) {
-        InterfaceApi interfaceApi = RetrofitLab.connect("http://www.livenewsglobe.com/wp-json/Newspaper/v2/");
-        imgLoading.setVisibility(View.VISIBLE);
-        final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
-        if(sharedPrefereneceManager.getLoginStatus() == true)
-        {
-            callNetworks = interfaceApi.getNetworks(sharedPrefereneceManager.getUserId(),networkName);
-        }
-        else
-        {
-            callNetworks = interfaceApi.getNetworks(networkName);
-        }
-
-        callNetworks.enqueue(new Callback<List<FeaturedNetworks>>() {
-            @Override
-            public void onResponse(Call<List<FeaturedNetworks>> call, Response<List<FeaturedNetworks>> response) {
-                if(!response.isSuccessful())
-                {
+                @Override
+                public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
                     imgLoading.setVisibility(View.GONE);
-                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try again later");
-                    return;
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
                 }
+            });
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
 
-                imgLoading.setVisibility(View.GONE);
-                searchNetworks = (ArrayList<FeaturedNetworks>) response.body();
-                mainActivity.storeNetworks=searchNetworks;
-
-
-
-                final LinearLayoutManager linearLayoutManagersss=new LinearLayoutManager(getActivity());
-
-                if(mainActivity.gridStatus == true)
-                {
-                    recyclerViewGrid.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-                    recyclerViewGrid.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
-                    NewsItem newsItem = new NewsItem(getActivity(), searchNetworks,"grid");
-                    recyclerViewGrid.setAdapter(newsItem);
-                    // for apply animation at receycler view items every time when show recycelr view ->using below line and add animation using attribute property android:layoutAnimation="@anim/layout_animation" in the XML of recycler view
-                    recyclerView.scheduleLayoutAnimation();
-                    recyclerViewGrid.scheduleLayoutAnimation();
-
-                }
-                else
-                {
-                    recyclerViewGrid.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(linearLayoutManagersss);
-                    NewsItem newsItem = new NewsItem(getActivity(), searchNetworks,"list");
-                    recyclerView.setAdapter(newsItem);
-                    recyclerView.scheduleLayoutAnimation();
-                    recyclerViewGrid.scheduleLayoutAnimation();
-                }
-
-                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    //this method call when scrooling start
-                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                        super.onScrollStateChanged(recyclerView, newState);
-                        if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                        {
-                            isScrooling=true;
-                        }
-                    }
-
-                    @Override
-                    //this method call when scrooled done
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        currentItems=linearLayoutManagersss.getChildCount();//get the count of currrently visible items in recycler view
-                        totalItems=linearLayoutManagersss.getItemCount(); // get the count of total items in recycler view
-                        scrollOutItems=linearLayoutManagersss.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
-
-                        if(isScrooling && (currentItems+scrollOutItems  ==  totalItems))
-                        {
-                            isScrooling=false;
-                            if(visibilityOfTip)
-                            {
-                                textViewShowTip.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        else if(currentItems<=5)
-                        {
-                            if(visibilityOfTip)
-                            {
-                                textViewShowTip.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        else if(isScrooling && (currentItems+scrollOutItems  !=  totalItems))
-                        {
-                            textViewShowTip.setVisibility(View.GONE);
-                        }
-                    }
-                });
-
-                // the below code is for swap at recycler view item
-                recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
-                recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
-                    @Override
-                    public void onRowClicked(int position) {
-//                        Toast.makeText(getActivity(), networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onIndependentViewClicked(int independentViewID, int position) {
-
-                    }
-                }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-                    @Override
-                    public void onSwipeOptionClicked(int viewID, int position) {
-                        switch (viewID) {
-                            case R.id.favourite_network:
-                                setFavOrUnfav(position);
-                                break;
-                        }
-                    }
-                });
-                recyclerView.addOnItemTouchListener(recyclerTouchListener);
-
-                recyclerView.scheduleLayoutAnimation();
-                recyclerViewGrid.scheduleLayoutAnimation();
-
-            }
-
-            @Override
-            public void onFailure(Call<List<FeaturedNetworks>> call, Throwable t) {
-                imgLoading.setVisibility(View.GONE);
-                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
-            }
-        });
     }
     private void listView() {
 
@@ -754,67 +785,77 @@ public class Home extends Fragment {
     }
 
     private void scrollAndtouchListener(RecyclerView recyclerView) {
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            //this method call when scrooling start
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                {
-                    isScrooling=true;
-                }
-            }
-
-            @Override
-            //this method call when scrooled done
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                currentItems=linearLayoutManager.getChildCount();//get the count of currrently visible items in recycler view
-                totalItems=linearLayoutManager.getItemCount(); // get the count of total items in recycler view
-                scrollOutItems=linearLayoutManager.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
-
-                if(isScrooling && (currentItems+scrollOutItems  ==  totalItems))
-                {
-                    isScrooling=false;
-                    if(visibilityOfTip)
+        try {
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                //this method call when scrooling start
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
                     {
-                        textViewShowTip.setVisibility(View.VISIBLE);
+                        isScrooling=true;
                     }
                 }
-                else if(isScrooling && (currentItems+scrollOutItems  !=  totalItems))
-                {
-                    textViewShowTip.setVisibility(View.GONE);
-                }
-            }
-        });
 
-        // the below code is for swap at recycler view item
-        recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
-        recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
-            @Override
-            public void onRowClicked(int position) {
+                @Override
+                //this method call when scrooled done
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    currentItems=linearLayoutManager.getChildCount();//get the count of currrently visible items in recycler view
+                    totalItems=linearLayoutManager.getItemCount(); // get the count of total items in recycler view
+                    scrollOutItems=linearLayoutManager.findFirstVisibleItemPosition(); // get the count of items which has been scrooled out in recycler view
+
+                    if(isScrooling && (currentItems+scrollOutItems  ==  totalItems))
+                    {
+                        isScrooling=false;
+                        if(visibilityOfTip)
+                        {
+                            textViewShowTip.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    else if(isScrooling && (currentItems+scrollOutItems  !=  totalItems))
+                    {
+                        textViewShowTip.setVisibility(View.GONE);
+                    }
+                }
+            });
+
+            // the below code is for swap at recycler view item
+            recyclerTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+            recyclerTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                @Override
+                public void onRowClicked(int position) {
 //                    Toast.makeText(getActivity(), networks.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onIndependentViewClicked(int independentViewID, int position) {
-
-            }
-        }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-            @Override
-            public void onSwipeOptionClicked(int viewID, final int position) {
-                switch (viewID) {
-                    case R.id.favourite_network:
-
-                        setFavOrUnfav(position);
                 }
-            }
-        });
-        recyclerView.addOnItemTouchListener(recyclerTouchListener);
+
+                @Override
+                public void onIndependentViewClicked(int independentViewID, int position) {
+
+                }
+            }).setSwipeOptionViews(R.id.favourite_network).setSwipeable(R.id.complete_item_click, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                @Override
+                public void onSwipeOptionClicked(int viewID, final int position) {
+                    switch (viewID) {
+                        case R.id.heart:
+
+//                        mainActivity.positions =  position;
+//
+//                        setFavOrUnfav(position);
+                    }
+                }
+            });
+            recyclerView.addOnItemTouchListener(recyclerTouchListener);
+        }
+        catch (Exception e)
+        {
+            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+        }
+
+
     }
 
     private void gridView() {
+
         recyclerViewGrid.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
@@ -827,6 +868,8 @@ public class Home extends Fragment {
         recyclerViewGrid.scheduleLayoutAnimation();
     }
     public void setFavOrUnfav(final int position) {
+
+
 
         final SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(mainActivity);
 //                            sharedPrefereneceManager.getLoginStatus();
@@ -865,6 +908,7 @@ public class Home extends Fragment {
                                         InsertChannelResponse insertChannelResponse = response.body();
                                         //  int pos = position;
                                         recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.heart).setBackground(mainActivity.getResources().getDrawable(R.drawable.like_channel));
+
                                         sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully added in favourites");
 
                                     }

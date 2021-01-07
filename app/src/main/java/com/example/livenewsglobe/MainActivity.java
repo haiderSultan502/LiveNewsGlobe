@@ -1,7 +1,10 @@
 package com.example.livenewsglobe;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -12,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -63,6 +67,12 @@ import com.example.livenewsglobe.otherClasses.SharedPrefereneceManager;
 import com.example.livenewsglobe.otherClasses.SweetAlertDialogGeneral;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -127,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     NavigationView navigationViews;
     View headerView;
     TextView userName;
-    ImageView imageViewUser,imagePicker;
+    ImageView imageViewUser,imagePicker,profileImg;
     static Bitmap bitmaps;
     Uri path;
     String imagePath;
@@ -162,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     View includeAboutUs,includeProfileScreen;
     ImageView imTwitter,imFb,imPintrest,imInsta;
 
-    EditText edUsername,edEmail;
+    TextView edUsername,edEmail;
 
     SharedPrefereneceManager sharedPrefereneceManager;
 
@@ -170,6 +180,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static ArrayList<FavouritesModel> arrayListFavourites;
 //    public static ArrayList<FeaturedNetworks> networkss;
 //    public static ArrayList<FeaturedNetworks> arrayListFeaturedNetwork;
+
+    public static int positions;
 
 
 
@@ -200,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         userName = (TextView) headerView.findViewById(R.id.tv_username);
         imageViewUser = headerView.findViewById(R.id.user_image);
+        profileImg = findViewById(R.id.user_image);
         imagePicker = headerView.findViewById(R.id.image_picker);
 
 
@@ -279,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
         sharedPrefereneceManager = new SharedPrefereneceManager(this);
 
         if (sharedPrefereneceManager.getLoginStatus() == true)
@@ -292,9 +306,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     userName = (TextView) headerView.findViewById(R.id.tv_username);
                     userName.setText(sharedPrefereneceManager.getUserName());
 
-                    imageViewUser = headerView.findViewById(R.id.user_image);
                     String url = sharedPrefereneceManager.getUserProfileUrl();
-                    Picasso.with(this).load(url).placeholder(R.drawable.user_profile).error(R.drawable.user_profile).into(imageViewUser);
+                    Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
+                    Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
                 }
         }
 
@@ -305,8 +319,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectImage();
-                Toast.makeText(MainActivity.this, "Select image", Toast.LENGTH_SHORT).show();
+                if (sharedPrefereneceManager.getLoginStatus() == true) {
+                    allowReadExternalStoragePermission();
+                }
+                else
+                {
+                    customAlertDialog.showDialog();
+                }
+
             }
         });
 
@@ -316,9 +336,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 SharedPrefereneceManager sharedPrefereneceManager= new SharedPrefereneceManager(getApplicationContext());
                 sharedPrefereneceManager.setLoginStatus(false);
-                setUserNameAndEmail("Null","Null");
+                setUserNameAndEmail("","");
                 replaceFragment();
                 includeProfileScreen.setVisibility(View.GONE);
+                profileImg.setImageResource(R.drawable.avatar_img);
 
             }
         });
@@ -345,7 +366,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 SharedPrefereneceManager sharedPrefereneceManager= new SharedPrefereneceManager(getApplicationContext());
                 sharedPrefereneceManager.setLoginStatus(false);
-                setUserNameAndEmail("Null","Null");
+                setUserNameAndEmail("","");
+                profileImg.setImageResource(R.drawable.avatar_img);
+                imageViewUser.setImageResource(R.drawable.avatar_img);
+
                 drawer.closeDrawers();
                 replaceFragment();
             }
@@ -412,7 +436,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponse(Call<List<States>> call, Response<List<States>> response) {
                 if(!response.isSuccessful())
                 {
-                    Toast.makeText(getApplicationContext(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
+                    sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
                     return;
                 }
 
@@ -449,7 +474,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onFailure(Call<List<States>> call, Throwable t) {
 //            progressDialog.progressDialogVar.dismiss();
-                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
                 Log.d("CheckMessage",t.getMessage());
             }
         });
@@ -930,6 +956,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         checkBackStackPopFrag();
                         if(getFavouritList==true)
                         {
+                            setBgResource();
                             filter.setBackgroundResource(R.drawable.filter);
                             filter_options.setVisibility(View.GONE);
                             favouriteListViewMode();
@@ -979,6 +1006,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    private void allowReadExternalStoragePermission() {
+        Dexter.withContext(this)
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        // permission is granted
+                        selectImage();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        // check for permanent denial of permission
+                        if (response.isPermanentlyDenied()) {
+                            showSettingsDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check();
+    }
+
+    private void showSettingsDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Need Permissions");
+        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
+        builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                openSettings();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void openSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivityForResult(intent, 101);
+    }
+
     public void setFragStatus(String value) {
         switch (value)
         {
@@ -1228,6 +1309,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         edUsername.setText(username);
         edEmail.setText(email);
 
+//        String url = sharedPrefereneceManager.getUserProfileUrl();
+//        Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
+//        Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
+//
+//        if (sharedPrefereneceManager.getUserProfileUrl().length() != 0)
+//        {
+//            userName = (TextView) headerView.findViewById(R.id.tv_username);
+//            userName.setText(sharedPrefereneceManager.getUserName());
+//
+//            String url = sharedPrefereneceManager.getUserProfileUrl();
+//            Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
+//            Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
+//        }
+
     }
     private void selectImage() {
         Intent intent = new Intent();
@@ -1262,7 +1357,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (sharedPrefereneceManager.getLoginStatus() == true) {
             File file = new File(imagePath);
 //                RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            final RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", file.getName(), requestBody);
 
             InterfaceApi interfaceApi = RetrofitLab.connect("https://www.livenewsglobe.com/wp-json/newspaper/v2/");
@@ -1273,7 +1368,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                     if (!response.isSuccessful()) {
-                        sweetAlertDialogGeneral.showSweetAlertDialog("warning", "Something goes wromg");
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning", "Please try later");
 //                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -1285,7 +1380,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(getApplicationContext());
                     sharedPrefereneceManager.setUserProfileUrl(userProfileURL);
 
-                    Picasso.with(getApplicationContext()).load(userProfileURL).placeholder(R.drawable.user_profile).error(R.drawable.user_profile).into(imageViewUser);
+                    Picasso.with(getApplicationContext()).load(userProfileURL).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
+                    Picasso.with(getApplicationContext()).load(userProfileURL).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
                     SharedPreferences prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE );
 
 
