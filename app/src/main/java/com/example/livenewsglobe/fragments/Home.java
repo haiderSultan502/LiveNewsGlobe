@@ -370,7 +370,7 @@ public class Home extends Fragment {
                     if(!response.isSuccessful())
                     {
                         imgLoading.setVisibility(View.GONE);
-                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","Please try later");
+                        sweetAlertDialogGeneral.showSweetAlertDialog("warning","No network found realted to main network");
 //                    Toast.makeText(getActivity(), "Code"+response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
