@@ -269,6 +269,8 @@ public class CustomAlertDialog {
 
                                     sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("success","Successfully Login");
 
+                                    MainActivity.tvSignIn.setText("Sign out");
+
 //                                SweetAlertDialog pDialogs = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
 //                                pDialogs.setTitleText("Successfully Login");
 //                                pDialogs.setCustomImage(R.drawable.loading);

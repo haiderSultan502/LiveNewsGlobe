@@ -168,9 +168,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  static final String TAG="MianActivity";
     RelativeLayout userLogout;
 
-    TextView tvLogoutProfile;
+    public static TextView tvLogoutProfile,tvSignIn;
     View includeAboutUs,includeProfileScreen;
-    ImageView imTwitter,imFb,imPintrest,imInsta;
+    ImageView imTwitter,imFb,imPintrest,imYoutube;
 
     TextView edUsername,edEmail;
 
@@ -200,12 +200,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         includeProfileScreen = findViewById(R.id.view_profile);
         imTwitter= findViewById(R.id.twitter);
         imFb=findViewById(R.id.fb);
-        imInsta=findViewById(R.id.insta);
-        imPintrest=findViewById(R.id.pintrest);
+        imYoutube=findViewById(R.id.youtube);
 
         edUsername=findViewById(R.id.tv_username_profile);
         edEmail=findViewById(R.id.tv_email_profile);
         tvLogoutProfile=findViewById(R.id.tv_logout_profile);
+        tvSignIn = findViewById(R.id.signIn);
 
         navigationView = (NavigationView) findViewById(R.id.navigation);
         headerView = navigationView.getHeaderView(0);
@@ -316,6 +316,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         blurbackground();
 
+        imTwitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSocialMediaPage("https://twitter.com/live_globe");
+            }
+        });
+        imFb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSocialMediaPage("https://www.facebook.com/Live-News-Globe-109250874181456");
+            }
+        });
+        imYoutube.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSocialMediaPage("https://www.youtube.com/channel/UCqpTOm-ezLywBlCJkaE7D4w?guided_help_flow=5");
+            }
+        });
+
+
+
         imagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -329,7 +350,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
 
         tvLogoutProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -365,13 +385,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 SharedPrefereneceManager sharedPrefereneceManager= new SharedPrefereneceManager(getApplicationContext());
-                sharedPrefereneceManager.setLoginStatus(false);
-                setUserNameAndEmail("","");
-                profileImg.setImageResource(R.drawable.avatar_img);
-                imageViewUser.setImageResource(R.drawable.avatar_img);
+//                sharedPrefereneceManager.setLoginStatus(false);
+                Boolean chectStatus = sharedPrefereneceManager.getLoginStatus();
+//
+                if (chectStatus == false)
+                {
 
-                drawer.closeDrawers();
-                replaceFragment();
+//                    blurbackground();
+                    customAlertDialog.showDialog();
+                    drawer.closeDrawers();
+
+                }
+                else {
+
+                    sharedPrefereneceManager.setLoginStatus(false);
+                    setUserNameAndEmail("","");
+                    profileImg.setImageResource(R.drawable.avatar_img);
+                    imageViewUser.setImageResource(R.drawable.avatar_img);
+                    tvSignIn.setText("Sign In");
+
+                    replaceFragment();
+
+                }
             }
         });
 
@@ -1031,7 +1066,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }).check();
     }
-
+    private void viewSocialMediaPage(String socialMediaLink) {
+        Intent socialMediaPage = new Intent(Intent.ACTION_VIEW);
+        socialMediaPage.setData(Uri.parse(socialMediaLink));
+        startActivity(socialMediaPage);
+    }
     private void showSettingsDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);

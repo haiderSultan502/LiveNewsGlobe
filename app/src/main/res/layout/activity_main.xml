@@ -401,17 +401,17 @@
             android:paddingRight="@dimen/_25sdp"
             android:layout_marginBottom="@dimen/_70sdp">
             <TextView
-                android:id="@+id/signOut"
+                android:id="@+id/signIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign Out"
+                android:text="Sign In"
                 android:textColor="#578FBF"
                 android:textSize="@dimen/_12sdp"
                 android:layout_alignParentRight="true"/>
             <ImageView
                 android:layout_width="@dimen/_12sdp"
                 android:layout_height="@dimen/_12sdp"
-                android:layout_below="@+id/signOut"
+                android:layout_below="@+id/signIn"
                 android:src="@drawable/signout"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/_8sdp"/>

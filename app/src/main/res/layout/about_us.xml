@@ -113,16 +113,10 @@
                 android:src="@drawable/fb"
                 android:layout_marginLeft="@dimen/_10sdp"/>
             <ImageView
-                android:id="@+id/insta"
+                android:id="@+id/youtube"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/insta"
-                android:layout_marginLeft="@dimen/_10sdp"/>
-            <ImageView
-                android:id="@+id/pintrest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/pintrest"
+                android:src="@drawable/youtube"
                 android:layout_marginLeft="@dimen/_10sdp"/>
 
         </LinearLayout>
