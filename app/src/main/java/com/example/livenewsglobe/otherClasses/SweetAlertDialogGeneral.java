@@ -59,7 +59,7 @@ public class SweetAlertDialogGeneral {
             public void run() {
                 sweetDialog.dismiss();
             }
-        },3000);
+        },2500);
     }
 
 }

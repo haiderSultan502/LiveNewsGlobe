@@ -43,7 +43,7 @@ public class NewsVideoPlayer extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        webview = true;
+//        webview = true;
     }
 
     @Nullable
@@ -60,10 +60,20 @@ public class NewsVideoPlayer extends Fragment {
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
 
+        WebSettings webSettings = web.getSettings();
+
+//        after adding below these two lines webview able to load the images and videos
+
+        webSettings.setJavaScriptEnabled(true);
+
+        webSettings.setUseWideViewPort(true);
+
+        web.getSettings().setLoadsImagesAutomatically(true);
+
 //        String url = "https://livenewsglobe.com/?p=3744";
         bundle=getArguments();
         networkUrl=bundle.getString("networkUrl");
-        captureLinkClick=false;
+//        captureLinkClick=false;
         new MyAsynTask().execute();
 
         imgBackButton.setOnClickListener(new View.OnClickListener() {
@@ -84,32 +94,36 @@ return view;
 
         @Override
         protected Document doInBackground(Void... voids) {
-            if (captureLinkClick==false)
-            {
-                try {
-                    document= Jsoup.connect(networkUrl).get();
+            removeView();
+//            if (captureLinkClick==false)
+//            {
+//
+//            }
+//            else
+//            {
+//                try {
+//                    document= Jsoup.connect(networkUrl).get();
+//                    Log.d("NetworkUrl",networkUrl);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            return document;
+        }
 
-                    document.getElementsByClass("td-header-template-wrap").remove();
-                    document.getElementsByClass("td-footer-template-wrap").remove();
-                    document.getElementById("comments").remove();
+        private void removeView() {
+            try {
+                document= Jsoup.connect(networkUrl).get();
+
+                document.getElementsByClass("td-header-template-wrap").remove();
+                document.getElementsByClass("td-footer-template-wrap").remove();
+                document.getElementById("comments").remove();
 //                document.getElementsByClass("vc_column tdi_100_fc1  wpb_column vc_column_container tdc-column td-pb-span12").remove();
 //                document.getElementsByClass("td-post-sharing-visible").remove();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            else
-            {
-                try {
-                    document= Jsoup.connect(networkUrl).get();
-                    Log.d("NetworkUrl",networkUrl);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return document;
         }
 
         @Override
@@ -118,7 +132,7 @@ return view;
 
             web.loadDataWithBaseURL(networkUrl,document.toString(),"text/html","utf-8","");
             web.getSettings().setCacheMode( WebSettings.LOAD_CACHE_ELSE_NETWORK );
-            web.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+//            web.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 //                // chromium, enable hardware acceleration
 //                web.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -127,29 +141,37 @@ return view;
 //                web.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 //            }
 //            after adding below these two lines webview able to load the images and videos
-            web.getSettings().setJavaScriptEnabled(true);
-            web.getSettings().setUseWideViewPort(true);
+//            web.getSettings().setJavaScriptEnabled(true);
+//            web.getSettings().setUseWideViewPort(true);
 //            web.loadUrl(networkUrl);
 
-            web.setWebViewClient(new WebViewClient(){
-
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                    view.loadUrl(networkUrl);
-                    return super.shouldOverrideUrlLoading(view, request);
-                }
-
+//            web.setWebViewClient(new WebViewClient(){
+//
+//                @Override
+//                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//                    view.loadUrl(networkUrl);
+//                    return super.shouldOverrideUrlLoading(view, request);
+//                }
+//
+//                @Override
+//                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                    imageViewLoading.setVisibility(View.VISIBLE);
+//                    Log.d("url",url);
+//                    networkUrl=url;
+//                    captureLinkClick=true;
+//                    new MyAsynTask().execute();
+//                    return true;
+//                }
+//
+//            });
+            web.setWebViewClient(new WebViewClient()
+            {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    imageViewLoading.setVisibility(View.VISIBLE);
-                    Log.d("url",url);
-                    networkUrl=url;
-                    captureLinkClick=true;
-                    new MyAsynTask().execute();
-                    return true;
+                    return super.shouldOverrideUrlLoading(view, url);
                 }
-
             });
+
             imageViewLoading.setVisibility(View.GONE);
         }
 

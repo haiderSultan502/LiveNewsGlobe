@@ -954,7 +954,7 @@ public class Home extends Fragment {
 
                                 @Override
                                 public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
-                                    sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
+                                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
                                 }
                             });
                         }
@@ -963,7 +963,7 @@ public class Home extends Fragment {
 
                 @Override
                 public void onFailure(Call<InsertChannelResponse> call, Throwable t) {
-                    sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
+                    sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
                 }
 
             });

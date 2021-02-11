@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     View headerView;
     TextView userName;
     ImageView imageViewUser,imagePicker,profileImg;
+    RelativeLayout rlUserProfile;
     static Bitmap bitmaps;
     Uri path;
     String imagePath;
@@ -214,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageViewUser = headerView.findViewById(R.id.user_image);
         profileImg = findViewById(R.id.user_image);
         imagePicker = headerView.findViewById(R.id.image_picker);
+        rlUserProfile = headerView.findViewById(R.id.relative_layout_image);
 
 
 //        progressDialog =  new ProgressDialog("Loading...");
@@ -297,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (sharedPrefereneceManager.getLoginStatus() == true)
         {
+            tvSignIn.setText("Sign out");
             setUserNameAndEmail(sharedPrefereneceManager.getUserName(),sharedPrefereneceManager.getUserEmail());
         }
 //                            sharedPrefereneceManager.getLoginStatus();
@@ -337,6 +340,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+        rlUserProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sharedPrefereneceManager.getLoginStatus() == true) {
+                    allowReadExternalStoragePermission();
+                }
+                else
+                {
+                    drawer.closeDrawers();
+                    blurbackground();
+                    customAlertDialog.showDialog();
+                }
+            }
+        });
         imagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -345,6 +362,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 else
                 {
+                    drawer.closeDrawers();
+                    blurbackground();
                     customAlertDialog.showDialog();
                 }
 
@@ -1048,6 +1067,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
+
+
                         // permission is granted
                         selectImage();
                     }

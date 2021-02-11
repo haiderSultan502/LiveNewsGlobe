@@ -286,7 +286,7 @@ public class CustomAlertDialog {
 
                             @Override
                             public void onFailure(Call<LoginModel> call, Throwable t) {
-                                sweetAlertDialogGeneral.showSweetAlertDialog("error","Please check your internet connection");
+                                sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
                             }
                         });
 

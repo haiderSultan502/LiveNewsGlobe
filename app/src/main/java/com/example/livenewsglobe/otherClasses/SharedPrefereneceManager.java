@@ -38,6 +38,13 @@ public class SharedPrefereneceManager {
         sharedPreferences.edit().putInt("userId",userId).commit();
     }
 
+//    public void setPermissionGranted(Boolean isGranted) {
+//        SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
+//        sharedPreferences.edit().putBoolean("userId",userId).commit();
+//    }
+
+
+
     public String getUserProfileUrl() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
         return sharedPreferences.getString("userProfileUrl","");
