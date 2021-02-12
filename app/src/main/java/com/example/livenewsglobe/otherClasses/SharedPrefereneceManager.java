@@ -54,6 +54,15 @@ public class SharedPrefereneceManager {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
         sharedPreferences.edit().putString("userProfileUrl",userProfileUrl).commit();
     }
+    public void setuserIdForGetUserImage(int userIdForGetUserImage) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("userIdForGetUserImage",userIdForGetUserImage).commit();
+    }
+    public int getuserIdForGetUserImage() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("userIdForGetUserImage",0);
+    }
+
     public String getUserName() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
         return sharedPreferences.getString("userName","Null");

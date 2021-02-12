@@ -271,6 +271,10 @@ public class CustomAlertDialog {
 
                                     MainActivity.tvSignIn.setText("Sign out");
 
+                                    context.checkGetandSetUserprofile();
+
+
+
 //                                SweetAlertDialog pDialogs = new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE);
 //                                pDialogs.setTitleText("Successfully Login");
 //                                pDialogs.setCustomImage(R.drawable.loading);
@@ -287,6 +291,7 @@ public class CustomAlertDialog {
                             @Override
                             public void onFailure(Call<LoginModel> call, Throwable t) {
                                 sweetAlertDialogGeneral.showSweetAlertDialog("error",t.getMessage());
+                                sweetAlertDialog.dismissWithAnimation();
                             }
                         });
 

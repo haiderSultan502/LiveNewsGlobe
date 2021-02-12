@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String[] networkNames={"Network","ABC","CBS","FOX","Independent","NBC"};
     String stateName,cityName;
     public static BlurView blurView;
+    static int userIdForGetUserImage;
 
     RecyclerView recyclerView,recyclerViewGrid;
 
@@ -304,15 +305,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 //                            sharedPrefereneceManager.getLoginStatus();
         if (sharedPrefereneceManager.getLoginStatus() == true) {
-                if (sharedPrefereneceManager.getUserProfileUrl().length() != 0)
-                {
-                    userName = (TextView) headerView.findViewById(R.id.tv_username);
-                    userName.setText(sharedPrefereneceManager.getUserName());
 
-                    String url = sharedPrefereneceManager.getUserProfileUrl();
-                    Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
-                    Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
-                }
+
+
+//            userIdForGetUserImage = sharedPrefereneceManager.getuserIdForGetUserImage();
+
+            checkGetandSetUserprofile();
+
+
         }
 
 
@@ -344,6 +344,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (sharedPrefereneceManager.getLoginStatus() == true) {
+
+
+//                    userIdForGetUserImage = sharedPrefereneceManager.getUserId();
+//
+//                    sharedPrefereneceManager.setuserIdForGetUserImage(userIdForGetUserImage);
+
+
                     allowReadExternalStoragePermission();
                 }
                 else
@@ -358,6 +365,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (sharedPrefereneceManager.getLoginStatus() == true) {
+
+//                    userIdForGetUserImage = sharedPrefereneceManager.getUserId();
+//
+//                    sharedPrefereneceManager.setuserIdForGetUserImage(userIdForGetUserImage);
+
                     allowReadExternalStoragePermission();
                 }
                 else
@@ -1061,6 +1073,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    public void checkGetandSetUserprofile() {
+        if (sharedPrefereneceManager.getUserProfileUrl().length() != 0)
+        {
+            userName = (TextView) headerView.findViewById(R.id.tv_username);
+            userName.setText(sharedPrefereneceManager.getUserName());
+
+            String url = sharedPrefereneceManager.getUserProfileUrl();
+            Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
+            Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
+        }
+    }
+
     private void allowReadExternalStoragePermission() {
         Dexter.withContext(this)
                 .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -1397,6 +1421,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(requestCode== IMAGE && resultCode==RESULT_OK && data!=null)
         {
             path = data.getData();
+
+            Picasso.with(getApplicationContext()).load(path).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
+            Picasso.with(getApplicationContext()).load(path).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
+
             imagePath = getRealPathFromUri(path);
             uploadUserProfile();
         }
@@ -1416,6 +1444,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                            sharedPrefereneceManager.getLoginStatus();
         if (sharedPrefereneceManager.getLoginStatus() == true) {
             File file = new File(imagePath);
+            Log.d("path", "uploadUserProfile: " + file.getName());
 //                RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file);
             final RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", file.getName(), requestBody);
@@ -1437,17 +1466,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     status = userProfile.getStatus();
                     userProfileURL = userProfile.getUrl();
 
+
+                    // if you are app runs on android version 10 or + then  must allow this  android:requestLegacyExternalStorage="true" in manifest file this permision is for scoped storage othert wise on version 10 + image not upload
+
                     SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(getApplicationContext());
                     sharedPrefereneceManager.setUserProfileUrl(userProfileURL);
 
-                    Picasso.with(getApplicationContext()).load(userProfileURL).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
-                    Picasso.with(getApplicationContext()).load(userProfileURL).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
-                    SharedPreferences prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE );
+
+//                    Picasso.with(getApplicationContext()).load(userProfileURL).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
+//                    Picasso.with(getApplicationContext()).load(userProfileURL).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
 
 
 
 
-                    sweetAlertDialogGeneral.showSweetAlertDialog("success", status);
+//                    sweetAlertDialogGeneral.showSweetAlertDialog("success", status);
                 }
 
                 @Override
