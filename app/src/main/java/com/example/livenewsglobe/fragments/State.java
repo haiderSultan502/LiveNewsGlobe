@@ -79,7 +79,7 @@ public class State extends Fragment{
         view=inflater.inflate(R.layout.state,container,false);
 
         sweetAlertDialogGeneral = new SweetAlertDialogGeneral(mainActivity);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
 
         recyclerView=view.findViewById(R.id.recycler_view);
         recyclerViewGrid=view.findViewById(R.id.recycler_view_gridView);
@@ -184,7 +184,7 @@ public class State extends Fragment{
         }
         catch (Exception e)
         {
-            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+//            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
         }
 
 

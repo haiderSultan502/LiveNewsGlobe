@@ -395,7 +395,7 @@ public class NewsItem extends RecyclerView.Adapter<NewsItem.ItemViewHolder> impl
         }
         catch (Exception e)
         {
-            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+//            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
         }
 
 

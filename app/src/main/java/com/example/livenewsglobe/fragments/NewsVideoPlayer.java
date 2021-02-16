@@ -58,7 +58,7 @@ public class NewsVideoPlayer extends Fragment {
 
         imageViewLoading.setVisibility(View.VISIBLE);
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
 
         WebSettings webSettings = web.getSettings();
 

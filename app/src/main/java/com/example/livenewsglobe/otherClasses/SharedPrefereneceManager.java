@@ -65,7 +65,7 @@ public class SharedPrefereneceManager {
 
     public String getUserName() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginFileStatus",Context.MODE_PRIVATE);
-        return sharedPreferences.getString("userName","Null");
+        return sharedPreferences.getString("userName","username");
     }
 
     public void setUserName(String userName) {

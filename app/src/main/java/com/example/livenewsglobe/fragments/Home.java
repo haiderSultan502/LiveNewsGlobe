@@ -194,7 +194,7 @@ public class Home extends Fragment {
         linearLayoutManager=new LinearLayoutManager(getActivity());
 
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);//this line is used to when keyboard comes up then dwidgets not disturb
 
 
         recyclerView=view.findViewById(R.id.recycler_view);
@@ -341,7 +341,7 @@ public class Home extends Fragment {
         }
         catch (Exception e)
         {
-            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+//            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
         }
 
 
@@ -484,7 +484,7 @@ public class Home extends Fragment {
         }
         catch (Exception e)
         {
-            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+            //sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
         }
 
 
@@ -623,7 +623,7 @@ public class Home extends Fragment {
         }
         catch (Exception e)
         {
-            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+            //sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
         }
 
 
@@ -765,7 +765,7 @@ public class Home extends Fragment {
         }
         catch (Exception e)
         {
-            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+            //sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
         }
 
     }
@@ -848,7 +848,7 @@ public class Home extends Fragment {
         }
         catch (Exception e)
         {
-            sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
+            //sweetAlertDialogGeneral.showSweetAlertDialog("warning",e.getMessage());
         }
 
 

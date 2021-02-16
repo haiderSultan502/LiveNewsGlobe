@@ -64,6 +64,7 @@ public class CustomAlertDialog {
     ColorStateList oldColors;
     SwipeDismissDialog swipeDismissDialog;
     static String userNameStr,valid_email,passwordStr;
+    String passwordStr2,passwordStr3;
     SweetAlertDialogGeneral sweetAlertDialogGeneral;
     SweetAlertDialog sweetAlertDialog;
     View dialog;
@@ -119,7 +120,6 @@ public class CustomAlertDialog {
                     valid_email = edt.getText().toString();
                 }
             }
-
             boolean isEmailValid(CharSequence email) {
                 return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
                         .matches();
@@ -158,11 +158,14 @@ public class CustomAlertDialog {
 
             @Override
             public void afterTextChanged(Editable s) {
-                passwordStr = password.getText().toString();
-                if (passwordStr.length() < 4)
-                {
-                    password.setError("Password must contain at least 4 characters.");
-                }
+//                passwordStr = password.getText().toString();
+
+
+//                password.setText(password.getText().delete(0,1));
+//                if (passwordStr.length() < 4)
+//                {
+//                    password.setError("Password must contain at least 4 characters.");
+//                }
             }
         });
 
@@ -214,9 +217,27 @@ public class CustomAlertDialog {
                         context.blurView.setVisibility(View.GONE);
                         swipeDismissDialog.dismiss();
                     }
+
+
                     return false;
                 }
             });
+
+//            password.setOnKeyListener(new View.OnKeyListener() {
+//                @Override
+//                public boolean onKey(View v, int keyCode, KeyEvent event) {
+//
+//                    if(keyCode == KeyEvent.KEYCODE_DEL) {
+//
+//                        passwordStr2 = password.getText().toString();
+//                        passwordStr3 = passwordStr2.substring(0,passwordStr2.length() - 1);
+//                        password.setText(passwordStr3);
+//                        password.setSelection(password.getText().length());
+//                    }
+//
+//                    return false;
+//                }
+//            });
 
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -228,6 +249,9 @@ public class CustomAlertDialog {
 //                pDialog.setCancelable(true);
 //                pDialog.setCanceledOnTouchOutside(true);
 //                pDialog.show();
+
+                    //from there
+
                     sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("progress","Loading");
 
                     if(email.getText().toString().length() > 11 && password.getText().toString().length() >= 3)
@@ -249,6 +273,7 @@ public class CustomAlertDialog {
 
                                     SharedPrefereneceManager sharedPrefereneceManager = new SharedPrefereneceManager(context);
                                     sharedPrefereneceManager.setLoginStatus(true);
+                                    sharedPrefereneceManager.setUserName(loginModel.getData().getUserNicename());
                                     sharedPrefereneceManager.setUserEmail(loginModel.getData().getUserEmail());
                                     sharedPrefereneceManager.setPassword(password.getText().toString());
                                     sharedPrefereneceManager.setUserId(loginModel.getID());
@@ -307,6 +332,9 @@ public class CustomAlertDialog {
                     }
 
                     clearEditText();
+
+
+
                 }
             });
 

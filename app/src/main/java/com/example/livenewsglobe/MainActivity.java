@@ -93,6 +93,13 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+
+    Home home;
+    State state = new State();
+    City city = new City("allCities");
+    Favourite favourite = new Favourite();
+    Home homee;
+
     public static Boolean checkLoginStatus=false, favStatus = true;
     public static int user_id,post_id;
     public static String userEmail;
@@ -156,10 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FragmentTransaction fragmentTransaction;
     SweetAlertDialogGeneral sweetAlertDialogGeneral;
     CustomAlertDialog customAlertDialog;
-    Home home;
-    State state = new State();
-    Fragment city = new City("allCities");
-    Fragment favourite = new Favourite();
+
 
     public static int cityId=0;
     public static int networkId=0;
@@ -375,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else
                 {
                     drawer.closeDrawers();
-                    blurbackground();
+//                    blurbackground();
                     customAlertDialog.showDialog();
                 }
 
@@ -434,6 +438,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     profileImg.setImageResource(R.drawable.avatar_img);
                     imageViewUser.setImageResource(R.drawable.avatar_img);
                     tvSignIn.setText("Sign In");
+                    userName.setText("username");
 
                     replaceFragment();
 
@@ -473,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fragmentManager = getSupportFragmentManager();
                     fragmentTransaction= fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.frame_layout,home);
-                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember       // I removed set transion becuase withourt removing when we fast switching between fragmemts then app crash remember
                     //      ft.addToBackStack(null);
                     fragmentTransaction.commit();
 
@@ -570,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentManager = getSupportFragmentManager();
                 fragmentTransaction= fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout,city);
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
 //        ft.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -922,11 +927,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         frameLayout=findViewById(R.id.frame_layout);
 
         homeFrag=true;
-        Home homee = new Home("featuredNetworks","featuredNetworks");
+        homee = new Home("featuredNetworks","featuredNetworks");
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,homee);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
         fragmentTransaction.commit();
 
 
@@ -947,7 +952,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             checkBackStackPopFrag();
                             setBgResource();
                             homeListViewMode();
+
                             setFragStatus("homeFrag");
+
                         break;
                     case 1:
                         checkBackStackPopFrag();
@@ -1083,6 +1090,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(imageViewUser);
             Picasso.with(this).load(url).placeholder(R.drawable.avatar_img).error(R.drawable.avatar_img).into(profileImg);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
+        //this functuion is called because when we back press then unInitialize the boolean variables othervise if not uninitialize then when app reopen then app perform some wrong operation because static varaibale has no set new values , there fore set new valuse of static avr before exit the app;
+
+        setFalseStaticBooleanVariales();
+        finish();
+
+    }
+
+    private void setFalseStaticBooleanVariales() {
+
+        getCityList=false;
+        getStateList=false;
+        getFeaturedList=false;
+        gridStatus=false;
+        filterStatus=false;
+        getFavouritList=false;
+
+        checkGridStatus=false;
+        checkListStatus=false;
+
     }
 
     private void allowReadExternalStoragePermission() {
@@ -1247,7 +1280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,home);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
 //        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -1267,7 +1300,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,home);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
         fragmentTransaction.commit();
     }
     public void replaceFragment()
@@ -1276,7 +1309,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,home);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
         fragmentTransaction.commit();
     }
     private void stateGridViewMode(String checkViewStatus,String currentFrag) {
@@ -1292,7 +1325,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
 
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
         fragmentTransaction.commit();
     }
     private void stateListViewMode() {
@@ -1300,7 +1333,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,state);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
         fragmentTransaction.commit();
     }
     private void cityListViewMode() {
@@ -1309,7 +1342,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,cityListParam);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
 //        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -1319,7 +1352,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction= fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame_layout,cityList);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
 //        ft.addToBackStack(null);
             fragmentTransaction.commit();
     }
@@ -1330,7 +1363,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,favourite);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
 //        ft.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -1341,7 +1374,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,favourites);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);       // I removed set transion becuase without removing set transition  when we fast switching between fragmemts then app crash remember
         fragmentTransaction.commit();
     }
     private void initViews() {
