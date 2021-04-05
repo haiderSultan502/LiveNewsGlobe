@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.livenewsglobe">
+    package="com.webscare.livenewsglobe">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -11,15 +11,15 @@
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
         android:allowBackup="true"
-        android:icon="@mipmap/icon_live_news_globe"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/icon_live_news_globe"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:windowSoftInputMode="adjustResize"
         android:requestLegacyExternalStorage="true"
         tools:replace="android:icon">
-        <activity android:name=".activties.SplashScreen">
+        <activity android:name="com.webscare.livenewsglobe.activties.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.webscare.livenewsglobe.MainActivity"
             android:windowSoftInputMode="adjustNothing"></activity>
     </application>
 

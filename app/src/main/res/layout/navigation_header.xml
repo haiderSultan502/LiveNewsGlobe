@@ -5,43 +5,53 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_190sdp"
         android:background="@drawable/side_bar_bg">>
+
+    <RelativeLayout
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true">
+
+
         <RelativeLayout
             android:id="@+id/relative_layout_image"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_90sdp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/_40sdp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
             android:background="@drawable/img_bg">
             <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/user_image"
-            android:layout_width="@dimen/_70sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/avatar_img"
-            />
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/user_image"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/avatar_img" />
         </RelativeLayout>
-    <TextView
-        android:id="@+id/tv_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relative_layout_image"
-        android:text="username"
-        android:textColor="#FFF"
-        android:textSize="@dimen/_16sdp"
-        android:textStyle="bold"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/_55sdp"
-        android:layout_marginTop="@dimen/_5sdp"/>
-    <ImageView
-        android:id="@+id/image_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_sharp_edit_24"
-        android:layout_below="@+id/relative_layout_image"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginRight="@dimen/_20sdp"></ImageView>
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relative_layout_image"
+            android:text="username"
+            android:textColor="#FFF"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="@dimen/_5sdp"/>
+
+    </RelativeLayout>
+
+
+
+<!--    <ImageView-->
+<!--        android:id="@+id/image_picker"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/ic_sharp_edit_24"-->
+<!--        android:layout_below="@+id/relative_layout_image"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_marginTop="@dimen/_10sdp"-->
+<!--        android:layout_marginRight="@dimen/_20sdp"></ImageView>-->
 
 </RelativeLayout>

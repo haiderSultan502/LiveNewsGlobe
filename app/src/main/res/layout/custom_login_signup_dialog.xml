@@ -50,6 +50,8 @@
 
         </RelativeLayout>
 
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,11 +88,12 @@
                 android:imeOptions="actionNext"
                 android:textCursorDrawable="@null"></EditText>
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleEnabled="true"
                 android:hint="Password"
+                app:passwordToggleEnabled="true"
                 android:textColorHint="#103E65">
                 <EditText
                     android:id="@+id/password"
@@ -98,6 +101,12 @@
                     android:layout_height="match_parent"
                     android:inputType="textPassword"></EditText>
             </com.google.android.material.textfield.TextInputLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/clear_password"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="clear password"-->
+<!--                android:layout_gravity="right"></TextView>-->
 
         </LinearLayout>
 
