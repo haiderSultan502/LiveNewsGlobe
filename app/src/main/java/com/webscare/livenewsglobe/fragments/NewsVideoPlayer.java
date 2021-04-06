@@ -149,6 +149,8 @@ public class NewsVideoPlayer extends Fragment {
 
             web.setWebViewClient(new MyWebViewClient());
 
+
+
 //            web.getSettings().setCacheMode( WebSettings.LOAD_CACHE_ELSE_NETWORK );
 //            web.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -200,20 +202,20 @@ public class NewsVideoPlayer extends Fragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-                String uri = Uri.parse(url).getHost();
-                if ("livenewsglobe.com".equals(Uri.parse(url).getHost())) {
-//                 This is my website, so do not override; let my WebView load the page
-
-                    imageViewLoading.setVisibility(View.VISIBLE);
-
-                networkUrl = url;
-
-                new MyAsynTask().execute();
-
-
-
-                return false;
-            }
+//                String uri = Uri.parse(url).getHost();
+//                if ("livenewsglobe.com".equals(Uri.parse(url).getHost())) {
+////                 This is my website, so do not override; let my WebView load the page
+//
+//                    imageViewLoading.setVisibility(View.VISIBLE);
+//
+//                networkUrl = url;
+//
+//                new MyAsynTask().execute();
+//
+//
+//
+//                return false;
+//            }
 
 
                 // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
