@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     State state = new State();
     City city = new City("allCities");
     Favourite favourite = new Favourite();
-    Home homee;
+    Home homee; // object creation
 
     public static Boolean checkLoginStatus=false, favStatus = true;
     public static int user_id,post_id;
