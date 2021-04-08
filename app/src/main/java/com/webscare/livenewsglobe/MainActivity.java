@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static Boolean clicklist=false,clickGrid=false,clickFilter=false,getCityList=false,getStateList=false,getFeaturedList=false,gridStatus=false,filterStatus=false,getFavouritList=false;
     public static Boolean homeFrag=false,cityFrag=false,stateFrag=false,favFrag=false;
 
-//    static InterfaceApi interfaceApi;
+//    static InterfaceApi interfaceApi;s
     public static List<String> listCities;
     public static ArrayList<Cities> storeCities;
     public static ArrayList<States> storeStates;
