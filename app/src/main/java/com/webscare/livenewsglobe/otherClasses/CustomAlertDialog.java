@@ -236,7 +236,7 @@ public class CustomAlertDialog extends AppCompatActivity {
 //                pDialog.setCanceledOnTouchOutside(true);
 //                pDialog.show();
 
-                    //from there .. .
+                    //from there .. ..
 
                     sweetAlertDialog = sweetAlertDialogGeneral.showSweetAlertDialog("progress","Loading");
 
