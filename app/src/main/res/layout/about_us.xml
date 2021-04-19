@@ -116,7 +116,7 @@
                 android:id="@+id/youtube"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/youtube"
+                android:src="@drawable/twitter"
                 android:layout_marginLeft="@dimen/_10sdp"/>
 
         </LinearLayout>
